@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chroma_plus_flutter">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
    <application
         android:label="chroma_plus_flutter"
         android:name="${applicationName}"

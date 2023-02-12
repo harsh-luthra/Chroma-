@@ -4,10 +4,13 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:chroma_plus_flutter/Sample/main_screen.dart';
+import 'dart:async';
+
+import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:chroma_plus_flutter/select_color.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:wakelock/wakelock.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,18 +21,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Wakelock.enable();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Sensors Demo',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const SelectColor(),
+      home: const MainScreen(),
+      //home: const MyHomePage(),
     );
   }
 }
-
-/*
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, this.title}) : super(key: key);
@@ -176,5 +179,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-*/

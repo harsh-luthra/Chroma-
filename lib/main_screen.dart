@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:to_csv/to_csv.dart' as exportCSV;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -19,25 +22,39 @@ class MainScreenState extends State<MainScreen> {
   late final String? defaultColor = AppConstants.green_clr.toString();
   late var prefs;
 
+  double FPS = 30;
+
+  late Timer timer;
+  bool stopRecordingBool = false;
+
   String selectTitle = "Select Color";
   double progressSize = 0.25;
   String progressInt = "1";
   bool showBack = false;
 
   double _currentSliderValue = 10;
-  double _secondSliderValue = 20;
+  double _secondSliderValue = 40;
 
-  Color selectedColor = Color(0xffffffff);
+  Color selectedColor = const Color(0xffffffff);
   AssetImage selectedMarker = AppConstants.plusImg;
   double cornerMargin = 0.01;
 
-  double markerSize = 20;
+  double markerSize = 40;
+
+  List<double>? _accelerometerValues;
+  List<List<String>> _accelerometerValues_List = [];
+  late String old_accelerometerValues = "";
+
+  List<double>? _gyroscopeValues;
+  List<List<String>> _gyroscopeValues_List = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     loadData();
+    listenAllSensors();
+    print(Duration.microsecondsPerSecond ~/FPS);
   }
 
   @override
@@ -52,9 +69,12 @@ class MainScreenState extends State<MainScreen> {
           print("On Tap");
         },
         onDoubleTap: () {
+          stopRecordingBool = false;
+          startRecording();
           print("On Double Tap");
         },
         onLongPress: () {
+          stopRecordingBool = true;
           print("On Long Press");
         },
         child: Container(
@@ -144,7 +164,7 @@ class MainScreenState extends State<MainScreen> {
                       label: _currentSliderValue.round().toString(),
                       onChanged: (double value) {
                         setState(() {
-                          print(value);
+                          //print(value);
                           _currentSliderValue = value;
                           cornerMargin = _currentSliderValue / 100;
                         });
@@ -165,7 +185,7 @@ class MainScreenState extends State<MainScreen> {
                       label: _secondSliderValue.round().toString(),
                       onChanged: (double value) {
                         setState(() {
-                          print(value);
+                          //print(value);
                           _secondSliderValue = value;
                           markerSize = _secondSliderValue;
                         });
@@ -179,6 +199,133 @@ class MainScreenState extends State<MainScreen> {
         ),
       ),
     );
+  }
+
+  startRecording() {
+    timer = Timer.periodic(Duration(microseconds: Duration.microsecondsPerSecond ~/FPS), (timer) {
+        if (stopRecordingBool) {
+        stopRecording();
+      }
+      if(!stopRecordingBool) {
+        int timeStamp = DateTime.now().microsecondsSinceEpoch;
+        print("$timeStamp : $_accelerometerValues");
+
+        // Only When Changed Values
+        /*if(old_accelerometerValues != _accelerometerValues.toString()){
+          List<String> accelerometerValue = [timeStamp.toString(),_accelerometerValues.toString()];
+          _accelerometerValues_List.add(accelerometerValue);
+        }
+        old_accelerometerValues = _accelerometerValues.toString();*/
+
+        //All the Data
+        List<String> accelerometerValue = [timeStamp.toString(),_accelerometerValues.toString()];
+        _accelerometerValues_List.add(accelerometerValue);
+
+        List<String> gyroscopeValue = [timeStamp.toString(),_gyroscopeValues.toString()];
+        _gyroscopeValues_List.add(gyroscopeValue);
+      }
+    });
+  }
+
+  stopRecording(){
+    timer.cancel();
+    _dialogBuilder(context);
+    // List<String> header = [];
+    // header.add('TimeStamp.');
+    // header.add('AccelerometerValues');
+    // exportCSV.myCSV(header, _accelerometerValues_List);
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: const Text('Export'),
+            content: const SingleChildScrollView(
+              child: Text("Data Recorded"),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Export Accel'),
+                onPressed: () {
+                  List<String> header = [];
+                  header.add('TimeStamp.');
+                  header.add('AccelerometerValues');
+                  exportCSV.myCSV(header, _accelerometerValues_List);
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Export Gyro'),
+                onPressed: () {
+                  List<String> header = [];
+                  header.add('TimeStamp.');
+                  header.add('AccelerometerValues');
+                  exportCSV.myCSV(header, _gyroscopeValues_List);
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void listenAllSensors(){
+    accelerometerEvents.listen((AccelerometerEvent event) {
+      //print(event);
+      _accelerometerValues = <double>[event.x, event.y, event.z];
+    });
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      //print(event);
+      _gyroscopeValues = <double>[event.x, event.y, event.z];
+    });
+   /* // [AccelerometerEvent (x: 0.0, y: 9.8, z: 0.0)]
+    userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+      print(event);
+    });
+    // [UserAccelerometerEvent (x: 0.0, y: 0.0, z: 0.0)]
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      print(event);
+    });
+    // [GyroscopeEvent (x: 0.0, y: 0.0, z: 0.0)]
+    magnetometerEvents.listen((MagnetometerEvent event) {
+      print(event);
+    });*/
+  }
+
+  void TestCsv(){
+    List<String> header = [];
+    header.add('No.');
+    header.add('User Name');
+    header.add('Mobile');
+    header.add('ID Number');
+    List<List<String>> listOfLists = []; //Outter List which contains the data List
+    List<String> data1 = ['1','Bilal Saeed','1374934','912839812']; //Inner list which contains Data i.e Row
+    List<String> data2 = ['2','Ahmar','21341234','192834821']; //Inner list which contains Data i.e Row
+    listOfLists.add(data1);
+    listOfLists.add(data2);
+    exportCSV.myCSV(header, listOfLists);
+  }
+
+  void TestCsv_new(){
+    List<List<String>> data = [
+      ["No.", "Name", "Roll No."],
+      ["1", "54212341212", "5wew42121212"],
+      ["2", "5421234r1212", "54yfd2121212"],
+      ["3", "54212341212", "54gss2121212"]
+    ];
+    String csvData = const ListToCsvConverter().convert(data);
+    print(csvData);
   }
 
   void loadData() async {

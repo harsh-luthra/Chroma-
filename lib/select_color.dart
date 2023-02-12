@@ -1,8 +1,11 @@
 
+import 'dart:async';
+
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectColor extends StatefulWidget {
@@ -40,6 +43,8 @@ class SelectColorState extends State<SelectColor> {
 
   @override
   Widget build(BuildContext context) {
+    //listenAllSensors();
+   // RepeatTest();
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -106,6 +111,39 @@ class SelectColorState extends State<SelectColor> {
         ),
       ),
     );
+  }
+
+  void RepeatTest(){
+    final periodicTimer = Timer.periodic(
+      const Duration(seconds: 1),
+          (timer) {
+            print(DateTime.now().millisecondsSinceEpoch);
+        // Update user about remaining time
+      },
+    );
+    periodicTimer.cancel();
+  }
+
+  void StopRecord(){
+
+  }
+
+  void listenAllSensors(){
+    accelerometerEvents.listen((AccelerometerEvent event) {
+      print(event);
+    });
+    // [AccelerometerEvent (x: 0.0, y: 9.8, z: 0.0)]
+    userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+      print(event);
+    });
+    // [UserAccelerometerEvent (x: 0.0, y: 0.0, z: 0.0)]
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      print(event);
+    });
+    // [GyroscopeEvent (x: 0.0, y: 0.0, z: 0.0)]
+    magnetometerEvents.listen((MagnetometerEvent event) {
+      print(event);
+    });
   }
 
   Widget SelectWidget() {
@@ -392,7 +430,7 @@ class SelectColorState extends State<SelectColor> {
   Widget markerPaletteBox(AssetImage showImage, String title) {
     double? outerCircleCorner = 15;
     double? outerCircleSize = screenHeight! * 0.09;
-    double? innerCircleSize = outerCircleSize * 0.34;
+    //double? innerCircleSize = outerCircleSize * 0.34;
     return GestureDetector(
       onTap: () {
         if (title == "Cross") {
@@ -455,7 +493,7 @@ class SelectColorState extends State<SelectColor> {
   Widget layoutPaletteBox(AssetImage showImage, String title) {
     double? outerCircleCorner = 15;
     double? outerCircleSize = screenHeight! * 0.09;
-    double? innerCircleSize = outerCircleSize * 1;
+    //double? innerCircleSize = outerCircleSize * 1;
     return GestureDetector(
       onTap: () {
         if (title == "Standard") {
