@@ -201,6 +201,8 @@ class MainScreenState extends State<MainScreen> {
     );
   }
 
+
+
   startRecording() {
     timer = Timer.periodic(Duration(microseconds: Duration.microsecondsPerSecond ~/FPS), (timer) {
         if (stopRecordingBool) {
@@ -263,7 +265,7 @@ class MainScreenState extends State<MainScreen> {
                 onPressed: () {
                   List<String> header = [];
                   header.add('TimeStamp.');
-                  header.add('AccelerometerValues');
+                  header.add('GyroscopeValues');
                   exportCSV.myCSV(header, _gyroscopeValues_List);
                 },
               ),

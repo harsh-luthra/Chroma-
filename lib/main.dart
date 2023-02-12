@@ -6,6 +6,7 @@
 
 import 'dart:async';
 
+import 'package:chroma_plus_flutter/Sample/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:chroma_plus_flutter/select_color.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const MainScreen(),
+      home: const SelectColor(),
       //home: const MyHomePage(),
     );
   }

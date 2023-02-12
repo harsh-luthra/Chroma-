@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
+import 'package:chroma_plus_flutter/Sample/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -282,14 +283,25 @@ class SelectColorState extends State<SelectColor> {
   void goToMain() async {
     await prefs.setString('selectedLayout', selectedLayout.toString());
     print("Saved Layout $selectedLayout");
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext _context) {
-          return MainScreen();
-        },
-      ),
-    );
+    if(selectedLayout == 1){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext _context) {
+            return MainScreen();
+          },
+        ),
+      );
+    }else if(selectedLayout == 2){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext _context) {
+            return CustomiseLayout();
+          },
+        ),
+      );
+    }
   }
 
   Future<bool> _onWillPop() async {
