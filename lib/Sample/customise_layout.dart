@@ -63,6 +63,9 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   Color makerColorRightCenter = Colors.transparent;
   Color makerColorBottomCenter = Colors.transparent;
 
+  Color containerBorderColour = Colors.grey;
+  Color containerColour = const Color.fromARGB(100,255,255,255);
+
   @override
   void initState() {
     // TODO: implement initState
@@ -254,8 +257,15 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 Positioned(
                   bottom: screenHeight! * 0.6,
                   child: Container(
+                    decoration: BoxDecoration(
+                      color: containerColour,
+                        border: Border.all(
+                          color: containerBorderColour,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))
+                    ),
                     alignment: Alignment.center,
-                    color: const Color.fromARGB(100, 255, 255, 255),
+                    //color: const Color.fromARGB(100, 255, 255, 255),
                     height: 70,
                     width: screenWidth!*0.95,
                     child: const Text(
@@ -276,7 +286,13 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 Positioned(
                   bottom: screenHeight! * 0.375,
                   child: Container(
-                    color: const Color.fromARGB(100, 255, 255, 255),
+                    decoration: BoxDecoration(
+                        color: containerColour,
+                        border: Border.all(
+                          color: containerBorderColour,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))
+                    ),
                     height: 30,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -321,7 +337,13 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                   bottom: screenHeight! * 0.3,
                   child: Container(
                     transformAlignment: Alignment.center,
-                    color: const Color.fromARGB(100, 255, 255, 255),
+                    decoration: BoxDecoration(
+                        color: containerColour,
+                        border: Border.all(
+                          color: containerBorderColour,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))
+                    ),
                     height: 30,
                     child: Row(
                       children: [
