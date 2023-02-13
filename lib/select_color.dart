@@ -1,10 +1,10 @@
-
 import 'dart:async';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
-import 'package:chroma_plus_flutter/Sample/customise_layout.dart';
+import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -383,6 +383,7 @@ class SelectColorState extends State<SelectColor> {
     double? innerCircleSize = outerCircleSize * 0.34;
     return GestureDetector(
       onTap: () {
+        HapticFeedback.mediumImpact();
         if (title == "Custom") {
           _dialogBuilder(context);
         } else {
@@ -449,6 +450,7 @@ class SelectColorState extends State<SelectColor> {
     //double? innerCircleSize = outerCircleSize * 0.34;
     return GestureDetector(
       onTap: () {
+        HapticFeedback.mediumImpact();
         if (title == "Cross") {
           setState(() {
             selectedMarker = 1;
@@ -512,6 +514,7 @@ class SelectColorState extends State<SelectColor> {
     //double? innerCircleSize = outerCircleSize * 1;
     return GestureDetector(
       onTap: () {
+        HapticFeedback.mediumImpact();
         if (title == "Standard") {
           selectedLayout = 1;
         } else {
@@ -640,6 +643,7 @@ class SelectColorState extends State<SelectColor> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.mediumImpact();
               goBack();
             },
             child: Container(
@@ -682,6 +686,7 @@ class SelectColorState extends State<SelectColor> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.mediumImpact();
               goBack();
             },
             child: Container(

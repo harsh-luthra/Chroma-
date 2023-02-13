@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
-import 'package:chroma_plus_flutter/Sample/customise_layout.dart';
+import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';

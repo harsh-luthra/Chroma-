@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
+import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_csv/to_csv.dart' as exportCSV;
@@ -51,6 +54,8 @@ class MainScreenState extends State<MainScreen> {
   Timer holdTimer = Timer(const Duration(milliseconds: 1), () {});
   bool showingThreeFingersMenu = true;
 
+  late MarkersDataObj markersDataObj;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -89,53 +94,66 @@ class MainScreenState extends State<MainScreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
+
+                // TOP LEFT
                 Positioned(
                   top: cornerSpace,
                   left: cornerSpace,
-                  child: markerWidget(Colors.transparent),
+                  child: markerWidget(markersDataObj.markerTopLeft),
                 ),
-                Positioned(
-                  bottom: cornerSpace,
-                  left: cornerSpace,
-                  child: markerWidget(Colors.transparent),
-                ),
-                Positioned(
-                  top: cornerSpace,
-                  right: cornerSpace,
-                  child: markerWidget(Colors.transparent),
-                ),
-                Positioned(
-                  bottom: cornerSpace,
-                  right: cornerSpace,
-                  child: markerWidget(Colors.transparent),
-                ),
-                Positioned(
-                  top: screenHeight! * 0.435,
-                  bottom: screenHeight! * 0.435,
-                  child: markerWidget(Colors.transparent),
-                ),
+
                 // TOP CENTER
                 Positioned(
                   top: cornerSpace,
-                  child: markerWidget(Colors.transparent),
+                  child: markerWidget(markersDataObj.markerTopCenter),
                 ),
 
-                // LEFT CENTER
+                // TOP Right
+                Positioned(
+                  top: cornerSpace,
+                  right: cornerSpace,
+                  child: markerWidget(markersDataObj.markerTopRight),
+                ),
+
+
+                // MIDDLE LEFT
                 Positioned(
                   left: cornerSpace,
-                  child: markerWidget(Colors.transparent),
+                  child: markerWidget(markersDataObj.markerMiddleLeft),
                 ),
 
-                // RIGHT CENTER
+                // MIDDLE CENTER
+                Positioned(
+                  top: screenHeight! * 0.435,
+                  bottom: screenHeight! * 0.435,
+                  child: markerWidget(markersDataObj.markerCenter),
+                ),
+
+                // MIDDLE RIGHT
                 Positioned(
                   right: cornerSpace,
-                  child: markerWidget(Colors.transparent),
+                  child: markerWidget(markersDataObj.markerMiddleRight),
+                ),
+
+
+                // BOTTOM Left
+                Positioned(
+                  bottom: cornerSpace,
+                  left: cornerSpace,
+                  child: markerWidget(markersDataObj.markerBottomLeft),
                 ),
 
                 // BOTTOM CENTER
                 Positioned(
                   bottom: cornerSpace,
-                  child: markerWidget(Colors.transparent),
+                  child: markerWidget(markersDataObj.markerBottomCenter),
+                ),
+
+                // BOTTOM Right
+                Positioned(
+                  bottom: cornerSpace,
+                  right: cornerSpace,
+                  child: markerWidget(markersDataObj.markerBottomRight),
                 ),
 
                 fingersHoldMenu(),
@@ -147,20 +165,25 @@ class MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget markerWidget(Color markerColor) {
-    return Container(
-      width: markerSize,
-      height: markerSize,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: markerColor,
-        image: DecorationImage(
-          opacity: 1,
-          image: selectedMarker,
-          fit: BoxFit.contain,
+  Widget markerWidget(bool isMarkerEnabled) {
+    if(isMarkerEnabled){
+      return Container(
+        width: markerSize,
+        height: markerSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+          image: DecorationImage(
+            opacity: 1,
+            image: selectedMarker,
+            fit: BoxFit.contain,
+          ),
         ),
-      ),
-    );
+      );
+    }else{
+      return Container();
+    }
+
   }
 
   Widget fingersHoldMenu() {
@@ -235,6 +258,7 @@ class MainScreenState extends State<MainScreen> {
                 children: [
                   GestureDetector(
                     onTap: (){
+                      HapticFeedback.mediumImpact();
                       print("Pressed Record Button");
                     },
                     child: buttonImg("Record", AppConstants.startRecordImg,
@@ -243,6 +267,7 @@ class MainScreenState extends State<MainScreen> {
                   SizedBox(width: screenWidth! * 0.06),
                   GestureDetector(
                     onTap: (){
+                      HapticFeedback.mediumImpact();
                       print("Pressed Stop Button");
                     },
                     child: buttonImg(
@@ -258,6 +283,7 @@ class MainScreenState extends State<MainScreen> {
                 children: [
                   GestureDetector(
                     onTap: (){
+                      HapticFeedback.mediumImpact();
                       print("Pressed All Button");
                     },
                     child: buttonImg(
@@ -268,6 +294,7 @@ class MainScreenState extends State<MainScreen> {
                   ),
                   GestureDetector(
                     onTap: (){
+                      HapticFeedback.mediumImpact();
                       print("Pressed Export Button");
                     },
                     child: buttonImg(
@@ -386,6 +413,7 @@ class MainScreenState extends State<MainScreen> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.mediumImpact();
               goBack();
             },
             child: Container(
@@ -471,12 +499,14 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
+  // Starts Timer for 3 Seconds 3 Fingers Hold Action
   startHoldTimer() {
     if (holdTimer.isActive) {
       return;
     }
     holdTimer = Timer(const Duration(seconds: 3), () {
       if (fingersNowHold == 3) {
+        HapticFeedback.mediumImpact();
         print("3 FINGERS ACTION COMPLETED");
         setState(() {
           showingThreeFingersMenu = !showingThreeFingersMenu;
@@ -487,12 +517,14 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  // Cancel Timer for 3 Seconds 3 Fingers Hold Action
   cancelHoldTimer() {
     if (holdTimer.isActive) {
       holdTimer.cancel();
     }
   }
 
+  // Starts Recording of Sensors DATA to List
   startRecording() {
     timer = Timer.periodic(
         Duration(microseconds: Duration.microsecondsPerSecond ~/ FPS), (timer) {
@@ -526,6 +558,7 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  // Stops Recording of Sensors DATA
   stopRecording() {
     timer.cancel();
     _dialogBuilder(context);
@@ -681,33 +714,12 @@ class MainScreenState extends State<MainScreen> {
     print("Loaded Layout $loadedMarker");
     if (loadedLayout != null) {
       if (loadedLayout == "1") {
-        cornerMargin = 0.01;
-        markerSize = 40;
+        loadDefaultLayout();
       } else {
-
-        // Load Custom Layout
-        // Load cornerMargin
-        final String? loadedMargin = prefs.getString('cornerMargin');
-        print("Loaded Margin $loadedMargin");
-        if (loadedMargin != null) {
-          cornerMargin = double.parse(loadedMargin);
-        }else{
-          cornerMargin = 0.01;
-        }
-
-        // Load Marker Size
-        final String? loadedSize = prefs.getString('markerSize');
-        print("Loaded Marker Size $loadedSize");
-        if (loadedSize != null) {
-          markerSize = double.parse(loadedSize);
-        }else{
-          markerSize = 40;
-        }
-
+        loadCustomLayout();
       }
     } else {
-      cornerMargin = 0.01;
-      markerSize = 40;
+      loadDefaultLayout();
     }
 
     setState(() {
@@ -715,7 +727,46 @@ class MainScreenState extends State<MainScreen> {
       selectedMarker = selectedMarker;
       cornerMargin = cornerMargin;
       markerSize = markerSize;
+      markersDataObj = markersDataObj;
     });
 
   }
+
+  void loadCustomLayout(){
+    // Load Custom Layout
+    // Load cornerMargin
+    final String? loadedMargin = prefs.getString('cornerMargin');
+    print("Loaded Margin $loadedMargin");
+    if (loadedMargin != null) {
+      cornerMargin = double.parse(loadedMargin);
+    }else{
+      cornerMargin = 0.01;
+    }
+
+    // Load Marker Size
+    final String? loadedSize = prefs.getString('markerSize');
+    print("Loaded Marker Size $loadedSize");
+    if (loadedSize != null) {
+      markerSize = double.parse(loadedSize);
+    }else{
+      markerSize = 40;
+    }
+
+    final String? markerDataobjString = prefs.getString('markerDataobjString');
+    if (markerDataobjString != null) {
+      print(markerDataobjString.toString());
+      Map<String, dynamic> datamap = jsonDecode(markerDataobjString);
+      markersDataObj = MarkersDataObj.fromJson(datamap);
+    }else{
+      markersDataObj =  MarkersDataObj();
+      print(markerDataobjString.toString());
+    }
+  }
+
+  void loadDefaultLayout(){
+    cornerMargin = 0.01;
+    markerSize = 40;
+    markersDataObj = new MarkersDataObj();
+  }
+
 }
