@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
-import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
-import 'package:sensors_plus/sensors_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:to_csv/to_csv.dart' as exportCSV;
 
 class CustomiseLayout extends StatefulWidget {
   const CustomiseLayout({Key? key}) : super(key: key);
@@ -41,13 +38,6 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
   double markerSize = 40;
 
-  List<double>? _accelerometerValues;
-  List<List<String>> _accelerometerValues_List = [];
-  late String old_accelerometerValues = "";
-
-  List<double>? _gyroscopeValues;
-  List<List<String>> _gyroscopeValues_List = [];
-
   Color enabledMarkerColor = Colors.transparent;
   Color disabledMarkerColor = Colors.red;
 
@@ -72,6 +62,9 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     super.initState();
     loadData();
     print(Duration.microsecondsPerSecond ~/ FPS);
+    setState(() {
+      cornerMargin = _currentSliderValue / 100;
+    });
   }
 
   @override
@@ -383,7 +376,6 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 // Buttons
                 Positioned(
                   bottom: screenHeight! * 0.22,
-                  left: screenWidth! * 0.04,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -393,6 +385,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
+                            HapticFeedback.mediumImpact();
                             resetSettings();
                           });
                         },
@@ -403,18 +396,24 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                       const SizedBox(width: 5),
                       // Save & Exit Button
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          HapticFeedback.mediumImpact();
+                          saveData();
+                        },
                         style: ElevatedButton.styleFrom(
                             shape: const StadiumBorder()),
-                        child: const Text('Save & Exit'),
+                        child: const Text('Save'),
                       ),
                       const SizedBox(width: 5),
                       //Exit Without Saving Button
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          HapticFeedback.mediumImpact();
+                          Navigator.pop(context);
+                        },
                         style: ElevatedButton.styleFrom(
                             shape: const StadiumBorder()),
-                        child: const Text('Exit Without Saving'),
+                        child: const Text('Exit'),
                       )
                     ],
                   ),
@@ -447,6 +446,12 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   }
 
   Widget markerWidget(Color markerColor) {
+    double opacity = 1.0;
+    if(markerColor == enabledMarkerColor){
+      opacity = 1.0;
+    }else{
+      opacity = 0.5;
+    }
     return Container(
       width: markerSize,
       height: markerSize,
@@ -454,7 +459,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
         shape: BoxShape.circle,
         color: markerColor,
         image: DecorationImage(
-          opacity: 0.6,
+          opacity: opacity,
           image: selectedMarker,
           fit: BoxFit.contain,
         ),
@@ -462,49 +467,49 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     );
   }
 
-  Future<void> _dialogBuilder(BuildContext context) {
-    return showDialog<void>(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: AlertDialog(
-            title: const Text('Export'),
-            content: const SingleChildScrollView(
-              child: Text("Data Recorded"),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                child: const Text('Export Accel'),
-                onPressed: () {
-                  List<String> header = [];
-                  header.add('TimeStamp.');
-                  header.add('AccelerometerValues');
-                  exportCSV.myCSV(header, _accelerometerValues_List);
-                },
-              ),
-              ElevatedButton(
-                child: const Text('Export Gyro'),
-                onPressed: () {
-                  List<String> header = [];
-                  header.add('TimeStamp.');
-                  header.add('GyroscopeValues');
-                  exportCSV.myCSV(header, _gyroscopeValues_List);
-                },
-              ),
-              ElevatedButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // Future<void> _dialogBuilder(BuildContext context) {
+  //   return showDialog<void>(
+  //     barrierDismissible: false,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return WillPopScope(
+  //         onWillPop: () async => false,
+  //         child: AlertDialog(
+  //           title: const Text('Export'),
+  //           content: const SingleChildScrollView(
+  //             child: Text("Data Recorded"),
+  //           ),
+  //           actions: <Widget>[
+  //             ElevatedButton(
+  //               child: const Text('Export Accel'),
+  //               onPressed: () {
+  //                 List<String> header = [];
+  //                 header.add('TimeStamp.');
+  //                 header.add('AccelerometerValues');
+  //                 exportCSV.myCSV(header, _accelerometerValues_List);
+  //               },
+  //             ),
+  //             ElevatedButton(
+  //               child: const Text('Export Gyro'),
+  //               onPressed: () {
+  //                 List<String> header = [];
+  //                 header.add('TimeStamp.');
+  //                 header.add('GyroscopeValues');
+  //                 exportCSV.myCSV(header, _gyroscopeValues_List);
+  //               },
+  //             ),
+  //             ElevatedButton(
+  //               child: const Text('Cancel'),
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void loadData() async {
     prefs = await SharedPreferences.getInstance();
@@ -516,16 +521,10 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       String valueString = loadedColor.split('(0x')[1].split(')')[0];
       int value = int.parse(valueString, radix: 16);
       selectedColor = Color(value);
-      setState(() {
-        selectedColor = Color(value);
-      });
     } else {
       String? valueString = defaultColor?.split('(0x')[1].split(')')[0];
       int value = int.parse(valueString!, radix: 16);
       selectedColor = Color(value);
-      setState(() {
-        selectedColor = Color(value);
-      });
     }
 
     // Load Marker
@@ -540,24 +539,68 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     } else {
       selectedMarker = AppConstants.plusImg;
     }
-    setState(() {
-      selectedMarker = selectedMarker;
-    });
 
-    // Load Layout
+   /* // Load Layout
     final String? loadedLayout = prefs.getString('selectedLayout');
     print("Loaded Layout $loadedMarker");
     if (loadedLayout != null) {
       if (loadedLayout == "1") {
         cornerMargin = 0.01;
       } else {
-        cornerMargin = 0.05;
+        cornerMargin = 0.01;
       }
     } else {
       cornerMargin = 0.01;
     }
     setState(() {
       cornerMargin = cornerMargin;
+    });*/
+
+    // Load Border Margin
+    final String? loadedMargin = prefs.getString('cornerMargin');
+    print("Loaded Margin $loadedMargin");
+    if (loadedMargin != null) {
+      cornerMargin = double.parse(loadedMargin);
+    }else{
+      cornerMargin = 0.01;
+    }
+
+    // Load Marker Size
+    final String? loadedSize = prefs.getString('markerSize');
+    print("Loaded Marker Size $loadedSize");
+    if (loadedSize != null) {
+      markerSize = double.parse(loadedSize);
+    }else{
+      markerSize = 40;
+    }
+    setState(() {
+      selectedColor = selectedColor;
+      selectedMarker = selectedMarker;
+      cornerMargin = cornerMargin;
+      markerSize = markerSize;
+      _secondSliderValue = markerSize;
+      _currentSliderValue = cornerMargin * 100;
+    });
+
+  }
+
+  void saveData() async {
+    await prefs.setString('selectedLayout', "2");
+    await prefs.setString('cornerMargin', cornerMargin.toString());
+    await prefs.setString('markerSize', markerSize.toString());
+    Future.delayed(const Duration(milliseconds: 500), () {
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (BuildContext context) {
+      //       return const MainScreen();
+      //     },
+      //   ),
+      // );
+
+      Navigator.popAndPushNamed(context, '/mainScreen');
+
     });
   }
+
 }

@@ -114,6 +114,8 @@ class SelectColorState extends State<SelectColor> {
     );
   }
 
+
+
   void RepeatTest(){
     final periodicTimer = Timer.periodic(
       const Duration(seconds: 1),
@@ -283,25 +285,27 @@ class SelectColorState extends State<SelectColor> {
   void goToMain() async {
     await prefs.setString('selectedLayout', selectedLayout.toString());
     print("Saved Layout $selectedLayout");
-    if(selectedLayout == 1){
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext _context) {
-            return MainScreen();
-          },
-        ),
-      );
-    }else if(selectedLayout == 2){
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext _context) {
-            return CustomiseLayout();
-          },
-        ),
-      );
-    }
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if(selectedLayout == 1){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const MainScreen();
+            },
+          ),
+        );
+      }else if(selectedLayout == 2){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const CustomiseLayout();
+            },
+          ),
+        );
+      }
+    });
   }
 
   Future<bool> _onWillPop() async {

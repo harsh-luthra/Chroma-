@@ -30,6 +30,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: const SelectColor(),
+      routes: <String, WidgetBuilder> {
+        '/selectColor': (BuildContext context) => SelectColor(),
+        '/mainScreen' : (BuildContext context) =>  MainScreen(),
+        '/customiseLayout' : (BuildContext context) =>  CustomiseLayout(),
+      },
       //home: const MyHomePage(),
     );
   }

@@ -12,6 +12,7 @@ class AppConstants{
   static const Color blue_clr = Color.fromRGBO(11, 8, 182, 1);
   static const Color black_clr = Color.fromRGBO(0, 0, 0, 1);
   static const Color red_clr = Color.fromRGBO(252, 3, 3, 1);
+
   static const AssetImage plusImg = AssetImage('assets/images/plusImg.png');
   static const AssetImage triangleImg = AssetImage('assets/images/triangleImg.png');
 
@@ -19,5 +20,16 @@ class AppConstants{
   static const AssetImage standardImg = AssetImage('assets/images/standardLayout.png');
 
   static const AssetImage backImg = AssetImage('assets/images/backButton.png');
+
+  // Main Scree Icons
+  static const AssetImage startRecordImg = AssetImage('assets/images/startRecordImg.png');
+
+  static const AssetImage stopRecordImg = AssetImage('assets/images/stopRecordImg.png');
+
+  static const AssetImage folderImg = AssetImage('assets/images/foldersImg.png');
+
+  static const AssetImage exportImg = AssetImage('assets/images/exportImg.png');
+
+  static const AssetImage backImgWhite = AssetImage('assets/images/backButtonWhite.png');
 
 }

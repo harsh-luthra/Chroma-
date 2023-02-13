@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:csv/csv.dart';
@@ -29,11 +28,11 @@ class MainScreenState extends State<MainScreen> {
 
   String selectTitle = "Select Color";
   double progressSize = 0.25;
-  String progressInt = "1";
-  bool showBack = false;
+  String progressInt = "4";
+  bool showBack = true;
 
-  double _currentSliderValue = 10;
-  double _secondSliderValue = 40;
+  // double _currentSliderValue = 10;
+  // double _secondSliderValue = 40;
 
   Color selectedColor = const Color(0xffffffff);
   AssetImage selectedMarker = AppConstants.plusImg;
@@ -48,13 +47,20 @@ class MainScreenState extends State<MainScreen> {
   List<double>? _gyroscopeValues;
   List<List<String>> _gyroscopeValues_List = [];
 
+  int fingersNowHold = 0;
+  Timer holdTimer = Timer(const Duration(milliseconds: 1), () {});
+  bool showingThreeFingersMenu = true;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     loadData();
     listenAllSensors();
-    print(Duration.microsecondsPerSecond ~/FPS);
+    print(Duration.microsecondsPerSecond ~/ FPS);
+    setState(() {
+      showingThreeFingersMenu = true;
+    });
   }
 
   @override
@@ -65,17 +71,15 @@ class MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: selectedColor,
       body: GestureDetector(
-        onTap: () {
-          print("On Tap");
+        onScaleStart: (de) {
+          fingersNowHold = de.pointerCount;
+          onThreeHold(de.pointerCount);
         },
-        onDoubleTap: () {
-          stopRecordingBool = false;
-          startRecording();
-          print("On Double Tap");
-        },
-        onLongPress: () {
-          stopRecordingBool = true;
-          print("On Long Press");
+        onScaleUpdate: (de) {
+          fingersNowHold = de.pointerCount;
+          if (de.pointerCount != 3) {
+            cancelHoldTimer();
+          }
         },
         child: Container(
           decoration: BoxDecoration(
@@ -88,111 +92,53 @@ class MainScreenState extends State<MainScreen> {
                 Positioned(
                   top: cornerSpace,
                   left: cornerSpace,
-                  child: Container(
-                      width: markerSize,
-                      height: markerSize,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: selectedMarker,
-                          fit: BoxFit.contain,
-                        ),
-                      )),
+                  child: markerWidget(Colors.transparent),
                 ),
                 Positioned(
                   bottom: cornerSpace,
                   left: cornerSpace,
-                  child: Container(
-                      width: markerSize,
-                      height: markerSize,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: selectedMarker,
-                          fit: BoxFit.contain,
-                        ),
-                      )),
+                  child: markerWidget(Colors.transparent),
                 ),
                 Positioned(
                   top: cornerSpace,
                   right: cornerSpace,
-                  child: Container(
-                      width: markerSize,
-                      height: markerSize,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: selectedMarker,
-                          fit: BoxFit.contain,
-                        ),
-                      )),
+                  child: markerWidget(Colors.transparent),
                 ),
                 Positioned(
                   bottom: cornerSpace,
                   right: cornerSpace,
-                  child: Container(
-                      width: markerSize,
-                      height: markerSize,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: selectedMarker,
-                          fit: BoxFit.contain,
-                        ),
-                      )),
+                  child: markerWidget(Colors.transparent),
                 ),
                 Positioned(
-                  bottom: screenHeight! * 0.45,
-                  child: Container(
-                      width: markerSize,
-                      height: markerSize,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        image: DecorationImage(
-                          image: selectedMarker,
-                          fit: BoxFit.contain,
-                        ),
-                      )),
+                  top: screenHeight! * 0.435,
+                  bottom: screenHeight! * 0.435,
+                  child: markerWidget(Colors.transparent),
                 ),
-                // RePosition Corner
+                // TOP CENTER
                 Positioned(
-                  bottom: screenHeight! * 0.35,
-                  child: Container(
-                    width: screenWidth!*0.7,
-                    height: 20,
-                    child: Slider(
-                      value: _currentSliderValue,
-                      min: 1,
-                      max: 20,
-                      divisions: 20,
-                      label: _currentSliderValue.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          //print(value);
-                          _currentSliderValue = value;
-                          cornerMargin = _currentSliderValue / 100;
-                        });
-                      },
-                    ),
-                  ),
+                  top: cornerSpace,
+                  child: markerWidget(Colors.transparent),
                 ),
+
+                // LEFT CENTER
                 Positioned(
-                  bottom: screenHeight! * 0.25,
-                  child: Container(
-                    width: screenWidth!*0.7,
-                    height: 20,
-                    child: Slider(
-                      value: _secondSliderValue,
-                      min: 20,
-                      max: 60,
-                      divisions: 10,
-                      label: _secondSliderValue.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          //print(value);
-                          _secondSliderValue = value;
-                          markerSize = _secondSliderValue;
-                        });
-                      },
-                    ),
-                  ),
+                  left: cornerSpace,
+                  child: markerWidget(Colors.transparent),
                 ),
+
+                // RIGHT CENTER
+                Positioned(
+                  right: cornerSpace,
+                  child: markerWidget(Colors.transparent),
+                ),
+
+                // BOTTOM CENTER
+                Positioned(
+                  bottom: cornerSpace,
+                  child: markerWidget(Colors.transparent),
+                ),
+
+                fingersHoldMenu(),
               ],
             ),
           ),
@@ -201,14 +147,359 @@ class MainScreenState extends State<MainScreen> {
     );
   }
 
+  Widget markerWidget(Color markerColor) {
+    return Container(
+      width: markerSize,
+      height: markerSize,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: markerColor,
+        image: DecorationImage(
+          opacity: 1,
+          image: selectedMarker,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
 
+  Widget fingersHoldMenu() {
+    if (showingThreeFingersMenu) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            color: const Color.fromARGB(190, 0, 0, 0),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(
+                height: screenHeight! * 0.05,
+              ),
+              Container(
+                width: screenWidth! * 0.175,
+                height: screenWidth! * 0.175,
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/threeFingersImg.png'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: screenHeight! * 0.025,
+              ),
+              const Text(
+                "Hold for 3 Seconds",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                    fontSize: 18,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.bold,
+                    height: 1),
+              ),
+              const Text(
+                "to get started\nand to come back",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.w300,
+                    height: 1.2),
+              ),
+              SizedBox(
+                height: screenHeight! * 0.075,
+              ),
+              const Text(
+                "Gyroscope data",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    height: 1),
+              ),
+              SizedBox(height: screenHeight! * 0.0125),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                      print("Pressed Record Button");
+                    },
+                    child: buttonImg("Record", AppConstants.startRecordImg,
+                        screenWidth! * 0.2),
+                  ),
+                  SizedBox(width: screenWidth! * 0.06),
+                  GestureDetector(
+                    onTap: (){
+                      print("Pressed Stop Button");
+                    },
+                    child: buttonImg(
+                        "Stop", AppConstants.stopRecordImg, screenWidth! * 0.2),
+                  ),
+                ],
+              ),
+              SizedBox(height: screenHeight! * 0.025),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                      print("Pressed All Button");
+                    },
+                    child: buttonImg(
+                        "All", AppConstants.folderImg, screenWidth! * 0.075),
+                  ),
+                  SizedBox(
+                    width: screenWidth! * 0.17,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      print("Pressed Export Button");
+                    },
+                    child: buttonImg(
+                        "Export", AppConstants.exportImg, screenWidth! * 0.075),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: screenHeight! * 0.025,
+              ),
+              progressBarSized(1),
+              SizedBox(
+                height: screenHeight! * 0.01,
+              ),
+              bottomBackButton(),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  void goBack() {
+    Navigator.pop(context);
+  }
+
+  Widget buttonImg(String title, AssetImage assetImage, double size) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            image: DecorationImage(
+              image: assetImage,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight! * 0.01,
+        ),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              color: AppConstants.txt_color_1,
+              fontFamily: 'Inter',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              height: 1),
+        ),
+      ],
+    );
+  }
+
+  Widget progressBarSized(double progress) {
+    double? progressFullWidth = screenWidth! * 0.42;
+    return Stack(children: <Widget>[
+      // Full Bar
+      SizedBox(
+        width: progressFullWidth,
+        height: 9,
+        child: Stack(children: <Widget>[
+          Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                  width: progressFullWidth,
+                  height: 9,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(38.84709167480469),
+                      topRight: Radius.circular(38.84709167480469),
+                      bottomLeft: Radius.circular(38.84709167480469),
+                      bottomRight: Radius.circular(38.84709167480469),
+                    ),
+                    color: Color.fromRGBO(111, 109, 109, 1),
+                  ))),
+        ]),
+      ),
+      // Progress
+      SizedBox(
+        width: progressFullWidth * progress,
+        height: 9,
+        child: Stack(children: <Widget>[
+          Container(
+              alignment: Alignment.centerLeft,
+              width: progressFullWidth,
+              height: 9,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(38.84709167480469),
+                  topRight: Radius.circular(38.84709167480469),
+                  bottomLeft: Radius.circular(38.84709167480469),
+                  bottomRight: Radius.circular(38.84709167480469),
+                ),
+                color: AppConstants.green_alt_clr,
+              )),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget bottomBackButton() {
+    double backButtonSize = 36;
+    if (showBack) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              goBack();
+            },
+            child: Container(
+                alignment: Alignment.centerLeft,
+                width: backButtonSize,
+                height: backButtonSize,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AppConstants.backImgWhite, fit: BoxFit.fitWidth),
+                )),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            '$progressInt of 4',
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'Inter',
+                fontSize: 14,
+                letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                fontWeight: FontWeight.normal,
+                height: 1),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            width: backButtonSize,
+            height: backButtonSize,
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              goBack();
+            },
+            child: Container(
+              alignment: Alignment.centerLeft,
+              width: backButtonSize,
+              height: backButtonSize,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            '$progressInt of 4',
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+                color: Color.fromRGBO(105, 105, 105, 1),
+                fontFamily: 'Inter',
+                fontSize: 14,
+                letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                fontWeight: FontWeight.normal,
+                height: 1),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            width: backButtonSize,
+            height: backButtonSize,
+          ),
+        ],
+      );
+    }
+  }
+
+  void onThreeHold(int fingersCount) {
+    if (fingersCount == 3) {
+      print("3 FINGERS DETECTED");
+      startHoldTimer();
+    }
+  }
+
+  startHoldTimer() {
+    if (holdTimer.isActive) {
+      return;
+    }
+    holdTimer = Timer(const Duration(seconds: 3), () {
+      if (fingersNowHold == 3) {
+        print("3 FINGERS ACTION COMPLETED");
+        setState(() {
+          showingThreeFingersMenu = !showingThreeFingersMenu;
+        });
+      } else {
+        print("NOT 3 FINGERS ACTION CANCELED");
+      }
+    });
+  }
+
+  cancelHoldTimer() {
+    if (holdTimer.isActive) {
+      holdTimer.cancel();
+    }
+  }
 
   startRecording() {
-    timer = Timer.periodic(Duration(microseconds: Duration.microsecondsPerSecond ~/FPS), (timer) {
-        if (stopRecordingBool) {
+    timer = Timer.periodic(
+        Duration(microseconds: Duration.microsecondsPerSecond ~/ FPS), (timer) {
+      if (stopRecordingBool) {
         stopRecording();
       }
-      if(!stopRecordingBool) {
+      if (!stopRecordingBool) {
         int timeStamp = DateTime.now().microsecondsSinceEpoch;
         print("$timeStamp : $_accelerometerValues");
 
@@ -220,16 +511,22 @@ class MainScreenState extends State<MainScreen> {
         old_accelerometerValues = _accelerometerValues.toString();*/
 
         //All the Data
-        List<String> accelerometerValue = [timeStamp.toString(),_accelerometerValues.toString()];
+        List<String> accelerometerValue = [
+          timeStamp.toString(),
+          _accelerometerValues.toString()
+        ];
         _accelerometerValues_List.add(accelerometerValue);
 
-        List<String> gyroscopeValue = [timeStamp.toString(),_gyroscopeValues.toString()];
+        List<String> gyroscopeValue = [
+          timeStamp.toString(),
+          _gyroscopeValues.toString()
+        ];
         _gyroscopeValues_List.add(gyroscopeValue);
       }
     });
   }
 
-  stopRecording(){
+  stopRecording() {
     timer.cancel();
     _dialogBuilder(context);
     // List<String> header = [];
@@ -282,7 +579,7 @@ class MainScreenState extends State<MainScreen> {
     );
   }
 
-  void listenAllSensors(){
+  void listenAllSensors() {
     accelerometerEvents.listen((AccelerometerEvent event) {
       //print(event);
       _accelerometerValues = <double>[event.x, event.y, event.z];
@@ -291,7 +588,7 @@ class MainScreenState extends State<MainScreen> {
       //print(event);
       _gyroscopeValues = <double>[event.x, event.y, event.z];
     });
-   /* // [AccelerometerEvent (x: 0.0, y: 9.8, z: 0.0)]
+    /* // [AccelerometerEvent (x: 0.0, y: 9.8, z: 0.0)]
     userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       print(event);
     });
@@ -305,21 +602,32 @@ class MainScreenState extends State<MainScreen> {
     });*/
   }
 
-  void TestCsv(){
+  void TestCsv() {
     List<String> header = [];
     header.add('No.');
     header.add('User Name');
     header.add('Mobile');
     header.add('ID Number');
-    List<List<String>> listOfLists = []; //Outter List which contains the data List
-    List<String> data1 = ['1','Bilal Saeed','1374934','912839812']; //Inner list which contains Data i.e Row
-    List<String> data2 = ['2','Ahmar','21341234','192834821']; //Inner list which contains Data i.e Row
+    List<List<String>> listOfLists =
+        []; //Outter List which contains the data List
+    List<String> data1 = [
+      '1',
+      'Bilal Saeed',
+      '1374934',
+      '912839812'
+    ]; //Inner list which contains Data i.e Row
+    List<String> data2 = [
+      '2',
+      'Ahmar',
+      '21341234',
+      '192834821'
+    ]; //Inner list which contains Data i.e Row
     listOfLists.add(data1);
     listOfLists.add(data2);
     exportCSV.myCSV(header, listOfLists);
   }
 
-  void TestCsv_new(){
+  void TestCsv_new() {
     List<List<String>> data = [
       ["No.", "Name", "Roll No."],
       ["1", "54212341212", "5wew42121212"],
@@ -374,14 +682,40 @@ class MainScreenState extends State<MainScreen> {
     if (loadedLayout != null) {
       if (loadedLayout == "1") {
         cornerMargin = 0.01;
+        markerSize = 40;
       } else {
-        cornerMargin = 0.05;
+
+        // Load Custom Layout
+        // Load cornerMargin
+        final String? loadedMargin = prefs.getString('cornerMargin');
+        print("Loaded Margin $loadedMargin");
+        if (loadedMargin != null) {
+          cornerMargin = double.parse(loadedMargin);
+        }else{
+          cornerMargin = 0.01;
+        }
+
+        // Load Marker Size
+        final String? loadedSize = prefs.getString('markerSize');
+        print("Loaded Marker Size $loadedSize");
+        if (loadedSize != null) {
+          markerSize = double.parse(loadedSize);
+        }else{
+          markerSize = 40;
+        }
+
       }
     } else {
       cornerMargin = 0.01;
+      markerSize = 40;
     }
+
     setState(() {
+      selectedColor = selectedColor;
+      selectedMarker = selectedMarker;
       cornerMargin = cornerMargin;
+      markerSize = markerSize;
     });
+
   }
 }
