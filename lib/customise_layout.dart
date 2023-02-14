@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
+import 'package:chroma_plus_flutter/Customs/CustomButton.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,10 +56,10 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   Color makerColorMiddleRight = Colors.transparent;
   Color makerColorBottomCenter = Colors.transparent;
 
-  late MarkersDataObj markersDataObj;
+  MarkersDataObj markersDataObj = MarkersDataObj();
 
-  Color containerBorderColour = Colors.grey;
-  Color containerColour = const Color.fromARGB(100,255,255,255);
+  Color containerBorderColour = Color.fromARGB(125, 0, 0, 0);
+  Color containerColour = const Color.fromARGB(125, 0, 0, 0);
 
   @override
   void initState() {
@@ -86,7 +87,6 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-
               // TOP LEFT
               Positioned(
                 top: cornerSpace,
@@ -94,7 +94,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerTopLeft = !markersDataObj.markerTopLeft;
+                      markersDataObj.markerTopLeft =
+                          !markersDataObj.markerTopLeft;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -108,7 +109,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerTopCenter = !markersDataObj.markerTopCenter;
+                      markersDataObj.markerTopCenter =
+                          !markersDataObj.markerTopCenter;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -123,7 +125,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerTopRight = !markersDataObj.markerTopRight;
+                      markersDataObj.markerTopRight =
+                          !markersDataObj.markerTopRight;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -131,14 +134,14 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 ),
               ),
 
-
               // MIDDLE LEFT
               Positioned(
                 left: cornerSpace,
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerMiddleLeft = !markersDataObj.markerMiddleLeft;
+                      markersDataObj.markerMiddleLeft =
+                          !markersDataObj.markerMiddleLeft;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -153,7 +156,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerCenter = ! markersDataObj.markerCenter;
+                      markersDataObj.markerCenter =
+                          !markersDataObj.markerCenter;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -167,14 +171,14 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerMiddleRight = ! markersDataObj.markerMiddleRight;
+                      markersDataObj.markerMiddleRight =
+                          !markersDataObj.markerMiddleRight;
                       HapticFeedback.mediumImpact();
                     });
                   },
                   child: markerWidget(markersDataObj.markerMiddleRight),
                 ),
               ),
-
 
               // BOTTOM LEFT
               Positioned(
@@ -183,7 +187,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerBottomLeft = !markersDataObj.markerBottomLeft;
+                      markersDataObj.markerBottomLeft =
+                          !markersDataObj.markerBottomLeft;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -197,7 +202,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerBottomCenter = ! markersDataObj.markerBottomCenter;
+                      markersDataObj.markerBottomCenter =
+                          !markersDataObj.markerBottomCenter;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -212,7 +218,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      markersDataObj.markerBottomRight = !markersDataObj.markerBottomRight;
+                      markersDataObj.markerBottomRight =
+                          !markersDataObj.markerBottomRight;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -220,24 +227,36 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 ),
               ),
 
-
               // Tutorial Text
               Positioned(
                 bottom: screenHeight! * 0.6,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: containerColour,
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                            offset: Offset(0, 6),
+                            blurRadius: 4)
+                      ],
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromRGBO(127, 127, 127, 1),
+                          Color.fromRGBO(0, 0, 0, 0.29),
+                        ],
+                      ),
+                      color: containerColour,
                       border: Border.all(
                         color: containerBorderColour,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                   alignment: Alignment.center,
                   //color: const Color.fromARGB(100, 255, 255, 255),
                   height: 70,
-                  width: screenWidth!*0.95,
+                  width: screenWidth! * 0.95,
                   child: const Text(
-                    "Long Press Markers To Toggle Their Visibility\n\n(Red Markers are Not Visible in Layout)",
+                    "Long Press Markers To Toggle Their Visibility\n\n(Red markers will not be visible in layout)",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.white,
@@ -252,21 +271,34 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
               // SLIDERS
               // Marker Margin Slider
               Positioned(
-                bottom: screenHeight! * 0.375,
+                bottom: screenHeight! * 0.365,
                 child: Container(
                   decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                            offset: Offset(0, 6),
+                            blurRadius: 4)
+                      ],
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromRGBO(127, 127, 127, 1),
+                          Color.fromRGBO(0, 0, 0, 0.29),
+                        ],
+                      ),
                       color: containerColour,
                       border: Border.all(
                         color: containerBorderColour,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                  ),
-                  height: 30,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  height: 35,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(width: 7),
+                      const SizedBox(width: 12),
                       const Text(
                         'Corner Margin',
                         textAlign: TextAlign.left,
@@ -278,9 +310,11 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             height: 1),
                       ),
                       SizedBox(
-                        width: screenWidth! * 0.7,
+                        width: screenWidth! * 0.68,
                         height: 20,
                         child: Slider(
+                          activeColor: Colors.white,
+                          inactiveColor: Colors.grey,
                           value: _currentSliderValue,
                           min: 1,
                           max: 20,
@@ -302,20 +336,33 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
               // Marker Size Slider
               Positioned(
-                bottom: screenHeight! * 0.3,
+                bottom: screenHeight! * 0.29,
                 child: Container(
                   transformAlignment: Alignment.center,
                   decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                            offset: Offset(0, 6),
+                            blurRadius: 4)
+                      ],
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromRGBO(127, 127, 127, 1),
+                          Color.fromRGBO(0, 0, 0, 0.29),
+                        ],
+                      ),
                       color: containerColour,
                       border: Border.all(
                         color: containerBorderColour,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                  ),
-                  height: 30,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  height: 35,
                   child: Row(
                     children: [
-                      const SizedBox(width: 7),
+                      const SizedBox(width: 12),
                       const Text(
                         'Marker Size',
                         style: TextStyle(
@@ -329,6 +376,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                         width: screenWidth! * 0.7,
                         height: 20,
                         child: Slider(
+                          activeColor: Colors.white,
+                          inactiveColor: Colors.grey,
                           value: _secondSliderValue,
                           min: 20,
                           max: 60,
@@ -350,51 +399,75 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
               // Buttons
               Positioned(
-                bottom: screenHeight! * 0.22,
+                bottom: screenHeight! * 0.21,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    //REST Button
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          HapticFeedback.mediumImpact();
-                          resetSettings();
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder()),
-                      child: const Text('Reset'),
-                    ),
+                    //Reset Button
+                    gradientButton("Reset",(){
+                      setState(() {
+                        HapticFeedback.mediumImpact();
+                        resetSettings();
+                      });
+                    }),
+                    //Save Button
                     const SizedBox(width: 5),
-                    // Save & Exit Button
-                    ElevatedButton(
-                      onPressed: () {
+                    gradientButton("Save",(){
+                      setState(() {
                         HapticFeedback.mediumImpact();
                         saveData();
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder()),
-                      child: const Text('Save'),
-                    ),
+                      });
+                    }),
+                    //Exit Button
                     const SizedBox(width: 5),
-                    //Exit Without Saving Button
-                    ElevatedButton(
-                      onPressed: () {
+                    gradientButton("Exit",(){
+                      setState(() {
                         HapticFeedback.mediumImpact();
                         Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder()),
-                      child: const Text('Exit'),
-                    )
+                      });
+                    }),
                   ],
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget gradientButton(String title, Function() action){
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.transparent,
+        elevation: 4.0,
+        minimumSize: const Size(15.0, 15.0),
+        padding: const EdgeInsets.all(0.0),
+      ),
+      onPressed: () {
+       action();
+      },
+      child: Ink(
+        padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+        height: 35,
+        child: Text (title),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [
+                0.1,
+                0.8,
+                0.9
+              ],
+              colors: [
+                Color.fromRGBO(127, 127, 127, 1),
+                Color.fromRGBO(0, 0, 0, 0.29),
+                Color.fromRGBO(0, 0, 0, 0.29),
+              ]),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
       ),
     );
@@ -421,7 +494,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     markersDataObj = new MarkersDataObj();
 
     markersDataObj.markerTopLeft = true;
-    markersDataObj. markerTopCenter = true;
+    markersDataObj.markerTopCenter = true;
     markersDataObj.markerTopRight = true;
 
     markersDataObj.markerMiddleLeft = true;
@@ -431,16 +504,15 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     markersDataObj.markerBottomLeft = true;
     markersDataObj.markerBottomCenter = true;
     markersDataObj.markerBottomRight = true;
-
   }
 
   Widget markerWidget(bool isMarkerEnabled) {
     Color markerColor = enabledMarkerColor;
     double opacity = 1.0;
-    if(isMarkerEnabled){
+    if (isMarkerEnabled) {
       markerColor = enabledMarkerColor;
       opacity = 1.0;
-    }else{
+    } else {
       markerColor = disabledMarkerColor;
       opacity = 0.5;
     }
@@ -532,7 +604,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       selectedMarker = AppConstants.plusImg;
     }
 
-   /* // Load Layout
+    /* // Load Layout
     final String? loadedLayout = prefs.getString('selectedLayout');
     print("Loaded Layout $loadedMarker");
     if (loadedLayout != null) {
@@ -553,7 +625,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     print("Loaded Margin $loadedMargin");
     if (loadedMargin != null) {
       cornerMargin = double.parse(loadedMargin);
-    }else{
+    } else {
       cornerMargin = 0.01;
     }
 
@@ -562,7 +634,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     print("Loaded Marker Size $loadedSize");
     if (loadedSize != null) {
       markerSize = double.parse(loadedSize);
-    }else{
+    } else {
       markerSize = 40;
     }
 
@@ -571,8 +643,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       print(markerDataobjString.toString());
       Map<String, dynamic> datamap = jsonDecode(markerDataobjString);
       markersDataObj = MarkersDataObj.fromJson(datamap);
-    }else{
-      markersDataObj =  MarkersDataObj();
+    } else {
+      markersDataObj = MarkersDataObj();
       print(markerDataobjString.toString());
     }
 
@@ -586,12 +658,12 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       markersDataObj = markersDataObj;
       setStateOfMarkersFromLoadedData();
     });
-
   }
 
   void saveData() async {
     //saveMarkerObjData();
-    await prefs.setString("markerDataobjString", json.encode(markersDataObj.toJson()));
+    await prefs.setString(
+        "markerDataobjString", json.encode(markersDataObj.toJson()));
     await prefs.setString('selectedLayout', "2");
     await prefs.setString('cornerMargin', cornerMargin.toString());
     await prefs.setString('markerSize', markerSize.toString());
@@ -605,62 +677,61 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       //   ),
       // );
       Navigator.popAndPushNamed(context, '/mainScreen');
-
     });
   }
 
-  void setStateOfMarkersFromLoadedData(){
-    if(markersDataObj.markerTopLeft){
+  void setStateOfMarkersFromLoadedData() {
+    if (markersDataObj.markerTopLeft) {
       makerColorTopLeft = Colors.transparent;
-    }else{
+    } else {
       makerColorTopLeft = Colors.red;
     }
 
-    if(markersDataObj.markerTopCenter){
+    if (markersDataObj.markerTopCenter) {
       makerColorTopCenter = Colors.transparent;
-    }else{
+    } else {
       makerColorTopCenter = Colors.red;
     }
 
-    if(markersDataObj.markerTopRight){
+    if (markersDataObj.markerTopRight) {
       makerColorTopRight = Colors.transparent;
-    }else{
+    } else {
       makerColorTopRight = Colors.red;
     }
 
-    if(markersDataObj.markerMiddleLeft){
+    if (markersDataObj.markerMiddleLeft) {
       makerColorMiddleLeft = Colors.transparent;
-    }else{
+    } else {
       makerColorMiddleLeft = Colors.red;
     }
 
-    if(markersDataObj.markerCenter){
+    if (markersDataObj.markerCenter) {
       makerColorCenter = Colors.transparent;
-    }else{
+    } else {
       makerColorCenter = Colors.red;
     }
 
-    if(markersDataObj.markerMiddleRight){
+    if (markersDataObj.markerMiddleRight) {
       makerColorMiddleRight = Colors.transparent;
-    }else{
+    } else {
       makerColorMiddleRight = Colors.red;
     }
 
-    if(markersDataObj.markerBottomLeft){
+    if (markersDataObj.markerBottomLeft) {
       makerColorBottomLeft = Colors.transparent;
-    }else{
+    } else {
       makerColorBottomLeft = Colors.red;
     }
 
-    if(markersDataObj.markerBottomCenter){
+    if (markersDataObj.markerBottomCenter) {
       makerColorBottomCenter = Colors.transparent;
-    }else{
+    } else {
       makerColorBottomCenter = Colors.red;
     }
 
-    if(markersDataObj.markerBottomRight){
+    if (markersDataObj.markerBottomRight) {
       makerColorBottomRight = Colors.transparent;
-    }else{
+    } else {
       makerColorBottomRight = Colors.red;
     }
 
@@ -676,5 +747,4 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     // makerColorBottomCenter = Colors.transparent;
     // makerColorBottomRight = Colors.transparent;
   }
-
 }

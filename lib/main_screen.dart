@@ -54,7 +54,7 @@ class MainScreenState extends State<MainScreen> {
   Timer holdTimer = Timer(const Duration(milliseconds: 1), () {});
   bool showingThreeFingersMenu = true;
 
-  late MarkersDataObj markersDataObj;
+  MarkersDataObj markersDataObj = new MarkersDataObj();
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class MainScreenState extends State<MainScreen> {
     super.initState();
     loadData();
     listenAllSensors();
-    print(Duration.microsecondsPerSecond ~/ FPS);
+    //print(Duration.microsecondsPerSecond ~/ FPS);
     setState(() {
       showingThreeFingersMenu = true;
     });

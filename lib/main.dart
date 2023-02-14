@@ -6,6 +6,7 @@
 
 import 'dart:async';
 
+import 'package:chroma_plus_flutter/Sample/UndoRedoTest.dart';
 import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:chroma_plus_flutter/select_color.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: const SelectColor(),
+      //home: const SelectColor(),
       routes: <String, WidgetBuilder> {
         '/selectColor': (BuildContext context) => SelectColor(),
         '/mainScreen' : (BuildContext context) =>  MainScreen(),

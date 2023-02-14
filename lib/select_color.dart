@@ -21,19 +21,19 @@ class SelectColorState extends State<SelectColor> {
   double? screenWidth;
   double? screenHeight;
   late final String? defaultColor = AppConstants.red_clr.toString();
-  late var prefs;
+  late var prefrences;
 
   String selectTitle = "Select Color";
   double progressSize = 0.25;
   String progressInt = "1";
   bool showBack = false;
 
-  Color selectedColor = Color(0xffffffff);
+  Color selectedColor = const Color(0xffffffff);
   int selectedMarker = 1;
   int selectedLayout = 1;
 
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Color(0xff443a49);
+  Color pickerColor = const Color(0xff443a49);
+  Color currentColor = const Color(0xff443a49);
 
   @override
   void initState() {
@@ -113,8 +113,6 @@ class SelectColorState extends State<SelectColor> {
       ),
     );
   }
-
-
 
   void RepeatTest(){
     final periodicTimer = Timer.periodic(
@@ -238,8 +236,8 @@ class SelectColorState extends State<SelectColor> {
   }
 
   void loadData() async {
-    prefs = await SharedPreferences.getInstance();
-    final String? customColor = prefs.getString('customColor');
+    prefrences = await SharedPreferences.getInstance();
+    final String? customColor = prefrences.getString('customColor');
     print("Loaded Color $customColor");
     if (customColor != null) {
       String valueString = customColor.split('(0x')[1].split(')')[0];
@@ -270,7 +268,7 @@ class SelectColorState extends State<SelectColor> {
     progressSize = 0.5;
     showBack = true;
     print("Saved Color $selectedColor");
-    await prefs.setString('selectedColor', selectedColor.toString());
+    await prefrences.setString('selectedColor', selectedColor.toString());
   }
 
   void SelectLayout() async {
@@ -279,11 +277,11 @@ class SelectColorState extends State<SelectColor> {
     progressSize = 0.75;
     showBack = true;
     print("Saved Marker $selectedMarker");
-    await prefs.setString('selectedMarker', selectedMarker.toString());
+    await prefrences.setString('selectedMarker', selectedMarker.toString());
   }
 
   void goToMain() async {
-    await prefs.setString('selectedLayout', selectedLayout.toString());
+    await prefrences.setString('selectedLayout', selectedLayout.toString());
     print("Saved Layout $selectedLayout");
     Future.delayed(const Duration(milliseconds: 500), () {
       if(selectedLayout == 1){
@@ -373,7 +371,7 @@ class SelectColorState extends State<SelectColor> {
   }
 
   void changeColor(Color color) async {
-    await prefs.setString('customColor', color.toString());
+    await prefrences.setString('customColor', color.toString());
     setState(() => pickerColor = color);
   }
 
