@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:wakelock/wakelock.dart';
 
+import 'Data_List.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const SelectColor(),
+      home: SelectColor(),
       //home: const SelectColor(),
       routes: <String, WidgetBuilder> {
         '/selectColor': (BuildContext context) => SelectColor(),

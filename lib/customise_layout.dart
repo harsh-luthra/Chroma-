@@ -229,41 +229,79 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
               // Tutorial Text
               Positioned(
-                bottom: screenHeight! * 0.6,
+                bottom: screenHeight! * 0.56,
                 child: Container(
                   decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.5),
-                            offset: Offset(0, 6),
-                            blurRadius: 4)
-                      ],
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color.fromRGBO(127, 127, 127, 1),
-                          Color.fromRGBO(0, 0, 0, 0.29),
-                        ],
-                      ),
-                      color: containerColour,
+                      // boxShadow: const [
+                      //   BoxShadow(
+                      //       color: Color.fromRGBO(0, 0, 0, 0.5),
+                      //       offset: Offset(0, 6),
+                      //       blurRadius: 4)
+                      // ],
+                      // gradient: const LinearGradient(
+                      //   begin: Alignment.topCenter,
+                      //   end: Alignment.bottomCenter,
+                      //   colors: [
+                      //     Color.fromRGBO(127, 127, 127, 1),
+                      //     Color.fromRGBO(0, 0, 0, 0.29),
+                      //   ],
+                      // ),
+                      color: const Color.fromARGB(65, 0, 0, 0),
                       border: Border.all(
-                        color: containerBorderColour,
+                        color: const Color.fromARGB(0, 0, 0, 0),
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius: const BorderRadius.all(Radius.circular(8))),
                   alignment: Alignment.center,
                   //color: const Color.fromARGB(100, 255, 255, 255),
-                  height: 70,
-                  width: screenWidth! * 0.95,
-                  child: const Text(
-                    "Long Press Markers To Toggle Their Visibility\n\n(Red markers will not be visible in layout)",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Proxima Nova',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        height: 1),
+                  height: screenWidth! * 0.275,
+                  width: screenWidth! * 0.875,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      // SizedBox(
+                      //   height: screenHeight! * 0.05,
+                      // ),
+                      Container(
+                        width: screenWidth! * 0.085,
+                        height: screenWidth! * 0.085,
+                        decoration: const BoxDecoration(
+                          color: Colors.transparent,
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/holdfingericon.png'),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        "Hold markers for 2 seconds to toggle visibility",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Proxima Nova',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            height: 1),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text(
+                        "(Low opacity markers wont be visible at launch)",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Color.fromARGB(200, 255, 255, 255),
+                            fontFamily: 'Proxima Nova',
+                            fontSize: 13.5,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.w500,
+                            height: 1),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -274,25 +312,25 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 bottom: screenHeight! * 0.365,
                 child: Container(
                   decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.5),
-                            offset: Offset(0, 6),
-                            blurRadius: 4)
-                      ],
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color.fromRGBO(127, 127, 127, 1),
-                          Color.fromRGBO(0, 0, 0, 0.29),
-                        ],
-                      ),
-                      color: containerColour,
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //       color: Color.fromRGBO(0, 0, 0, 0.5),
+                    //       offset: Offset(0, 6),
+                    //       blurRadius: 4)
+                    // ],
+                    // gradient: const LinearGradient(
+                    //   begin: Alignment.topCenter,
+                    //   end: Alignment.bottomCenter,
+                    //   colors: [
+                    //     Color.fromRGBO(127, 127, 127, 1),
+                    //     Color.fromRGBO(0, 0, 0, 0.29),
+                    //   ],
+                    // ),
+                      color: const Color.fromARGB(65, 0, 0, 0),
                       border: Border.all(
-                        color: containerBorderColour,
+                        color: const Color.fromARGB(0, 0, 0, 0),
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius: const BorderRadius.all(Radius.circular(20))),
                   height: 35,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -300,7 +338,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                     children: [
                       const SizedBox(width: 12),
                       const Text(
-                        'Corner Margin',
+                        'Position',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             color: Colors.white,
@@ -309,12 +347,13 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             fontWeight: FontWeight.w500,
                             height: 1),
                       ),
+                      const SizedBox(width: 25),
                       SizedBox(
-                        width: screenWidth! * 0.68,
+                        width: screenWidth! * 0.6,
                         height: 20,
                         child: Slider(
-                          activeColor: Colors.white,
-                          inactiveColor: Colors.grey,
+                          activeColor: const Color.fromARGB(255, 210, 210, 210),
+                          inactiveColor: const Color.fromARGB(255, 210, 210, 210),
                           value: _currentSliderValue,
                           min: 1,
                           max: 20,
@@ -340,25 +379,25 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 child: Container(
                   transformAlignment: Alignment.center,
                   decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.5),
-                            offset: Offset(0, 6),
-                            blurRadius: 4)
-                      ],
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color.fromRGBO(127, 127, 127, 1),
-                          Color.fromRGBO(0, 0, 0, 0.29),
-                        ],
-                      ),
-                      color: containerColour,
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //       color: Color.fromRGBO(0, 0, 0, 0.5),
+                    //       offset: Offset(0, 6),
+                    //       blurRadius: 4)
+                    // ],
+                    // gradient: const LinearGradient(
+                    //   begin: Alignment.topCenter,
+                    //   end: Alignment.bottomCenter,
+                    //   colors: [
+                    //     Color.fromRGBO(127, 127, 127, 1),
+                    //     Color.fromRGBO(0, 0, 0, 0.29),
+                    //   ],
+                    // ),
+                      color: const Color.fromARGB(65, 0, 0, 0),
                       border: Border.all(
-                        color: containerBorderColour,
+                        color: const Color.fromARGB(0, 0, 0, 0),
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius: const BorderRadius.all(Radius.circular(20))),
                   height: 35,
                   child: Row(
                     children: [
@@ -373,11 +412,11 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             height: 1),
                       ),
                       SizedBox(
-                        width: screenWidth! * 0.7,
+                        width: screenWidth! * 0.6,
                         height: 20,
                         child: Slider(
-                          activeColor: Colors.white,
-                          inactiveColor: Colors.grey,
+                          activeColor: const Color.fromARGB(255, 210, 210, 210),
+                          inactiveColor: const Color.fromARGB(255, 210, 210, 210),
                           value: _secondSliderValue,
                           min: 20,
                           max: 60,
@@ -442,12 +481,48 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         primary: Colors.transparent,
+        elevation: 0.0,
+        minimumSize: const Size(12.0, 12.0),
+        padding: const EdgeInsets.all(0.0),
+      ),
+      onPressed: () {
+       action();
+      },
+      child: Ink(
+        padding: EdgeInsets.only(top: 8, left: 15, right: 15,bottom: 0),
+        height: 32,
+        decoration: const BoxDecoration(
+            color: Color.fromARGB(65, 0, 0, 0),
+          // gradient: LinearGradient(
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //     stops: [
+          //       0.1,
+          //       0.8,
+          //       0.9
+          //     ],
+          //     colors: [
+          //       Color.fromRGBO(127, 127, 127, 1),
+          //       Color.fromRGBO(127, 127, 127, 1),
+          //       Color.fromRGBO(127, 127, 127, 1),
+          //     ]),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Text (title),
+      ),
+    );
+  }
+
+  Widget gradientButton_old(String title, Function() action){
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.transparent,
         elevation: 4.0,
         minimumSize: const Size(15.0, 15.0),
         padding: const EdgeInsets.all(0.0),
       ),
       onPressed: () {
-       action();
+        action();
       },
       child: Ink(
         padding: EdgeInsets.only(top: 10, left: 15, right: 15),
@@ -514,14 +589,14 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       opacity = 1.0;
     } else {
       markerColor = disabledMarkerColor;
-      opacity = 0.5;
+      opacity = 0.25;
     }
     return Container(
       width: markerSize,
       height: markerSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: markerColor,
+        //color: markerColor,
         image: DecorationImage(
           opacity: opacity,
           image: selectedMarker,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
+import 'package:chroma_plus_flutter/Data_List.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
@@ -285,6 +286,7 @@ class MainScreenState extends State<MainScreen> {
                     onTap: (){
                       HapticFeedback.mediumImpact();
                       print("Pressed All Button");
+                      All_Data_List();
                     },
                     child: buttonImg(
                         "All", AppConstants.folderImg, screenWidth! * 0.075),
@@ -317,6 +319,17 @@ class MainScreenState extends State<MainScreen> {
     } else {
       return Container();
     }
+  }
+
+  void All_Data_List() {
+    Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return Data_List();
+            },
+          ),
+        );
   }
 
   void goBack() {

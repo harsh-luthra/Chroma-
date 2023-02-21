@@ -44,6 +44,8 @@ dependencies:
   to_csv: ^1.1.1
   csv: ^5.0.1
   undo: ^1.4.0
+  intl: ^0.17.0
+  flutter_slidable: ^2.0.0
 
 dev_dependencies:
   flutter_test:
