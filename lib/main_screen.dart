@@ -55,6 +55,8 @@ class MainScreenState extends State<MainScreen> {
   Timer holdTimer = Timer(const Duration(milliseconds: 1), () {});
   bool showingThreeFingersMenu = true;
 
+  double? fontSize = 15;
+
   MarkersDataObj markersDataObj = new MarkersDataObj();
 
   @override
@@ -73,6 +75,7 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    fontSize = screenWidth! * 0.038;
     double cornerSpace = screenWidth! * cornerMargin;
     return Scaffold(
       backgroundColor: selectedColor,
@@ -193,130 +196,138 @@ class MainScreenState extends State<MainScreen> {
           Container(
             color: const Color.fromARGB(190, 0, 0, 0),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(
-                height: screenHeight! * 0.05,
-              ),
-              Container(
-                width: screenWidth! * 0.175,
-                height: screenWidth! * 0.175,
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/threeFingersImg.png'),
-                    fit: BoxFit.contain,
-                  ),
+          Positioned(
+            top: screenHeight! * 0.3,
+            child: Container(
+              width: screenWidth! * 0.125,
+              height: screenWidth! * 0.125,
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                image: DecorationImage(
+                  image: AssetImage('assets/images/threeFingersImg.png'),
+                  fit: BoxFit.contain,
                 ),
               ),
-              SizedBox(
-                height: screenHeight! * 0.025,
-              ),
-              const Text(
-                "Hold for 3 Seconds",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontSize: 18,
-                    letterSpacing: 1.5,
-                    fontWeight: FontWeight.bold,
-                    height: 1),
-              ),
-              const Text(
-                "to get started\nand to come back",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontSize: 15,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w300,
-                    height: 1.2),
-              ),
-              SizedBox(
-                height: screenHeight! * 0.075,
-              ),
-              const Text(
-                "Gyroscope data",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    height: 1),
-              ),
-              SizedBox(height: screenHeight! * 0.0125),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      HapticFeedback.mediumImpact();
-                      print("Pressed Record Button");
-                    },
-                    child: buttonImg("Record", AppConstants.startRecordImg,
-                        screenWidth! * 0.2),
-                  ),
-                  SizedBox(width: screenWidth! * 0.06),
-                  GestureDetector(
-                    onTap: (){
-                      HapticFeedback.mediumImpact();
-                      print("Pressed Stop Button");
-                    },
-                    child: buttonImg(
-                        "Stop", AppConstants.stopRecordImg, screenWidth! * 0.2),
-                  ),
-                ],
-              ),
-              SizedBox(height: screenHeight! * 0.025),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      HapticFeedback.mediumImpact();
-                      print("Pressed All Button");
-                      All_Data_List();
-                    },
-                    child: buttonImg(
-                        "All", AppConstants.folderImg, screenWidth! * 0.075),
-                  ),
-                  SizedBox(
-                    width: screenWidth! * 0.17,
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      HapticFeedback.mediumImpact();
-                      print("Pressed Export Button");
-                    },
-                    child: buttonImg(
-                        "Export", AppConstants.exportImg, screenWidth! * 0.075),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: screenHeight! * 0.025,
-              ),
-              progressBarSized(1),
-              SizedBox(
-                height: screenHeight! * 0.01,
-              ),
-              bottomBackButton(),
-            ],
+            ),
+          ),
+          Positioned(
+            top: screenHeight! * 0.575,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  "Hold for 3 Seconds",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: fontSize,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.bold,
+                      height: 1),
+                ),
+                Text(
+                  "to get started\nand to come back",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: fontSize,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w300,
+                      height: 1.2),
+                ),
+                SizedBox(
+                  height: screenHeight! * 0.075,
+                ),
+
+                progressBarSized(1),
+                SizedBox(
+                  height: screenHeight! * 0.01,
+                ),
+                bottomBackButton(),
+
+              ],
+            ),
           ),
         ],
       );
     } else {
       return Container();
     }
+  }
+
+  Widget Gyroscope(){
+    return Column(
+      children: [
+        const Text(
+          "Gyroscope data",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Inter',
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              height: 1),
+        ),
+        SizedBox(height: screenHeight! * 0.0125),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            GestureDetector(
+              onTap: (){
+                HapticFeedback.mediumImpact();
+                print("Pressed Record Button");
+              },
+              child: buttonImg("Record", AppConstants.startRecordImg,
+                  screenWidth! * 0.2),
+            ),
+            SizedBox(width: screenWidth! * 0.06),
+            GestureDetector(
+              onTap: (){
+                HapticFeedback.mediumImpact();
+                print("Pressed Stop Button");
+              },
+              child: buttonImg("Stop", AppConstants.stopRecordImg, screenWidth! * 0.2),
+            ),
+          ],
+        ),
+        SizedBox(height: screenHeight! * 0.025),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            GestureDetector(
+              onTap: (){
+                HapticFeedback.mediumImpact();
+                print("Pressed All Button");
+                All_Data_List();
+              },
+              child: buttonImg(
+                  "All", AppConstants.folderImg, screenWidth! * 0.075),
+            ),
+            SizedBox(
+              width: screenWidth! * 0.17,
+            ),
+            GestureDetector(
+              onTap: (){
+                HapticFeedback.mediumImpact();
+                print("Pressed Export Button");
+              },
+              child: buttonImg(
+                  "Export", AppConstants.exportImg, screenWidth! * 0.075),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: screenHeight! * 0.025,
+        ),
+      ],
+    );
   }
 
   void All_Data_List() {
@@ -417,7 +428,7 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Widget bottomBackButton() {
-    double backButtonSize = 36;
+    double backButtonSize = screenWidth! * 0.1;
     if (showBack) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -433,26 +444,26 @@ class MainScreenState extends State<MainScreen> {
                 height: backButtonSize,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AppConstants.backImgWhite, fit: BoxFit.fitWidth),
+                      image: AppConstants.backImg, fit: BoxFit.fitWidth),
                 )),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+              width: screenWidth! * 0.02
           ),
           Text(
             '$progressInt of 4',
             textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Colors.white,
+            style: TextStyle(
+                color: const Color.fromRGBO(105, 105, 105, 1),
                 fontFamily: 'Inter',
-                fontSize: 14,
+                fontSize: fontSize,
                 letterSpacing:
-                    2 /*percentages not used in flutter. defaulting to zero*/,
+                2 /*percentages not used in flutter. defaulting to zero*/,
                 fontWeight: FontWeight.normal,
                 height: 1),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+              width: screenWidth! * 0.01
           ),
           Container(
             alignment: Alignment.centerLeft,
@@ -467,6 +478,7 @@ class MainScreenState extends State<MainScreen> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.mediumImpact();
               goBack();
             },
             child: Container(
@@ -475,23 +487,23 @@ class MainScreenState extends State<MainScreen> {
               height: backButtonSize,
             ),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+              width: screenWidth! * 0.09
           ),
           Text(
             '$progressInt of 4',
             textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(105, 105, 105, 1),
+            style: TextStyle(
+                color: const Color.fromRGBO(105, 105, 105, 1),
                 fontFamily: 'Inter',
-                fontSize: 14,
+                fontSize: fontSize,
                 letterSpacing:
-                    2 /*percentages not used in flutter. defaulting to zero*/,
+                2 /*percentages not used in flutter. defaulting to zero*/,
                 fontWeight: FontWeight.normal,
                 height: 1),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+              width: screenWidth! * 0.09
           ),
           Container(
             alignment: Alignment.centerLeft,
