@@ -70,6 +70,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     print(Duration.microsecondsPerSecond ~/ fPS);
     setState(() {
       cornerMargin = _currentSliderValue / 100;
+      //markerSize = _secondSliderValue * (screenWidth! * 0.0025);
     });
   }
 
@@ -77,6 +78,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    markerSize = _secondSliderValue * (screenWidth! * 0.0025);
     fontSize = screenWidth! * 0.038;
     double cornerSpace = screenWidth! * cornerMargin;
     return Scaffold(
@@ -396,7 +398,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             setState(() {
                               //print(value);
                               _secondSliderValue = value;
-                              markerSize = _secondSliderValue;
+                              markerSize = _secondSliderValue * (screenWidth! * 0.0025);
                             });
                           },
                         ),
@@ -459,7 +461,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
        action();
       },
       child: Ink(
-        padding: const EdgeInsets.only(top: 8, left: 15, right: 15,bottom: 10),
+        padding: const EdgeInsets.only(top: 10, left: 15, right: 15,bottom: 10),
         width: screenWidth! * 0.185,
         decoration: const BoxDecoration(
             color: AppConstants.buttonGreyColor,
