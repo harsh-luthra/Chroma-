@@ -35,6 +35,8 @@ class SelectColorState extends State<SelectColor> {
   Color pickerColor = const Color(0xff443a49);
   Color currentColor = const Color(0xff443a49);
 
+  double? fontSize = 15;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -48,6 +50,7 @@ class SelectColorState extends State<SelectColor> {
    // RepeatTest();
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    fontSize = screenWidth! * 0.04;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -62,23 +65,23 @@ class SelectColorState extends State<SelectColor> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-                const Text(
+                 Text(
                   'CHROMA+',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: AppConstants.txt_color_1,
                       fontFamily: 'Inter',
-                      fontSize: 30,
+                      fontSize: fontSize! * 2,
                       fontWeight: FontWeight.bold,
                       height: 1),
                 ),
-                const Text(
+                 Text(
                   'by Scissor Films',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: AppConstants.txt_color_1,
                       fontFamily: 'Proxima Nova',
-                      fontSize: 15,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.w300,
                       height: 1),
                 ),
@@ -86,10 +89,10 @@ class SelectColorState extends State<SelectColor> {
                 Text(
                   selectTitle,
                   textAlign: TextAlign.left,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: AppConstants.txt_color_1,
                       fontFamily: 'Inter',
-                      fontSize: 15,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.w500,
                       height: 1),
                 ),
@@ -349,7 +352,7 @@ class SelectColorState extends State<SelectColor> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Pick a color', style: TextStyle(fontSize: 15),),
+          title: Text('Pick a color', style: TextStyle(fontSize: fontSize),),
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: pickerColor,
@@ -372,10 +375,10 @@ class SelectColorState extends State<SelectColor> {
                 });
                 Navigator.of(context).pop();
               },
-              child: const Text('Done', style: TextStyle(
-                  color: Color.fromRGBO(69, 69, 69, 1),
+              child: Text('Done', style: TextStyle(
+                  color: const Color.fromRGBO(69, 69, 69, 1),
                   fontFamily: 'Inter',
-                  fontSize: 15,
+                  fontSize: fontSize,
                   fontWeight: FontWeight.normal,
                   height: 1),),
             ),
@@ -391,10 +394,10 @@ class SelectColorState extends State<SelectColor> {
                 setState(() => currentColor = pickerColor);
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel', style: TextStyle(
+              child: Text('Cancel', style: TextStyle(
                       color: Color.fromRGBO(69, 69, 69, 1),
                       fontFamily: 'Inter',
-                      fontSize: 15,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.normal,
                       height: 1),),
             ),
@@ -464,10 +467,11 @@ class SelectColorState extends State<SelectColor> {
           Text(
             title,
             textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(69, 69, 69, 1),
+            style: TextStyle(
+                color: const Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 15,
+                fontSize: fontSize,
+                // fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),
           )
@@ -528,10 +532,10 @@ class SelectColorState extends State<SelectColor> {
           Text(
             title,
             textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(69, 69, 69, 1),
+            style: TextStyle(
+                color: const Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 15,
+                fontSize: fontSize,
                 fontWeight: FontWeight.normal,
                 height: 1),
           )
@@ -581,10 +585,10 @@ class SelectColorState extends State<SelectColor> {
           Text(
             title,
             textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(69, 69, 69, 1),
+            style: TextStyle(
+                color: const Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 15,
+                fontSize: fontSize,
                 fontWeight: FontWeight.normal,
                 height: 1),
           ),
@@ -696,10 +700,10 @@ class SelectColorState extends State<SelectColor> {
           Text(
             '$progressInt of 4',
             textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(105, 105, 105, 1),
+            style: TextStyle(
+                color: const Color.fromRGBO(105, 105, 105, 1),
                 fontFamily: 'Inter',
-                fontSize: 14,
+                fontSize: fontSize,
                 letterSpacing:
                     2 /*percentages not used in flutter. defaulting to zero*/,
                 fontWeight: FontWeight.normal,
@@ -736,10 +740,10 @@ class SelectColorState extends State<SelectColor> {
           Text(
             '$progressInt of 4',
             textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(105, 105, 105, 1),
+            style: TextStyle(
+                color: const Color.fromRGBO(105, 105, 105, 1),
                 fontFamily: 'Inter',
-                fontSize: 14,
+                fontSize: fontSize,
                 letterSpacing:
                     2 /*percentages not used in flutter. defaulting to zero*/,
                 fontWeight: FontWeight.normal,
