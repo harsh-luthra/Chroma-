@@ -1,10 +1,10 @@
-
 import 'dart:async';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,19 +21,19 @@ class SelectColorBkupState extends State<SelectColorBkup> {
   double? screenWidth;
   double? screenHeight;
   late final String? defaultColor = AppConstants.red_clr.toString();
-  late var prefs;
+  late var prefrences;
 
   String selectTitle = "Select Color";
   double progressSize = 0.25;
   String progressInt = "1";
   bool showBack = false;
 
-  Color selectedColor = Color(0xffffffff);
+  Color selectedColor = const Color(0xffffffff);
   int selectedMarker = 1;
   int selectedLayout = 1;
 
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Color(0xff443a49);
+  Color pickerColor = const Color(0xff443a49);
+  Color currentColor = const Color(0xff443a49);
 
   @override
   void initState() {
@@ -113,8 +113,6 @@ class SelectColorBkupState extends State<SelectColorBkup> {
       ),
     );
   }
-
-
 
   void RepeatTest(){
     final periodicTimer = Timer.periodic(
@@ -210,7 +208,18 @@ class SelectColorBkupState extends State<SelectColorBkup> {
         const SizedBox(
           height: 10,
         ),
-        SizedBox(height: (screenHeight! * 0.09) + 10 + 8)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            markerPaletteBox_fake(),
+            const SizedBox(
+              width: 10,
+            ),
+            markerPaletteBox_fake(),
+          ],
+        ),
+        // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
       ],
     );
   }
@@ -238,8 +247,8 @@ class SelectColorBkupState extends State<SelectColorBkup> {
   }
 
   void loadData() async {
-    prefs = await SharedPreferences.getInstance();
-    final String? customColor = prefs.getString('customColor');
+    prefrences = await SharedPreferences.getInstance();
+    final String? customColor = prefrences.getString('customColor');
     print("Loaded Color $customColor");
     if (customColor != null) {
       String valueString = customColor.split('(0x')[1].split(')')[0];
@@ -270,7 +279,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
     progressSize = 0.5;
     showBack = true;
     print("Saved Color $selectedColor");
-    await prefs.setString('selectedColor', selectedColor.toString());
+    await prefrences.setString('selectedColor', selectedColor.toString());
   }
 
   void SelectLayout() async {
@@ -279,31 +288,33 @@ class SelectColorBkupState extends State<SelectColorBkup> {
     progressSize = 0.75;
     showBack = true;
     print("Saved Marker $selectedMarker");
-    await prefs.setString('selectedMarker', selectedMarker.toString());
+    await prefrences.setString('selectedMarker', selectedMarker.toString());
   }
 
   void goToMain() async {
-    await prefs.setString('selectedLayout', selectedLayout.toString());
+    await prefrences.setString('selectedLayout', selectedLayout.toString());
     print("Saved Layout $selectedLayout");
-    if(selectedLayout == 1){
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext _context) {
-            return MainScreen();
-          },
-        ),
-      );
-    }else if(selectedLayout == 2){
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext _context) {
-            return CustomiseLayout();
-          },
-        ),
-      );
-    }
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if(selectedLayout == 1){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const MainScreen();
+            },
+          ),
+        );
+      }else if(selectedLayout == 2){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const CustomiseLayout();
+            },
+          ),
+        );
+      }
+    });
   }
 
   Future<bool> _onWillPop() async {
@@ -338,7 +349,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Pick a color'),
+          title: const Text('Pick a color', style: TextStyle(fontSize: 15),),
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: pickerColor,
@@ -347,7 +358,12 @@ class SelectColorBkupState extends State<SelectColorBkup> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: const Text('Got it'),
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(65, 0, 0, 0),
+                elevation: 0.0,
+                minimumSize: const Size(60.0, 35.0),
+                padding: const EdgeInsets.all(0.0),
+              ),
               onPressed: () {
                 setState(() {
                   selectedColor = pickerColor;
@@ -356,13 +372,31 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                 });
                 Navigator.of(context).pop();
               },
+              child: const Text('Done', style: TextStyle(
+                  color: Color.fromRGBO(69, 69, 69, 1),
+                  fontFamily: 'Inter',
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  height: 1),),
             ),
+
             ElevatedButton(
-              child: const Text('Cancel'),
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(65, 0, 0, 0),
+                elevation: 0.0,
+                minimumSize: const Size(70.0, 35.0),
+                padding: const EdgeInsets.all(0.0),
+              ),
               onPressed: () {
                 setState(() => currentColor = pickerColor);
                 Navigator.of(context).pop();
               },
+              child: const Text('Cancel', style: TextStyle(
+                  color: Color.fromRGBO(69, 69, 69, 1),
+                  fontFamily: 'Inter',
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  height: 1),),
             ),
           ],
         );
@@ -371,7 +405,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
   }
 
   void changeColor(Color color) async {
-    await prefs.setString('customColor', color.toString());
+    await prefrences.setString('customColor', color.toString());
     setState(() => pickerColor = color);
   }
 
@@ -381,6 +415,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
     double? innerCircleSize = outerCircleSize * 0.34;
     return GestureDetector(
       onTap: () {
+        HapticFeedback.mediumImpact();
         if (title == "Custom") {
           _dialogBuilder(context);
         } else {
@@ -413,10 +448,10 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                 height: innerCircleSize,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(38.84709167480469),
-                    topRight: Radius.circular(38.84709167480469),
-                    bottomLeft: Radius.circular(38.84709167480469),
-                    bottomRight: Radius.circular(38.84709167480469),
+                    topLeft: Radius.circular(39),
+                    topRight: Radius.circular(39),
+                    bottomLeft: Radius.circular(39),
+                    bottomRight: Radius.circular(39),
                   ),
                   color: color,
                 ),
@@ -432,7 +467,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
             style: const TextStyle(
                 color: Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 10,
+                fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),
           )
@@ -447,6 +482,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
     //double? innerCircleSize = outerCircleSize * 0.34;
     return GestureDetector(
       onTap: () {
+        HapticFeedback.mediumImpact();
         if (title == "Cross") {
           setState(() {
             selectedMarker = 1;
@@ -478,8 +514,8 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                 ),
               ),
               Container(
-                  width: 20,
-                  height: 20,
+                  width: screenHeight! * 0.034,
+                  height: screenHeight! * 0.034,
                   decoration: BoxDecoration(
                     image:
                     DecorationImage(image: showImage, fit: BoxFit.fitWidth),
@@ -495,7 +531,56 @@ class SelectColorBkupState extends State<SelectColorBkup> {
             style: const TextStyle(
                 color: Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 10,
+                fontSize: 15,
+                fontWeight: FontWeight.normal,
+                height: 1),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget markerPaletteBox_fake() {
+    double? outerCircleCorner = 15;
+    double? outerCircleSize = screenHeight! * 0.09;
+    //double? innerCircleSize = outerCircleSize * 0.34;
+    return GestureDetector(
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: outerCircleSize,
+                height: outerCircleSize,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(outerCircleCorner),
+                    topRight: Radius.circular(outerCircleCorner),
+                    bottomLeft: Radius.circular(outerCircleCorner),
+                    bottomRight: Radius.circular(outerCircleCorner),
+                  ),
+                  color: Colors.transparent,
+                ),
+              ),
+              Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+
+                  )),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(
+            "",
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+                color: Color.fromRGBO(69, 69, 69, 1),
+                fontFamily: ' ',
+                fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),
           )
@@ -510,6 +595,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
     //double? innerCircleSize = outerCircleSize * 1;
     return GestureDetector(
       onTap: () {
+        HapticFeedback.mediumImpact();
         if (title == "Standard") {
           selectedLayout = 1;
         } else {
@@ -547,10 +633,13 @@ class SelectColorBkupState extends State<SelectColorBkup> {
             style: const TextStyle(
                 color: Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 10,
+                fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),
-          )
+          ),
+          const SizedBox(
+            height: 4,
+          ),
         ],
       ),
     );
@@ -638,6 +727,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.mediumImpact();
               goBack();
             },
             child: Container(
@@ -680,6 +770,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.mediumImpact();
               goBack();
             },
             child: Container(

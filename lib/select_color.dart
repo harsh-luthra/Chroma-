@@ -160,89 +160,89 @@ class SelectColorState extends State<SelectColor> {
   }
 
   Widget colorPickerGroup() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            colorPaletteBox(AppConstants.green_clr, "Green"),
-            const SizedBox(
-              width: 10,
-            ),
-            colorPaletteBox(AppConstants.blue_clr, "Blue"),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            colorPaletteBox(AppConstants.black_clr, "Black"),
-            const SizedBox(
-              width: 10,
-            ),
-            colorPaletteBox(currentColor, "Custom"),
-          ],
-        ),
-      ],
+    return Container(
+      width: screenWidth,
+      height: screenHeight! *0.275,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              colorPaletteBox(AppConstants.green_clr, "Green"),
+              const SizedBox(
+                width: 10,
+              ),
+              colorPaletteBox(AppConstants.blue_clr, "Blue"),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              colorPaletteBox(AppConstants.black_clr, "Black"),
+              const SizedBox(
+                width: 10,
+              ),
+              colorPaletteBox(currentColor, "Custom"),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget markerPickerGroup() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            markerPaletteBox(AppConstants.plusImg, "Cross"),
-            const SizedBox(
-              width: 10,
-            ),
-            markerPaletteBox(AppConstants.triangleImg, "Triangle"),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            markerPaletteBox_fake(),
-            const SizedBox(
-              width: 10,
-            ),
-            markerPaletteBox_fake(),
-          ],
-        ),
-       // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
-      ],
+    return Container(
+      width: screenWidth,
+      height: screenHeight! *0.275,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              markerPaletteBox(AppConstants.plusImg, "Cross"),
+              const SizedBox(
+                width: 10,
+              ),
+              markerPaletteBox(AppConstants.triangleImg, "Triangle"),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+         // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
+        ],
+      ),
     );
   }
 
   Widget layoutPickerGroup() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            layoutPaletteBox(AppConstants.plusImg, "Standard"),
-            const SizedBox(
-              width: 10,
-            ),
-            layoutPaletteBox(AppConstants.triangleImg, "Custom"),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(height: (screenHeight! * 0.09) / 1.5 + 9)
-      ],
+    return Container(
+      width: screenWidth,
+      height: screenHeight! *0.275,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              layoutPaletteBox(AppConstants.plusImg, "Standard"),
+              const SizedBox(
+                width: 10,
+              ),
+              layoutPaletteBox(AppConstants.triangleImg, "Custom"),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
     );
   }
 
@@ -531,55 +531,6 @@ class SelectColorState extends State<SelectColor> {
             style: const TextStyle(
                 color: Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 15,
-                fontWeight: FontWeight.normal,
-                height: 1),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget markerPaletteBox_fake() {
-    double? outerCircleCorner = 15;
-    double? outerCircleSize = screenHeight! * 0.09;
-    //double? innerCircleSize = outerCircleSize * 0.34;
-    return GestureDetector(
-      child: Column(
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                width: outerCircleSize,
-                height: outerCircleSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(outerCircleCorner),
-                    topRight: Radius.circular(outerCircleCorner),
-                    bottomLeft: Radius.circular(outerCircleCorner),
-                    bottomRight: Radius.circular(outerCircleCorner),
-                  ),
-                  color: Colors.transparent,
-                ),
-              ),
-              Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-
-                  )),
-            ],
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            "",
-            textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(69, 69, 69, 1),
-                fontFamily: ' ',
                 fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),

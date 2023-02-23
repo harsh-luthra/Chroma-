@@ -151,8 +151,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
               // MIDDLE CENTER
               Positioned(
-                top: screenHeight! * 0.435,
-                bottom: screenHeight! * 0.435,
+                top: screenHeight! * 0.4,
+                bottom: screenHeight! * 0.4,
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
