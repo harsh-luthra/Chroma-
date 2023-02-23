@@ -16,6 +16,14 @@ class AppConstants{
   static const Color buttonGreyColor = Color.fromARGB(65, 0, 0, 0);
   static const Color buttonTxtColor = Color.fromRGBO(69, 69, 69, 1);
 
+  static const Color whiteTxtColor = Color.fromARGB(200, 255, 255, 255);
+
+  static const Color sliderActiveColor = Color.fromARGB(255, 210, 210, 210);
+  static const Color sliderInActiveColor = Color.fromARGB(255, 210, 210, 210);
+
+
+  static const Color containerGreyColor = Color.fromARGB(65, 0, 0, 0);
+
   static const AssetImage plusImg = AssetImage('assets/images/plusImg.png');
   static const AssetImage triangleImg = AssetImage('assets/images/triangleImg.png');
 

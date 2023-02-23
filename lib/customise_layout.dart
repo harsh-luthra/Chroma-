@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
-import 'package:chroma_plus_flutter/Customs/CustomButton.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,9 +19,9 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   double? screenWidth;
   double? screenHeight;
   late final String? defaultColor = AppConstants.green_clr.toString();
-  late var prefs;
+  late SharedPreferences prefs;
 
-  double FPS = 30;
+  double fPS = 30;
 
   late Timer timer;
   bool stopRecordingBool = false;
@@ -58,15 +57,17 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
   MarkersDataObj markersDataObj = MarkersDataObj();
 
-  Color containerBorderColour = Color.fromARGB(125, 0, 0, 0);
-  Color containerColour = const Color.fromARGB(125, 0, 0, 0);
+  // Color containerBorderColour = const Color.fromARGB(125, 0, 0, 0);
+  // Color containerColour = const Color.fromARGB(125, 0, 0, 0);
+
+  double? fontSize = 15;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     loadData();
-    print(Duration.microsecondsPerSecond ~/ FPS);
+    print(Duration.microsecondsPerSecond ~/ fPS);
     setState(() {
       cornerMargin = _currentSliderValue / 100;
     });
@@ -76,6 +77,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    fontSize = screenWidth! * 0.038;
     double cornerSpace = screenWidth! * cornerMargin;
     return Scaffold(
       backgroundColor: selectedColor,
@@ -232,40 +234,22 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 bottom: screenHeight! * 0.56,
                 child: Container(
                   decoration: BoxDecoration(
-                      // boxShadow: const [
-                      //   BoxShadow(
-                      //       color: Color.fromRGBO(0, 0, 0, 0.5),
-                      //       offset: Offset(0, 6),
-                      //       blurRadius: 4)
-                      // ],
-                      // gradient: const LinearGradient(
-                      //   begin: Alignment.topCenter,
-                      //   end: Alignment.bottomCenter,
-                      //   colors: [
-                      //     Color.fromRGBO(127, 127, 127, 1),
-                      //     Color.fromRGBO(0, 0, 0, 0.29),
-                      //   ],
-                      // ),
-                      color: const Color.fromARGB(65, 0, 0, 0),
+                      color: AppConstants.containerGreyColor,
                       border: Border.all(
-                        color: const Color.fromARGB(0, 0, 0, 0),
+                        color: Colors.transparent,
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(8))),
                   alignment: Alignment.center,
-                  //color: const Color.fromARGB(100, 255, 255, 255),
-                  height: screenWidth! * 0.275,
-                  width: screenWidth! * 0.875,
+                  height: screenHeight! * 0.16,
+                  width: screenWidth! * 0.85,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      // SizedBox(
-                      //   height: screenHeight! * 0.05,
-                      // ),
                       Container(
-                        width: screenWidth! * 0.085,
-                        height: screenWidth! * 0.085,
+                        width: screenWidth! * 0.09,
+                        height: screenWidth! * 0.09,
                         decoration: const BoxDecoration(
                           color: Colors.transparent,
                           image: DecorationImage(
@@ -274,29 +258,29 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: screenHeight! * 0.015,
                       ),
-                      const Text(
+                      Text(
                         "Hold markers for 2 seconds to toggle visibility",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Proxima Nova',
-                            fontSize: 14,
+                            fontSize: fontSize,
                             fontWeight: FontWeight.w500,
                             height: 1),
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      const Text(
+                      Text(
                         "(Low opacity markers wont be visible at launch)",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: Color.fromARGB(200, 255, 255, 255),
+                            color: AppConstants.whiteTxtColor,
                             fontFamily: 'Proxima Nova',
-                            fontSize: 13.5,
+                            fontSize: fontSize! * 0.97,
                             letterSpacing: 0,
                             fontWeight: FontWeight.w500,
                             height: 1),
@@ -312,50 +296,35 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 bottom: screenHeight! * 0.365,
                 child: Container(
                   decoration: BoxDecoration(
-                    // boxShadow: const [
-                    //   BoxShadow(
-                    //       color: Color.fromRGBO(0, 0, 0, 0.5),
-                    //       offset: Offset(0, 6),
-                    //       blurRadius: 4)
-                    // ],
-                    // gradient: const LinearGradient(
-                    //   begin: Alignment.topCenter,
-                    //   end: Alignment.bottomCenter,
-                    //   colors: [
-                    //     Color.fromRGBO(127, 127, 127, 1),
-                    //     Color.fromRGBO(0, 0, 0, 0.29),
-                    //   ],
-                    // ),
-                      color: const Color.fromARGB(65, 0, 0, 0),
+                      color: AppConstants.containerGreyColor,
                       border: Border.all(
-                        color: const Color.fromARGB(0, 0, 0, 0),
+                        color: Colors.transparent,
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(20))),
-                  height: 35,
+                  height: screenHeight! * 0.05,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(width: 12),
-                      const Text(
+                      SizedBox(width: screenWidth! * 0.04),
+                      Text(
                         'Marker Position',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Proxima Nova',
-                            fontSize: 15,
+                            fontSize: fontSize,
                             fontWeight: FontWeight.w500,
                             height: 1),
                       ),
-                      const SizedBox(width: 0),
                       SizedBox(
                         width: screenWidth! * 0.6,
-                        height: 20,
+                        height: screenHeight! * 0.05,
                         child: Slider(
-                          activeColor: const Color.fromARGB(255, 210, 210, 210),
-                          inactiveColor: const Color.fromARGB(255, 210, 210, 210),
+                          activeColor: AppConstants.sliderActiveColor,
+                          inactiveColor: AppConstants.sliderInActiveColor,
                           value: _currentSliderValue,
-                          min: 1,
+                          min: 0,
                           max: 20,
                           divisions: 20,
                           label: _currentSliderValue.round().toString(),
@@ -393,31 +362,31 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                     //     Color.fromRGBO(0, 0, 0, 0.29),
                     //   ],
                     // ),
-                      color: const Color.fromARGB(65, 0, 0, 0),
+                      color: AppConstants.containerGreyColor,
                       border: Border.all(
-                        color: const Color.fromARGB(0, 0, 0, 0),
+                        color: Colors.transparent,
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(20))),
-                  height: 35,
+                  height: screenHeight! * 0.05,
                   child: Row(
                     children: [
-                      const SizedBox(width: 12),
-                      const Text(
+                      SizedBox(width: screenWidth! * 0.04),
+                      Text(
                         'Marker Size',
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Proxima Nova',
-                            fontSize: 15,
+                            fontSize: fontSize,
                             fontWeight: FontWeight.w500,
                             height: 1),
                       ),
-                      const SizedBox(width: 25),
+                      SizedBox(width: screenWidth! * 0.07),
                       SizedBox(
                         width: screenWidth! * 0.6,
-                        height: 20,
+                        height: screenHeight! * 0.05,
                         child: Slider(
-                          activeColor: const Color.fromARGB(255, 210, 210, 210),
-                          inactiveColor: const Color.fromARGB(255, 210, 210, 210),
+                          activeColor: AppConstants.sliderActiveColor,
+                          inactiveColor: AppConstants.sliderInActiveColor,
                           value: _secondSliderValue,
                           min: 20,
                           max: 60,
@@ -453,7 +422,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                       });
                     }),
                     //Save Button
-                    const SizedBox(width: 5),
+                    SizedBox(width: screenWidth! * 0.02),
                     gradientButton("Save",(){
                       setState(() {
                         HapticFeedback.mediumImpact();
@@ -461,7 +430,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                       });
                     }),
                     //Exit Button
-                    const SizedBox(width: 5),
+                    SizedBox(width: screenWidth! * 0.02),
                     gradientButton("Exit",(){
                       setState(() {
                         HapticFeedback.mediumImpact();
@@ -481,7 +450,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   Widget gradientButton(String title, Function() action){
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
         minimumSize: const Size(12.0, 12.0),
         padding: const EdgeInsets.all(0.0),
@@ -490,10 +459,11 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
        action();
       },
       child: Ink(
-        padding: EdgeInsets.only(top: 8, left: 15, right: 15,bottom: 0),
-        height: 32,
+        padding: const EdgeInsets.only(top: 8, left: 15, right: 15,bottom: 0),
+        height: screenHeight! * 0.054,
+        width: screenWidth! * 0.185,
         decoration: const BoxDecoration(
-            color: Color.fromARGB(65, 0, 0, 0),
+            color: AppConstants.buttonGreyColor,
           // gradient: LinearGradient(
           //     begin: Alignment.topCenter,
           //     end: Alignment.bottomCenter,
@@ -509,15 +479,17 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
           //     ]),
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
-        child: Text (title),
+        child: Text (title, textAlign: TextAlign.center, style: TextStyle(
+          fontSize: fontSize,
+        ),),
       ),
     );
   }
 
-  Widget gradientButton_old(String title, Function() action){
+  Widget gradientButtonOld(String title, Function() action){
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 4.0,
         minimumSize: const Size(15.0, 15.0),
         padding: const EdgeInsets.all(0.0),
@@ -526,9 +498,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
         action();
       },
       child: Ink(
-        padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+        padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
         height: 35,
-        child: Text (title),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -545,6 +516,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
               ]),
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
+        child: Text (title),
       ),
     );
   }
@@ -567,7 +539,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     // makerColorMiddleRight = enabledMarkerColor;
     // makerColorBottomCenter = enabledMarkerColor;
 
-    markersDataObj = new MarkersDataObj();
+    markersDataObj = MarkersDataObj();
 
     markersDataObj.markerTopLeft = true;
     markersDataObj.markerTopCenter = true;
@@ -583,13 +555,13 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   }
 
   Widget markerWidget(bool isMarkerEnabled) {
-    Color markerColor = enabledMarkerColor;
+    //Color markerColor = enabledMarkerColor;
     double opacity = 1.0;
     if (isMarkerEnabled) {
-      markerColor = enabledMarkerColor;
+      //markerColor = enabledMarkerColor;
       opacity = 1.0;
     } else {
-      markerColor = disabledMarkerColor;
+      //markerColor = disabledMarkerColor;
       opacity = 0.25;
     }
     return Container(
