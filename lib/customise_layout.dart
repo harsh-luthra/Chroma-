@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:flutter/material.dart';
@@ -263,7 +264,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                       SizedBox(
                         height: screenHeight! * 0.015,
                       ),
-                      Text(
+                      AutoSizeText(
                         "Hold markers for 2 seconds to toggle visibility",
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -272,11 +273,12 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             fontSize: fontSize,
                             fontWeight: FontWeight.w500,
                             height: 1),
+                        maxLines: 1,
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      Text(
+                      AutoSizeText(
                         "(Low opacity markers wont be visible at launch)",
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -286,6 +288,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             letterSpacing: 0,
                             fontWeight: FontWeight.w500,
                             height: 1),
+                        maxLines: 1,
                       ),
                     ],
                   ),
