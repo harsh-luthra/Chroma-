@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CustomiseLayout extends StatefulWidget {
-  const CustomiseLayout({Key? key}) : super(key: key);
+class CustomiseLayoutBkup extends StatefulWidget {
+  const CustomiseLayoutBkup({Key? key}) : super(key: key);
 
   @override
-  State<CustomiseLayout> createState() => CustomiseLayoutState();
+  State<CustomiseLayoutBkup> createState() => CustomiseLayoutBkupState();
 }
 
-class CustomiseLayoutState extends State<CustomiseLayout> {
+class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
   // create some values
   double? screenWidth;
   double? screenHeight;
@@ -293,311 +293,156 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
               ),
 
               // SLIDERS
-
+              
+              // Marker Margin Slider
               Positioned(
-                bottom: screenHeight! * 0.2,
-                child: Column(
-                  children: [
-
-                    // Marker Margin Slider
-                    Container(
-                      decoration: BoxDecoration(
-                          color: AppConstants.containerGreyColor,
-                          border: Border.all(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: const BorderRadius.all(Radius.circular(20))),
-                      height: screenHeight! * 0.05,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: screenWidth! * 0.04),
-                          Text(
-                            'Marker Position',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Proxima Nova',
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w500,
-                                height: 1),
-                          ),
-                          SizedBox(
-                            width: screenWidth! * 0.6,
-                            height: screenHeight! * 0.05,
-                            child: Slider(
-                              activeColor: AppConstants.sliderActiveColor,
-                              inactiveColor: AppConstants.sliderInActiveColor,
-                              value: _currentSliderValue,
-                              min: 0,
-                              max: 20,
-                              divisions: 20,
-                              label: _currentSliderValue.round().toString(),
-                              onChanged: (double value) {
-                                setState(() {
-                                  //print(value);
-                                  _currentSliderValue = value;
-                                  cornerMargin = _currentSliderValue / 100;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
+                bottom: screenHeight! * 0.365,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: AppConstants.containerGreyColor,
+                      border: Border.all(
+                        color: Colors.transparent,
                       ),
-                    ),
-
-                    SizedBox(height: screenHeight! * 0.03,),
-
-                    // Marker Size Slider
-                    Container(
-                      transformAlignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        // boxShadow: const [
-                        //   BoxShadow(
-                        //       color: Color.fromRGBO(0, 0, 0, 0.5),
-                        //       offset: Offset(0, 6),
-                        //       blurRadius: 4)
-                        // ],
-                        // gradient: const LinearGradient(
-                        //   begin: Alignment.topCenter,
-                        //   end: Alignment.bottomCenter,
-                        //   colors: [
-                        //     Color.fromRGBO(127, 127, 127, 1),
-                        //     Color.fromRGBO(0, 0, 0, 0.29),
-                        //   ],
-                        // ),
-                          color: AppConstants.containerGreyColor,
-                          border: Border.all(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: const BorderRadius.all(Radius.circular(20))),
-                      height: screenHeight! * 0.05,
-                      child: Row(
-                        children: [
-                          SizedBox(width: screenWidth! * 0.04),
-                          Text(
-                            'Marker Size',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Proxima Nova',
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w500,
-                                height: 1),
-                          ),
-                          SizedBox(width: screenWidth! * 0.07),
-                          SizedBox(
-                            width: screenWidth! * 0.6,
-                            height: screenHeight! * 0.05,
-                            child: Slider(
-                              activeColor: AppConstants.sliderActiveColor,
-                              inactiveColor: AppConstants.sliderInActiveColor,
-                              value: _secondSliderValue,
-                              min: 20,
-                              max: 60,
-                              divisions: 10,
-                              label: _secondSliderValue.round().toString(),
-                              onChanged: (double value) {
-                                setState(() {
-                                  //print(value);
-                                  _secondSliderValue = value;
-                                  markerSize = _secondSliderValue * (screenWidth! * 0.0025);
-                                });
-                              },
-                            ),
-                          ),
-                        ],
+                      borderRadius: const BorderRadius.all(Radius.circular(20))),
+                  height: screenHeight! * 0.05,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(width: screenWidth! * 0.04),
+                      Text(
+                        'Marker Position',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Proxima Nova',
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                            height: 1),
                       ),
-                    ),
-
-                    SizedBox(height: screenHeight! * 0.015,),
-
-                    // Buttons
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        //Reset Button
-                        gradientButton("Reset",(){
-                          setState(() {
-                            HapticFeedback.mediumImpact();
-                            resetSettings();
-                          });
-                        }),
-                        //Save Button
-                        SizedBox(width: screenWidth! * 0.02),
-                        gradientButton("Save",(){
-                          setState(() {
-                            HapticFeedback.mediumImpact();
-                            saveData();
-                          });
-                        }),
-                        //Exit Button
-                        SizedBox(width: screenWidth! * 0.02),
-                        gradientButton("Exit",(){
-                          setState(() {
-                            HapticFeedback.mediumImpact();
-                            Navigator.pop(context);
-                          });
-                        }),
-                      ],
-                    ),
-
-                  ],
+                      SizedBox(
+                        width: screenWidth! * 0.6,
+                        height: screenHeight! * 0.05,
+                        child: Slider(
+                          activeColor: AppConstants.sliderActiveColor,
+                          inactiveColor: AppConstants.sliderInActiveColor,
+                          value: _currentSliderValue,
+                          min: 0,
+                          max: 20,
+                          divisions: 20,
+                          label: _currentSliderValue.round().toString(),
+                          onChanged: (double value) {
+                            setState(() {
+                              //print(value);
+                              _currentSliderValue = value;
+                              cornerMargin = _currentSliderValue / 100;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
-              // // Marker Margin Slider
-              // Positioned(
-              //   bottom: screenHeight! * 0.365,
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //         color: AppConstants.containerGreyColor,
-              //         border: Border.all(
-              //           color: Colors.transparent,
-              //         ),
-              //         borderRadius: const BorderRadius.all(Radius.circular(20))),
-              //     height: screenHeight! * 0.05,
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         SizedBox(width: screenWidth! * 0.04),
-              //         Text(
-              //           'Marker Position',
-              //           textAlign: TextAlign.left,
-              //           style: TextStyle(
-              //               color: Colors.white,
-              //               fontFamily: 'Proxima Nova',
-              //               fontSize: fontSize,
-              //               fontWeight: FontWeight.w500,
-              //               height: 1),
-              //         ),
-              //         SizedBox(
-              //           width: screenWidth! * 0.6,
-              //           height: screenHeight! * 0.05,
-              //           child: Slider(
-              //             activeColor: AppConstants.sliderActiveColor,
-              //             inactiveColor: AppConstants.sliderInActiveColor,
-              //             value: _currentSliderValue,
-              //             min: 0,
-              //             max: 20,
-              //             divisions: 20,
-              //             label: _currentSliderValue.round().toString(),
-              //             onChanged: (double value) {
-              //               setState(() {
-              //                 //print(value);
-              //                 _currentSliderValue = value;
-              //                 cornerMargin = _currentSliderValue / 100;
-              //               });
-              //             },
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-
               // Marker Size Slider
-              // Positioned(
-              //   bottom: screenHeight! * 0.29,
-              //   child: Container(
-              //     transformAlignment: Alignment.center,
-              //     decoration: BoxDecoration(
-              //       // boxShadow: const [
-              //       //   BoxShadow(
-              //       //       color: Color.fromRGBO(0, 0, 0, 0.5),
-              //       //       offset: Offset(0, 6),
-              //       //       blurRadius: 4)
-              //       // ],
-              //       // gradient: const LinearGradient(
-              //       //   begin: Alignment.topCenter,
-              //       //   end: Alignment.bottomCenter,
-              //       //   colors: [
-              //       //     Color.fromRGBO(127, 127, 127, 1),
-              //       //     Color.fromRGBO(0, 0, 0, 0.29),
-              //       //   ],
-              //       // ),
-              //         color: AppConstants.containerGreyColor,
-              //         border: Border.all(
-              //           color: Colors.transparent,
-              //         ),
-              //         borderRadius: const BorderRadius.all(Radius.circular(20))),
-              //     height: screenHeight! * 0.05,
-              //     child: Row(
-              //       children: [
-              //         SizedBox(width: screenWidth! * 0.04),
-              //         Text(
-              //           'Marker Size',
-              //           style: TextStyle(
-              //               color: Colors.white,
-              //               fontFamily: 'Proxima Nova',
-              //               fontSize: fontSize,
-              //               fontWeight: FontWeight.w500,
-              //               height: 1),
-              //         ),
-              //         SizedBox(width: screenWidth! * 0.07),
-              //         SizedBox(
-              //           width: screenWidth! * 0.6,
-              //           height: screenHeight! * 0.05,
-              //           child: Slider(
-              //             activeColor: AppConstants.sliderActiveColor,
-              //             inactiveColor: AppConstants.sliderInActiveColor,
-              //             value: _secondSliderValue,
-              //             min: 20,
-              //             max: 60,
-              //             divisions: 10,
-              //             label: _secondSliderValue.round().toString(),
-              //             onChanged: (double value) {
-              //               setState(() {
-              //                 //print(value);
-              //                 _secondSliderValue = value;
-              //                 markerSize = _secondSliderValue * (screenWidth! * 0.0025);
-              //               });
-              //             },
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              Positioned(
+                bottom: screenHeight! * 0.29,
+                child: Container(
+                  transformAlignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //       color: Color.fromRGBO(0, 0, 0, 0.5),
+                    //       offset: Offset(0, 6),
+                    //       blurRadius: 4)
+                    // ],
+                    // gradient: const LinearGradient(
+                    //   begin: Alignment.topCenter,
+                    //   end: Alignment.bottomCenter,
+                    //   colors: [
+                    //     Color.fromRGBO(127, 127, 127, 1),
+                    //     Color.fromRGBO(0, 0, 0, 0.29),
+                    //   ],
+                    // ),
+                      color: AppConstants.containerGreyColor,
+                      border: Border.all(
+                        color: Colors.transparent,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(20))),
+                  height: screenHeight! * 0.05,
+                  child: Row(
+                    children: [
+                      SizedBox(width: screenWidth! * 0.04),
+                      Text(
+                        'Marker Size',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Proxima Nova',
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                            height: 1),
+                      ),
+                      SizedBox(width: screenWidth! * 0.07),
+                      SizedBox(
+                        width: screenWidth! * 0.6,
+                        height: screenHeight! * 0.05,
+                        child: Slider(
+                          activeColor: AppConstants.sliderActiveColor,
+                          inactiveColor: AppConstants.sliderInActiveColor,
+                          value: _secondSliderValue,
+                          min: 20,
+                          max: 60,
+                          divisions: 10,
+                          label: _secondSliderValue.round().toString(),
+                          onChanged: (double value) {
+                            setState(() {
+                              //print(value);
+                              _secondSliderValue = value;
+                              markerSize = _secondSliderValue * (screenWidth! * 0.0025);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               // Buttons
-              // Positioned(
-              //   bottom: screenHeight! * 0.21,
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     mainAxisSize: MainAxisSize.max,
-              //     children: [
-              //       //Reset Button
-              //       gradientButton("Reset",(){
-              //         setState(() {
-              //           HapticFeedback.mediumImpact();
-              //           resetSettings();
-              //         });
-              //       }),
-              //       //Save Button
-              //       SizedBox(width: screenWidth! * 0.02),
-              //       gradientButton("Save",(){
-              //         setState(() {
-              //           HapticFeedback.mediumImpact();
-              //           saveData();
-              //         });
-              //       }),
-              //       //Exit Button
-              //       SizedBox(width: screenWidth! * 0.02),
-              //       gradientButton("Exit",(){
-              //         setState(() {
-              //           HapticFeedback.mediumImpact();
-              //           Navigator.pop(context);
-              //         });
-              //       }),
-              //     ],
-              //   ),
-              // ),
-
+              Positioned(
+                bottom: screenHeight! * 0.21,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //Reset Button
+                    gradientButton("Reset",(){
+                      setState(() {
+                        HapticFeedback.mediumImpact();
+                        resetSettings();
+                      });
+                    }),
+                    //Save Button
+                    SizedBox(width: screenWidth! * 0.02),
+                    gradientButton("Save",(){
+                      setState(() {
+                        HapticFeedback.mediumImpact();
+                        saveData();
+                      });
+                    }),
+                    //Exit Button
+                    SizedBox(width: screenWidth! * 0.02),
+                    gradientButton("Exit",(){
+                      setState(() {
+                        HapticFeedback.mediumImpact();
+                        Navigator.pop(context);
+                      });
+                    }),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
