@@ -211,7 +211,7 @@ class MainScreenState extends State<MainScreen> {
             ),
           ),
           Positioned(
-            top: screenHeight! * 0.57,
+            top: screenHeight! * 0.4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -239,18 +239,28 @@ class MainScreenState extends State<MainScreen> {
                       height: 1.2),
                 ),
                 SizedBox(
-                  height: screenHeight! * 0.075,
+                  height: screenHeight! * 0.245,
                 ),
+              ],
+            ),
+          ),
 
-                progressBarSized(1),
+          Positioned(
+            bottom: screenHeight! * 0.17,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                   progressBarSized(1),
                 SizedBox(
                   height: screenHeight! * 0.01,
                 ),
                 bottomBackButton(),
-
               ],
             ),
           ),
+
         ],
       );
     } else {
