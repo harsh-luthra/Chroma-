@@ -96,17 +96,15 @@ class SelectColorState extends State<SelectColor> {
                       fontWeight: FontWeight.w500,
                       height: 1),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: screenHeight! * 0.025),
                 // Color Columns
                 SelectWidget(),
                 //colorPickerGroup(),
                 //markerPickerGroup(),
-                const SizedBox(height: 20),
+                SizedBox(height: screenHeight! * 0.02),
                 // Progress Bar
                 progressBarSized(progressSize),
-                const SizedBox(height: 5),
+                SizedBox(height: screenHeight! * 0.01),
                 // Progress Text
                 bottomBackButton(),
               ],
@@ -163,7 +161,7 @@ class SelectColorState extends State<SelectColor> {
   }
 
   Widget colorPickerGroup() {
-    return Container(
+    return SizedBox(
       width: screenWidth,
       height: screenHeight! *0.275,
       child: Column(
@@ -173,22 +171,22 @@ class SelectColorState extends State<SelectColor> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               colorPaletteBox(AppConstants.green_clr, "Green"),
-              const SizedBox(
-                width: 10,
+              SizedBox(
+                width: screenWidth! * 0.03,
               ),
               colorPaletteBox(AppConstants.blue_clr, "Blue"),
             ],
           ),
-          const SizedBox(
-            height: 10,
+          SizedBox(
+            height: screenHeight! * 0.0175,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               colorPaletteBox(AppConstants.black_clr, "Black"),
-              const SizedBox(
-                width: 10,
+              SizedBox(
+                width: screenWidth! * 0.03,
               ),
               colorPaletteBox(currentColor, "Custom"),
             ],
@@ -209,14 +207,11 @@ class SelectColorState extends State<SelectColor> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               markerPaletteBox(AppConstants.plusImg, "Cross"),
-              const SizedBox(
-                width: 10,
+              SizedBox(
+                width: screenWidth! * 0.03,
               ),
               markerPaletteBox(AppConstants.triangleImg, "Triangle"),
             ],
-          ),
-          const SizedBox(
-            height: 10,
           ),
          // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
         ],
@@ -235,14 +230,11 @@ class SelectColorState extends State<SelectColor> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               layoutPaletteBox(AppConstants.plusImg, "Standard"),
-              const SizedBox(
-                width: 10,
+               SizedBox(
+                width: screenWidth! * 0.03,
               ),
               layoutPaletteBox(AppConstants.triangleImg, "Custom"),
             ],
-          ),
-          const SizedBox(
-            height: 10,
           ),
         ],
       ),
@@ -461,8 +453,8 @@ class SelectColorState extends State<SelectColor> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 8,
+          SizedBox(
+            height: screenHeight! * 0.01,
           ),
           Text(
             title,
@@ -526,8 +518,8 @@ class SelectColorState extends State<SelectColor> {
                   )),
             ],
           ),
-          const SizedBox(
-            height: 8,
+          SizedBox(
+            height: screenHeight! * 0.01,
           ),
           Text(
             title,
@@ -579,8 +571,8 @@ class SelectColorState extends State<SelectColor> {
               layoutCenterBox(title),
             ],
           ),
-          const SizedBox(
-            height: 8,
+          SizedBox(
+            height: screenHeight! * 0.01,
           ),
           Text(
             title,
@@ -591,9 +583,6 @@ class SelectColorState extends State<SelectColor> {
                 fontSize: fontSize,
                 fontWeight: FontWeight.normal,
                 height: 1),
-          ),
-          const SizedBox(
-            height: 4,
           ),
         ],
       ),
@@ -615,8 +604,8 @@ class SelectColorState extends State<SelectColor> {
           ));
     } else if (title == "Custom") {
       return Container(
-          width: innerCircleSize * 0.3,
-          height: innerCircleSize * 0.3,
+          width: screenHeight! * 0.035,
+          height: screenHeight! * 0.035,
           decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AppConstants.customImg, fit: BoxFit.contain),
@@ -675,7 +664,7 @@ class SelectColorState extends State<SelectColor> {
   }
 
   Widget bottomBackButton() {
-    double backButtonSize = 36;
+    double backButtonSize = screenWidth! * 0.1;
     if (showBack) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -694,8 +683,8 @@ class SelectColorState extends State<SelectColor> {
                       image: AppConstants.backImg, fit: BoxFit.fitWidth),
                 )),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+              width: screenWidth! * 0.02
           ),
           Text(
             '$progressInt of 4',
@@ -709,8 +698,8 @@ class SelectColorState extends State<SelectColor> {
                 fontWeight: FontWeight.normal,
                 height: 1),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+              width: screenWidth! * 0.01
           ),
           Container(
             alignment: Alignment.centerLeft,
@@ -734,8 +723,8 @@ class SelectColorState extends State<SelectColor> {
               height: backButtonSize,
             ),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+              width: screenWidth! * 0.09
           ),
           Text(
             '$progressInt of 4',
@@ -749,8 +738,8 @@ class SelectColorState extends State<SelectColor> {
                 fontWeight: FontWeight.normal,
                 height: 1),
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+            width: screenWidth! * 0.09
           ),
           Container(
             alignment: Alignment.centerLeft,
