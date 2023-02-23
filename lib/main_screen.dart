@@ -116,7 +116,6 @@ class MainScreenState extends State<MainScreen> {
                   child: markerWidget(markersDataObj.markerTopRight),
                 ),
 
-
                 // MIDDLE LEFT
                 Positioned(
                   left: cornerSpace,
@@ -125,8 +124,8 @@ class MainScreenState extends State<MainScreen> {
 
                 // MIDDLE CENTER
                 Positioned(
-                  top: screenHeight! * 0.435,
-                  bottom: screenHeight! * 0.435,
+                  top: screenHeight! * 0.4,
+                  bottom: screenHeight! * 0.4,
                   child: markerWidget(markersDataObj.markerCenter),
                 ),
 
@@ -135,7 +134,6 @@ class MainScreenState extends State<MainScreen> {
                   right: cornerSpace,
                   child: markerWidget(markersDataObj.markerMiddleRight),
                 ),
-
 
                 // BOTTOM Left
                 Positioned(
@@ -760,7 +758,7 @@ class MainScreenState extends State<MainScreen> {
     final String? loadedSize = prefs.getString('markerSize');
     print("Loaded Marker Size $loadedSize");
     if (loadedSize != null) {
-      markerSize = double.parse(loadedSize);
+      markerSize = double.parse(loadedSize) * (screenWidth! * 0.0025);
     }else{
       markerSize = 40;
     }

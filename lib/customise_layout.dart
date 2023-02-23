@@ -842,9 +842,9 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     final String? loadedSize = prefs.getString('markerSize');
     print("Loaded Marker Size $loadedSize");
     if (loadedSize != null) {
-      markerSize = double.parse(loadedSize);
+      _secondSliderValue = double.parse(loadedSize);
     } else {
-      markerSize = 40;
+      _secondSliderValue = 40;
     }
 
     final String? markerDataobjString = prefs.getString('markerDataobjString');
@@ -861,8 +861,9 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       selectedColor = selectedColor;
       selectedMarker = selectedMarker;
       cornerMargin = cornerMargin;
-      markerSize = markerSize;
-      _secondSliderValue = markerSize;
+      //markerSize = markerSize;
+      _secondSliderValue = _secondSliderValue;
+      markerSize = _secondSliderValue * (screenWidth! * 0.0025);
       _currentSliderValue = cornerMargin * 100;
       markersDataObj = markersDataObj;
       setStateOfMarkersFromLoadedData();
@@ -875,7 +876,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
         "markerDataobjString", json.encode(markersDataObj.toJson()));
     await prefs.setString('selectedLayout', "2");
     await prefs.setString('cornerMargin', cornerMargin.toString());
-    await prefs.setString('markerSize', markerSize.toString());
+    await prefs.setString('markerSize', _secondSliderValue.toString());
     Future.delayed(const Duration(milliseconds: 500), () {
       // Navigator.push(
       //   context,
