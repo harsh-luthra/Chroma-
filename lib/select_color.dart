@@ -208,7 +208,18 @@ class SelectColorState extends State<SelectColor> {
         const SizedBox(
           height: 10,
         ),
-        SizedBox(height: (screenHeight! * 0.09) + 10 + 8)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            markerPaletteBox_fake(),
+            const SizedBox(
+              width: 10,
+            ),
+            markerPaletteBox_fake(),
+          ],
+        ),
+       // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
       ],
     );
   }
@@ -338,7 +349,7 @@ class SelectColorState extends State<SelectColor> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Pick a color'),
+          title: const Text('Pick a color', style: TextStyle(fontSize: 15),),
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: pickerColor,
@@ -347,7 +358,12 @@ class SelectColorState extends State<SelectColor> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: const Text('Got it'),
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(65, 0, 0, 0),
+                elevation: 0.0,
+                minimumSize: const Size(60.0, 35.0),
+                padding: const EdgeInsets.all(0.0),
+              ),
               onPressed: () {
                 setState(() {
                   selectedColor = pickerColor;
@@ -356,13 +372,31 @@ class SelectColorState extends State<SelectColor> {
                 });
                 Navigator.of(context).pop();
               },
+              child: const Text('Done', style: TextStyle(
+                  color: Color.fromRGBO(69, 69, 69, 1),
+                  fontFamily: 'Inter',
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  height: 1),),
             ),
+
             ElevatedButton(
-              child: const Text('Cancel'),
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(65, 0, 0, 0),
+                elevation: 0.0,
+                minimumSize: const Size(70.0, 35.0),
+                padding: const EdgeInsets.all(0.0),
+              ),
               onPressed: () {
                 setState(() => currentColor = pickerColor);
                 Navigator.of(context).pop();
               },
+              child: const Text('Cancel', style: TextStyle(
+                      color: Color.fromRGBO(69, 69, 69, 1),
+                      fontFamily: 'Inter',
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                      height: 1),),
             ),
           ],
         );
@@ -433,7 +467,7 @@ class SelectColorState extends State<SelectColor> {
             style: const TextStyle(
                 color: Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 10,
+                fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),
           )
@@ -484,7 +518,7 @@ class SelectColorState extends State<SelectColor> {
                   height: 20,
                   decoration: BoxDecoration(
                     image:
-                        DecorationImage(image: showImage, fit: BoxFit.fitWidth),
+                    DecorationImage(image: showImage, fit: BoxFit.fitWidth),
                   )),
             ],
           ),
@@ -497,7 +531,56 @@ class SelectColorState extends State<SelectColor> {
             style: const TextStyle(
                 color: Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 10,
+                fontSize: 15,
+                fontWeight: FontWeight.normal,
+                height: 1),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget markerPaletteBox_fake() {
+    double? outerCircleCorner = 15;
+    double? outerCircleSize = screenHeight! * 0.09;
+    //double? innerCircleSize = outerCircleSize * 0.34;
+    return GestureDetector(
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: outerCircleSize,
+                height: outerCircleSize,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(outerCircleCorner),
+                    topRight: Radius.circular(outerCircleCorner),
+                    bottomLeft: Radius.circular(outerCircleCorner),
+                    bottomRight: Radius.circular(outerCircleCorner),
+                  ),
+                  color: Colors.transparent,
+                ),
+              ),
+              Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+
+                  )),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(
+            "",
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+                color: Color.fromRGBO(69, 69, 69, 1),
+                fontFamily: ' ',
+                fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),
           )
@@ -550,10 +633,13 @@ class SelectColorState extends State<SelectColor> {
             style: const TextStyle(
                 color: Color.fromRGBO(69, 69, 69, 1),
                 fontFamily: 'Inter',
-                fontSize: 10,
+                fontSize: 15,
                 fontWeight: FontWeight.normal,
                 height: 1),
-          )
+          ),
+          const SizedBox(
+            height: 4,
+          ),
         ],
       ),
     );

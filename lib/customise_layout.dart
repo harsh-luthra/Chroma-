@@ -338,7 +338,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                     children: [
                       const SizedBox(width: 12),
                       const Text(
-                        'Position',
+                        'Marker Position',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             color: Colors.white,
@@ -347,7 +347,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             fontWeight: FontWeight.w500,
                             height: 1),
                       ),
-                      const SizedBox(width: 25),
+                      const SizedBox(width: 0),
                       SizedBox(
                         width: screenWidth! * 0.6,
                         height: 20,
@@ -411,6 +411,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                             fontWeight: FontWeight.w500,
                             height: 1),
                       ),
+                      const SizedBox(width: 25),
                       SizedBox(
                         width: screenWidth! * 0.6,
                         height: 20,
