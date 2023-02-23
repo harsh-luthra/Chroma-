@@ -460,7 +460,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       },
       child: Ink(
         padding: const EdgeInsets.only(top: 8, left: 15, right: 15,bottom: 0),
-        height: screenHeight! * 0.054,
+        height: 32,
         width: screenWidth! * 0.185,
         decoration: const BoxDecoration(
             color: AppConstants.buttonGreyColor,
