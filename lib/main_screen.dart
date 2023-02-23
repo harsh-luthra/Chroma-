@@ -211,7 +211,7 @@ class MainScreenState extends State<MainScreen> {
             ),
           ),
           Positioned(
-            top: screenHeight! * 0.575,
+            top: screenHeight! * 0.57,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
