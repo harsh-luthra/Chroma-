@@ -161,7 +161,7 @@ class SelectColorState extends State<SelectColor> {
   Widget colorPickerGroup() {
     return SizedBox(
       width: screenWidth,
-      height: screenHeight! *0.275,
+      height: screenHeight! *0.28,
       child: Column(
         children: [
           Row(
@@ -197,7 +197,7 @@ class SelectColorState extends State<SelectColor> {
   Widget markerPickerGroup() {
     return SizedBox(
       width: screenWidth,
-      height: screenHeight! *0.275,
+      height: screenHeight! *0.28,
       child: Column(
         children: [
           Row(
@@ -220,7 +220,7 @@ class SelectColorState extends State<SelectColor> {
   Widget layoutPickerGroup() {
     return SizedBox(
       width: screenWidth,
-      height: screenHeight! *0.275,
+      height: screenHeight! *0.28,
       child: Column(
         children: [
           Row(
