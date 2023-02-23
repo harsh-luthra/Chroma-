@@ -17,11 +17,11 @@ class SelectColor extends StatefulWidget {
 }
 
 class SelectColorState extends State<SelectColor> {
-  // create some values
+
   double? screenWidth;
   double? screenHeight;
   late final String? defaultColor = AppConstants.red_clr.toString();
-  late var prefrences;
+  late SharedPreferences prefrences;
 
   String selectTitle = "Select Color";
   double progressSize = 0.25;
@@ -39,7 +39,6 @@ class SelectColorState extends State<SelectColor> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadData();
   }
@@ -98,9 +97,8 @@ class SelectColorState extends State<SelectColor> {
                 ),
                 SizedBox(height: screenHeight! * 0.025),
                 // Color Columns
-                SelectWidget(),
-                //colorPickerGroup(),
-                //markerPickerGroup(),
+                selectWidget(),
+
                 SizedBox(height: screenHeight! * 0.02),
                 // Progress Bar
                 progressBarSized(progressSize),
@@ -115,7 +113,7 @@ class SelectColorState extends State<SelectColor> {
     );
   }
 
-  void RepeatTest(){
+  void repeatTest(){
     final periodicTimer = Timer.periodic(
       const Duration(seconds: 1),
           (timer) {
@@ -126,7 +124,7 @@ class SelectColorState extends State<SelectColor> {
     periodicTimer.cancel();
   }
 
-  void StopRecord(){
+  void stopRecord(){
 
   }
 
@@ -148,7 +146,7 @@ class SelectColorState extends State<SelectColor> {
     });
   }
 
-  Widget SelectWidget() {
+  Widget selectWidget() {
     if (progressInt == "1") {
       return colorPickerGroup();
     } else if (progressInt == "2") {
@@ -197,7 +195,7 @@ class SelectColorState extends State<SelectColor> {
   }
 
   Widget markerPickerGroup() {
-    return Container(
+    return SizedBox(
       width: screenWidth,
       height: screenHeight! *0.275,
       child: Column(
@@ -220,7 +218,7 @@ class SelectColorState extends State<SelectColor> {
   }
 
   Widget layoutPickerGroup() {
-    return Container(
+    return SizedBox(
       width: screenWidth,
       height: screenHeight! *0.275,
       child: Column(
@@ -261,14 +259,14 @@ class SelectColorState extends State<SelectColor> {
     });
   }
 
-  void SelectColorView() async {
+  void selectColorView() async {
     selectTitle = "Select Color";
     progressInt = "1";
     progressSize = 0.25;
     showBack = false;
   }
 
-  void SelectMarkerView() async {
+  void selectMarkerView() async {
     selectTitle = "Select Marker";
     progressInt = "2";
     progressSize = 0.5;
@@ -277,7 +275,7 @@ class SelectColorState extends State<SelectColor> {
     await prefrences.setString('selectedColor', selectedColor.toString());
   }
 
-  void SelectLayout() async {
+  void selectLayout() async {
     selectTitle = "Select Layout";
     progressInt = "3";
     progressSize = 0.75;
@@ -315,11 +313,11 @@ class SelectColorState extends State<SelectColor> {
   Future<bool> _onWillPop() async {
     if (progressInt == "2") {
       setState(() {
-        SelectColorView();
+        selectColorView();
       });
     } else if (progressInt == "3") {
       setState(() {
-        SelectMarkerView();
+        selectMarkerView();
       });
     } else if (progressInt == "1") {
       return true; //<-- SEE HERE
@@ -330,11 +328,11 @@ class SelectColorState extends State<SelectColor> {
   void goBack() {
     if (progressInt == "2") {
       setState(() {
-        SelectColorView();
+        selectColorView();
       });
     } else if (progressInt == "3") {
       setState(() {
-        SelectMarkerView();
+        selectMarkerView();
       });
     }
   }
@@ -354,7 +352,7 @@ class SelectColorState extends State<SelectColor> {
           actions: <Widget>[
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(65, 0, 0, 0),
+                backgroundColor: AppConstants.buttonGreyColor,
                 elevation: 0.0,
                 minimumSize: const Size(60.0, 35.0),
                 padding: const EdgeInsets.all(0.0),
@@ -363,12 +361,12 @@ class SelectColorState extends State<SelectColor> {
                 setState(() {
                   selectedColor = pickerColor;
                   currentColor = pickerColor;
-                  SelectMarkerView();
+                  selectMarkerView();
                 });
                 Navigator.of(context).pop();
               },
               child: Text('Done', style: TextStyle(
-                  color: const Color.fromRGBO(69, 69, 69, 1),
+                  color: AppConstants.buttonTxtColor,
                   fontFamily: 'Inter',
                   fontSize: fontSize,
                   fontWeight: FontWeight.normal,
@@ -377,7 +375,7 @@ class SelectColorState extends State<SelectColor> {
 
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(65, 0, 0, 0),
+                backgroundColor: AppConstants.buttonGreyColor,
                 elevation: 0.0,
                 minimumSize: const Size(70.0, 35.0),
                 padding: const EdgeInsets.all(0.0),
@@ -387,7 +385,7 @@ class SelectColorState extends State<SelectColor> {
                 Navigator.of(context).pop();
               },
               child: Text('Cancel', style: TextStyle(
-                      color: Color.fromRGBO(69, 69, 69, 1),
+                      color: AppConstants.buttonTxtColor,
                       fontFamily: 'Inter',
                       fontSize: fontSize,
                       fontWeight: FontWeight.normal,
@@ -416,7 +414,7 @@ class SelectColorState extends State<SelectColor> {
         } else {
           setState(() {
             selectedColor = color;
-            SelectMarkerView();
+            selectMarkerView();
           });
         }
       },
@@ -460,7 +458,7 @@ class SelectColorState extends State<SelectColor> {
             title,
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: const Color.fromRGBO(69, 69, 69, 1),
+                color: AppConstants.buttonTxtColor,
                 fontFamily: 'Inter',
                 fontSize: fontSize,
                 // fontSize: 15,
@@ -482,12 +480,12 @@ class SelectColorState extends State<SelectColor> {
         if (title == "Cross") {
           setState(() {
             selectedMarker = 1;
-            SelectLayout();
+            selectLayout();
           });
         } else if (title == "Triangle") {
           setState(() {
             selectedMarker = 2;
-            SelectLayout();
+            selectLayout();
           });
         }
       },
@@ -539,7 +537,6 @@ class SelectColorState extends State<SelectColor> {
   Widget layoutPaletteBox(AssetImage showImage, String title) {
     double? outerCircleCorner = 15;
     double? outerCircleSize = screenHeight! * 0.09;
-    //double? innerCircleSize = outerCircleSize * 1;
     return GestureDetector(
       onTap: () {
         HapticFeedback.mediumImpact();

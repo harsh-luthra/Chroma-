@@ -13,6 +13,9 @@ class AppConstants{
   static const Color black_clr = Color.fromRGBO(0, 0, 0, 1);
   static const Color red_clr = Color.fromRGBO(252, 3, 3, 1);
 
+  static const Color buttonGreyColor = Color.fromARGB(65, 0, 0, 0);
+  static const Color buttonTxtColor = Color.fromRGBO(69, 69, 69, 1);
+
   static const AssetImage plusImg = AssetImage('assets/images/plusImg.png');
   static const AssetImage triangleImg = AssetImage('assets/images/triangleImg.png');
 
