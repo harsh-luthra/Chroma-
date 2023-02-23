@@ -236,6 +236,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
               Positioned(
                 bottom: screenHeight! * 0.56,
                 child: Container(
+                  padding: EdgeInsets.only(left: 10,right: 10),
                   decoration: BoxDecoration(
                       color: AppConstants.containerGreyColor,
                       border: Border.all(
