@@ -448,10 +448,10 @@ class SelectColorState extends State<SelectColor> {
                 height: innerCircleSize,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(38.84709167480469),
-                    topRight: Radius.circular(38.84709167480469),
-                    bottomLeft: Radius.circular(38.84709167480469),
-                    bottomRight: Radius.circular(38.84709167480469),
+                    topLeft: Radius.circular(39),
+                    topRight: Radius.circular(39),
+                    bottomLeft: Radius.circular(39),
+                    bottomRight: Radius.circular(39),
                   ),
                   color: color,
                 ),
@@ -514,8 +514,8 @@ class SelectColorState extends State<SelectColor> {
                 ),
               ),
               Container(
-                  width: 20,
-                  height: 20,
+                  width: screenHeight! * 0.034,
+                  height: screenHeight! * 0.034,
                   decoration: BoxDecoration(
                     image:
                     DecorationImage(image: showImage, fit: BoxFit.fitWidth),
