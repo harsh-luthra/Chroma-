@@ -1,4 +1,4 @@
-package com.example.chroma_plus_flutter
+package com.scissorfilms.chromaplus
 
 import io.flutter.embedding.android.FlutterActivity
 
