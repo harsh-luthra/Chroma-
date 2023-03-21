@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 
 class AppConstants{
 
+  static const int HoldTime = 1500;
+
   static const Color Bg_Color = Color.fromRGBO(32, 35, 32, 1);
   static const Color Alt_Color = Color.fromRGBO(111, 111, 111, 1);
   static const Color txt_color_1 = Color.fromRGBO(111, 111, 111, 1);

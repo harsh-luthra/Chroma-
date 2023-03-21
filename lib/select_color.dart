@@ -6,6 +6,7 @@ import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:fullscreen/fullscreen.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,6 +41,7 @@ class SelectColorState extends State<SelectColor> {
   @override
   void initState() {
     super.initState();
+    exitFullScreen();
     loadData();
   }
 
@@ -282,6 +284,10 @@ class SelectColorState extends State<SelectColor> {
     showBack = true;
     print("Saved Marker $selectedMarker");
     await prefrences.setString('selectedMarker', selectedMarker.toString());
+  }
+
+  void exitFullScreen()async{
+    await FullScreen.exitFullScreen();
   }
 
   void goToMain() async {
@@ -663,86 +669,133 @@ class SelectColorState extends State<SelectColor> {
   Widget bottomBackButton() {
     double backButtonSize = screenWidth! * 0.1;
     if (showBack) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Column(
         children: [
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.mediumImpact();
-              goBack();
-            },
-            child: Container(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    width: backButtonSize,
+                    height: backButtonSize,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AppConstants.backImg, fit: BoxFit.fitWidth, invertColors:  true),
+                    )),
+              ),
+              SizedBox(
+                  width: screenWidth! * 0.035
+              ),
+              SizedBox(
+                width: screenWidth! * 0.15,
+                child: Text(
+                  '$progressInt of 4',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color: const Color.fromRGBO(105, 105, 105, 1),
+                      fontFamily: 'Inter',
+                      fontSize: fontSize,
+                      letterSpacing:
+                          2 /*percentages not used in flutter. defaulting to zero*/,
+                      fontWeight: FontWeight.normal,
+                      height: 1),
+                ),
+              ),
+              SizedBox(
+                  width: screenWidth! * 0.035
+              ),
+              Container(
                 alignment: Alignment.centerLeft,
                 width: backButtonSize,
                 height: backButtonSize,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AppConstants.backImg, fit: BoxFit.fitWidth),
-                )),
+              ),
+            ],
           ),
-          SizedBox(
-              width: screenWidth! * 0.02
-          ),
-          Text(
-            '$progressInt of 4',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: const Color.fromRGBO(105, 105, 105, 1),
-                fontFamily: 'Inter',
-                fontSize: fontSize,
-                letterSpacing:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Back',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
                     2 /*percentages not used in flutter. defaulting to zero*/,
-                fontWeight: FontWeight.normal,
-                height: 1),
-          ),
-          SizedBox(
-              width: screenWidth! * 0.01
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            width: backButtonSize,
-            height: backButtonSize,
-          ),
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.31),
+            ],
+          )
         ],
       );
     } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Column(
         children: [
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.mediumImpact();
-              goBack();
-            },
-            child: Container(
-              alignment: Alignment.centerLeft,
-              width: backButtonSize,
-              height: backButtonSize,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  width: backButtonSize,
+                  height: backButtonSize,
+                ),
+              ),
+              SizedBox(
+                  width: screenWidth! * 0.09
+              ),
+              Text(
+                '$progressInt of 4',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                        2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(
+                width: screenWidth! * 0.09
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                width: backButtonSize,
+                height: backButtonSize,
+              ),
+            ],
           ),
-          SizedBox(
-              width: screenWidth! * 0.09
-          ),
-          Text(
-            '$progressInt of 4',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: const Color.fromRGBO(105, 105, 105, 1),
-                fontFamily: 'Inter',
-                fontSize: fontSize,
-                letterSpacing:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                ' ',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
                     2 /*percentages not used in flutter. defaulting to zero*/,
-                fontWeight: FontWeight.normal,
-                height: 1),
-          ),
-          SizedBox(
-            width: screenWidth! * 0.09
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            width: backButtonSize,
-            height: backButtonSize,
-          ),
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.31),
+            ],
+          )
         ],
       );
     }

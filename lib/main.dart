@@ -6,7 +6,6 @@
 
 import 'dart:async';
 
-import 'package:chroma_plus_flutter/Sample/UndoRedoTest.dart';
 import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:chroma_plus_flutter/select_color.dart';
@@ -14,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:wakelock/wakelock.dart';
 
-import 'Data_List.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,12 +30,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: SelectColor(),
+      home: const SelectColor(),
       //home: const SelectColor(),
       routes: <String, WidgetBuilder> {
-        '/selectColor': (BuildContext context) => SelectColor(),
-        '/mainScreen' : (BuildContext context) =>  MainScreen(),
-        '/customiseLayout' : (BuildContext context) =>  CustomiseLayout(),
+        '/selectColor': (BuildContext context) => const SelectColor(),
+        '/mainScreen' : (BuildContext context) =>  const MainScreen(),
+        '/customiseLayout' : (BuildContext context) =>  const CustomiseLayout(),
       },
       //home: const MyHomePage(),
     );
@@ -88,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: BoxDecoration(
                 border: Border.all(width: 1.0, color: Colors.black38),
               ),
-              child: SizedBox(
+              child: const SizedBox(
                 height: _snakeRows * _snakeCellSize,
                 width: _snakeColumns * _snakeCellSize,
                 // child: Snake(

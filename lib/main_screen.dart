@@ -7,6 +7,8 @@ import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fullscreen/fullscreen.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_csv/to_csv.dart' as exportCSV;
@@ -57,19 +59,34 @@ class MainScreenState extends State<MainScreen> {
 
   double? fontSize = 15;
 
+  double brightnessSliderValue = 0.5;
+
   MarkersDataObj markersDataObj = new MarkersDataObj();
 
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
     super.initState();
+    StartState();
+    // loadData();
+    // listenAllSensors();
+    // brightnessSliderValue = currentBrightness as double;
+    // //print(Duration.microsecondsPerSecond ~/ FPS);
+    // setState(() {
+    //   showingThreeFingersMenu = true;
+    // });
+  }
+
+  void StartState()async{
     loadData();
     listenAllSensors();
+    brightnessSliderValue = await currentBrightness;
     //print(Duration.microsecondsPerSecond ~/ FPS);
-    setState(() {
+    setState((){
+      print("B: $brightnessSliderValue");
       showingThreeFingersMenu = true;
     });
-  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -77,89 +94,91 @@ class MainScreenState extends State<MainScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     fontSize = screenWidth! * 0.038;
     double cornerSpace = screenWidth! * cornerMargin;
-    return Scaffold(
-      backgroundColor: selectedColor,
-      body: GestureDetector(
-        onScaleStart: (de) {
-          fingersNowHold = de.pointerCount;
-          onThreeHold(de.pointerCount);
-        },
-        onScaleUpdate: (de) {
-          fingersNowHold = de.pointerCount;
-          if (de.pointerCount != 3) {
-            cancelHoldTimer();
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: selectedColor,
-          ),
-          child: SafeArea(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: selectedColor,
+        body: GestureDetector(
+          onScaleStart: (de) {
+            fingersNowHold = de.pointerCount;
+            onThreeHold(de.pointerCount);
+          },
+          onScaleUpdate: (de) {
+            fingersNowHold = de.pointerCount;
+            if (de.pointerCount != 3) {
+              cancelHoldTimer();
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: selectedColor,
+            ),
+            child: SafeArea(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // TOP LEFT
+                  Positioned(
+                    top: cornerSpace,
+                    left: cornerSpace,
+                    child: markerWidget(markersDataObj.markerTopLeft),
+                  ),
 
-                // TOP LEFT
-                Positioned(
-                  top: cornerSpace,
-                  left: cornerSpace,
-                  child: markerWidget(markersDataObj.markerTopLeft),
-                ),
+                  // TOP CENTER
+                  Positioned(
+                    top: cornerSpace,
+                    child: markerWidget(markersDataObj.markerTopCenter),
+                  ),
 
-                // TOP CENTER
-                Positioned(
-                  top: cornerSpace,
-                  child: markerWidget(markersDataObj.markerTopCenter),
-                ),
+                  // TOP Right
+                  Positioned(
+                    top: cornerSpace,
+                    right: cornerSpace,
+                    child: markerWidget(markersDataObj.markerTopRight),
+                  ),
 
-                // TOP Right
-                Positioned(
-                  top: cornerSpace,
-                  right: cornerSpace,
-                  child: markerWidget(markersDataObj.markerTopRight),
-                ),
+                  // MIDDLE LEFT
+                  Positioned(
+                    left: cornerSpace,
+                    child: markerWidget(markersDataObj.markerMiddleLeft),
+                  ),
 
-                // MIDDLE LEFT
-                Positioned(
-                  left: cornerSpace,
-                  child: markerWidget(markersDataObj.markerMiddleLeft),
-                ),
+                  // MIDDLE CENTER
+                  Positioned(
+                    top: screenHeight! * 0.4,
+                    bottom: screenHeight! * 0.4,
+                    child: markerWidget(markersDataObj.markerCenter),
+                  ),
 
-                // MIDDLE CENTER
-                Positioned(
-                  top: screenHeight! * 0.4,
-                  bottom: screenHeight! * 0.4,
-                  child: markerWidget(markersDataObj.markerCenter),
-                ),
+                  // MIDDLE RIGHT
+                  Positioned(
+                    right: cornerSpace,
+                    child: markerWidget(markersDataObj.markerMiddleRight),
+                  ),
 
-                // MIDDLE RIGHT
-                Positioned(
-                  right: cornerSpace,
-                  child: markerWidget(markersDataObj.markerMiddleRight),
-                ),
+                  // BOTTOM Left
+                  Positioned(
+                    bottom: cornerSpace,
+                    left: cornerSpace,
+                    child: markerWidget(markersDataObj.markerBottomLeft),
+                  ),
 
-                // BOTTOM Left
-                Positioned(
-                  bottom: cornerSpace,
-                  left: cornerSpace,
-                  child: markerWidget(markersDataObj.markerBottomLeft),
-                ),
+                  // BOTTOM CENTER
+                  Positioned(
+                    bottom: cornerSpace,
+                    child: markerWidget(markersDataObj.markerBottomCenter),
+                  ),
 
-                // BOTTOM CENTER
-                Positioned(
-                  bottom: cornerSpace,
-                  child: markerWidget(markersDataObj.markerBottomCenter),
-                ),
+                  // BOTTOM Right
+                  Positioned(
+                    bottom: cornerSpace,
+                    right: cornerSpace,
+                    child: markerWidget(markersDataObj.markerBottomRight),
+                  ),
 
-                // BOTTOM Right
-                Positioned(
-                  bottom: cornerSpace,
-                  right: cornerSpace,
-                  child: markerWidget(markersDataObj.markerBottomRight),
-                ),
-
-                fingersHoldMenu(),
-              ],
+                  fingersHoldMenu(),
+                ],
+              ),
             ),
           ),
         ),
@@ -168,7 +187,7 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Widget markerWidget(bool isMarkerEnabled) {
-    if(isMarkerEnabled){
+    if (isMarkerEnabled) {
       return Container(
         width: markerSize,
         height: markerSize,
@@ -182,10 +201,9 @@ class MainScreenState extends State<MainScreen> {
           ),
         ),
       );
-    }else{
+    } else {
       return Container();
     }
-
   }
 
   Widget fingersHoldMenu() {
@@ -197,7 +215,7 @@ class MainScreenState extends State<MainScreen> {
             color: const Color.fromARGB(190, 0, 0, 0),
           ),
           Positioned(
-            top: screenHeight! * 0.3,
+            top: screenHeight! * 0.15,
             child: Container(
               width: screenWidth! * 0.125,
               height: screenWidth! * 0.125,
@@ -211,7 +229,7 @@ class MainScreenState extends State<MainScreen> {
             ),
           ),
           Positioned(
-            top: screenHeight! * 0.4,
+            top: screenHeight! * 0.25,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -244,7 +262,10 @@ class MainScreenState extends State<MainScreen> {
               ],
             ),
           ),
-
+          Positioned(
+            bottom: screenHeight! * 0.31,
+            child: brightnessSlider(),
+          ),
           Positioned(
             bottom: screenHeight! * 0.17,
             child: Column(
@@ -252,7 +273,7 @@ class MainScreenState extends State<MainScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-                   progressBarSized(1),
+                progressBarSized(1),
                 SizedBox(
                   height: screenHeight! * 0.01,
                 ),
@@ -260,7 +281,6 @@ class MainScreenState extends State<MainScreen> {
               ],
             ),
           ),
-
         ],
       );
     } else {
@@ -268,7 +288,7 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget Gyroscope(){
+  Widget Gyroscope() {
     return Column(
       children: [
         const Text(
@@ -288,20 +308,21 @@ class MainScreenState extends State<MainScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 HapticFeedback.mediumImpact();
                 print("Pressed Record Button");
               },
-              child: buttonImg("Record", AppConstants.startRecordImg,
-                  screenWidth! * 0.2),
+              child: buttonImg(
+                  "Record", AppConstants.startRecordImg, screenWidth! * 0.2),
             ),
             SizedBox(width: screenWidth! * 0.06),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 HapticFeedback.mediumImpact();
                 print("Pressed Stop Button");
               },
-              child: buttonImg("Stop", AppConstants.stopRecordImg, screenWidth! * 0.2),
+              child: buttonImg(
+                  "Stop", AppConstants.stopRecordImg, screenWidth! * 0.2),
             ),
           ],
         ),
@@ -312,7 +333,7 @@ class MainScreenState extends State<MainScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 HapticFeedback.mediumImpact();
                 print("Pressed All Button");
                 All_Data_List();
@@ -324,7 +345,7 @@ class MainScreenState extends State<MainScreen> {
               width: screenWidth! * 0.17,
             ),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 HapticFeedback.mediumImpact();
                 print("Pressed Export Button");
               },
@@ -342,17 +363,25 @@ class MainScreenState extends State<MainScreen> {
 
   void All_Data_List() {
     Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return Data_List();
-            },
-          ),
-        );
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return Data_List();
+        },
+      ),
+    );
   }
 
-  void goBack() {
+  void goBack() async{
     Navigator.pop(context);
+    await FullScreen.exitFullScreen();
+  }
+
+  Future<bool> _onWillPop() async {
+    Navigator.pop(context);
+    return await FullScreen.exitFullScreen().then((value){
+      return false;
+    });
   }
 
   Widget buttonImg(String title, AssetImage assetImage, double size) {
@@ -437,89 +466,199 @@ class MainScreenState extends State<MainScreen> {
     ]);
   }
 
+  Widget brightnessSlider() {
+    // Brightness Slider
+    return Container(
+      decoration: BoxDecoration(
+          color: AppConstants.containerGreyColor,
+          border: Border.all(
+            color: Colors.transparent,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      height: screenHeight! * 0.09,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: screenWidth! * 0.04),
+          SizedBox(height: screenHeight! * 0.005),
+          Text(
+            'Brightness',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Proxima Nova',
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+                height: 1),
+          ),
+          SizedBox(height: screenHeight! * 0.0025),
+          SizedBox(
+            width: screenWidth! * 0.6,
+            height: screenHeight! * 0.05,
+            child: Slider(
+              activeColor: AppConstants.sliderActiveColor,
+              inactiveColor: AppConstants.sliderInActiveColor,
+              value: brightnessSliderValue,
+              min: 0.1,
+              max: 1.0,
+              divisions: 9,
+              label: (brightnessSliderValue * 100).toInt().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  setBrightness(value);
+                  brightnessSliderValue = value;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<double> get currentBrightness async {
+    try {
+      return await ScreenBrightness().current;
+    } catch (e) {
+      print(e);
+      throw 'Failed to get current brightness';
+    }
+  }
+
+  Future<void> setBrightness(double brightness) async {
+    try {
+      await ScreenBrightness().setScreenBrightness(brightness);
+    } catch (e) {
+      print(e);
+      throw 'Failed to set brightness';
+    }
+  }
+
   Widget bottomBackButton() {
     double backButtonSize = screenWidth! * 0.1;
     if (showBack) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Column(
         children: [
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.mediumImpact();
-              goBack();
-            },
-            child: Container(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    width: backButtonSize,
+                    height: backButtonSize,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AppConstants.backImg,
+                          fit: BoxFit.fitWidth,
+                          invertColors: true),
+                    )),
+              ),
+              SizedBox(width: screenWidth! * 0.035),
+              SizedBox(
+                width: screenWidth! * 0.15,
+                child: Text(
+                  '$progressInt of 4',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color: const Color.fromRGBO(105, 105, 105, 1),
+                      fontFamily: 'Inter',
+                      fontSize: fontSize,
+                      letterSpacing:
+                          2 /*percentages not used in flutter. defaulting to zero*/,
+                      fontWeight: FontWeight.normal,
+                      height: 1),
+                ),
+              ),
+              SizedBox(width: screenWidth! * 0.035),
+              Container(
                 alignment: Alignment.centerLeft,
                 width: backButtonSize,
                 height: backButtonSize,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AppConstants.backImg, fit: BoxFit.fitWidth),
-                )),
+              ),
+            ],
           ),
-          SizedBox(
-              width: screenWidth! * 0.02
-          ),
-          Text(
-            '$progressInt of 4',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: const Color.fromRGBO(105, 105, 105, 1),
-                fontFamily: 'Inter',
-                fontSize: fontSize,
-                letterSpacing:
-                2 /*percentages not used in flutter. defaulting to zero*/,
-                fontWeight: FontWeight.normal,
-                height: 1),
-          ),
-          SizedBox(
-              width: screenWidth! * 0.01
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            width: backButtonSize,
-            height: backButtonSize,
-          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Back',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                        2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.31),
+            ],
+          )
         ],
       );
     } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Column(
         children: [
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.mediumImpact();
-              goBack();
-            },
-            child: Container(
-              alignment: Alignment.centerLeft,
-              width: backButtonSize,
-              height: backButtonSize,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  width: backButtonSize,
+                  height: backButtonSize,
+                ),
+              ),
+              SizedBox(width: screenWidth! * 0.09),
+              Text(
+                '$progressInt of 4',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                        2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.09),
+              Container(
+                alignment: Alignment.centerLeft,
+                width: backButtonSize,
+                height: backButtonSize,
+              ),
+            ],
           ),
-          SizedBox(
-              width: screenWidth! * 0.09
-          ),
-          Text(
-            '$progressInt of 4',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: const Color.fromRGBO(105, 105, 105, 1),
-                fontFamily: 'Inter',
-                fontSize: fontSize,
-                letterSpacing:
-                2 /*percentages not used in flutter. defaulting to zero*/,
-                fontWeight: FontWeight.normal,
-                height: 1),
-          ),
-          SizedBox(
-              width: screenWidth! * 0.09
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            width: backButtonSize,
-            height: backButtonSize,
-          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                        2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.31),
+            ],
+          )
         ],
       );
     }
@@ -537,17 +676,26 @@ class MainScreenState extends State<MainScreen> {
     if (holdTimer.isActive) {
       return;
     }
-    holdTimer = Timer(const Duration(seconds: 3), () {
+    holdTimer = Timer(const Duration(milliseconds: AppConstants.HoldTime), () {
       if (fingersNowHold == 3) {
         HapticFeedback.mediumImpact();
         print("3 FINGERS ACTION COMPLETED");
         setState(() {
           showingThreeFingersMenu = !showingThreeFingersMenu;
+          ToggleFullScreen();
         });
       } else {
         print("NOT 3 FINGERS ACTION CANCELED");
       }
     });
+  }
+
+  void ToggleFullScreen() async{
+    if(showingThreeFingersMenu == false){
+      await FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
+    }else{
+      await FullScreen.exitFullScreen();
+    }
   }
 
   // Cancel Timer for 3 Seconds 3 Fingers Hold Action
@@ -762,17 +910,16 @@ class MainScreenState extends State<MainScreen> {
       markerSize = markerSize;
       markersDataObj = markersDataObj;
     });
-
   }
 
-  void loadCustomLayout(){
+  void loadCustomLayout() {
     // Load Custom Layout
     // Load cornerMargin
     final String? loadedMargin = prefs.getString('cornerMargin');
     print("Loaded Margin $loadedMargin");
     if (loadedMargin != null) {
       cornerMargin = double.parse(loadedMargin);
-    }else{
+    } else {
       cornerMargin = 0.01;
     }
 
@@ -781,7 +928,7 @@ class MainScreenState extends State<MainScreen> {
     print("Loaded Marker Size $loadedSize");
     if (loadedSize != null) {
       markerSize = double.parse(loadedSize) * (screenWidth! * 0.0025);
-    }else{
+    } else {
       markerSize = 40;
     }
 
@@ -790,16 +937,15 @@ class MainScreenState extends State<MainScreen> {
       print(markerDataobjString.toString());
       Map<String, dynamic> datamap = jsonDecode(markerDataobjString);
       markersDataObj = MarkersDataObj.fromJson(datamap);
-    }else{
-      markersDataObj =  MarkersDataObj();
+    } else {
+      markersDataObj = MarkersDataObj();
       print(markerDataobjString.toString());
     }
   }
 
-  void loadDefaultLayout(){
+  void loadDefaultLayout() {
     cornerMargin = 0.01;
     markerSize = 40;
     markersDataObj = new MarkersDataObj();
   }
-
 }
