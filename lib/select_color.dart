@@ -175,22 +175,26 @@ class SelectColorState extends State<SelectColor> {
                 width: screenWidth! * 0.03,
               ),
               colorPaletteBox(AppConstants.blue_clr, "Blue"),
-            ],
-          ),
-          SizedBox(
-            height: screenHeight! * 0.0175,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              colorPaletteBox(AppConstants.black_clr, "Black"),
               SizedBox(
                 width: screenWidth! * 0.03,
               ),
-              colorPaletteBox(currentColor, "Custom"),
+              colorPaletteBox(AppConstants.blue_clr, "Custom"),
             ],
           ),
+          // SizedBox(
+          //   height: screenHeight! * 0.0175,
+          // ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     colorPaletteBox(AppConstants.black_clr, "Black"),
+          //     SizedBox(
+          //       width: screenWidth! * 0.03,
+          //     ),
+          //     colorPaletteBox(currentColor, "Custom"),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -210,7 +214,11 @@ class SelectColorState extends State<SelectColor> {
               SizedBox(
                 width: screenWidth! * 0.03,
               ),
-              markerPaletteBox(AppConstants.triangleImg, "Triangle"),
+              markerPaletteBox(AppConstants.sfCircleImg, "Circle"),
+              SizedBox(
+                width: screenWidth! * 0.03,
+              ),
+              markerPaletteBox(AppConstants.addMarkerImg, "Custom"),
             ],
           ),
          // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
@@ -233,7 +241,7 @@ class SelectColorState extends State<SelectColor> {
                SizedBox(
                 width: screenWidth! * 0.03,
               ),
-              layoutPaletteBox(AppConstants.triangleImg, "Custom"),
+              layoutPaletteBox(AppConstants.sfCircleImg, "Custom"),
             ],
           ),
         ],
@@ -442,7 +450,7 @@ class SelectColorState extends State<SelectColor> {
                   color: AppConstants.Alt_Color,
                 ),
               ),
-              Container(
+              title != "Custom" ? Container(
                 width: innerCircleSize,
                 height: innerCircleSize,
                 decoration: BoxDecoration(
@@ -453,6 +461,19 @@ class SelectColorState extends State<SelectColor> {
                     bottomRight: Radius.circular(39),
                   ),
                   color: color,
+                ),
+              ) : Container(
+                width: innerCircleSize,
+                height: innerCircleSize,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(39),
+                    topRight: Radius.circular(39),
+                    bottomLeft: Radius.circular(39),
+                    bottomRight: Radius.circular(39),
+                  ),
+                  color: color,
+                  image: const DecorationImage(image: AppConstants.colorCircleImg, fit: BoxFit.fitWidth),
                 ),
               ),
             ],
@@ -479,6 +500,7 @@ class SelectColorState extends State<SelectColor> {
   Widget markerPaletteBox(AssetImage showImage, String title) {
     double? outerCircleCorner = 15;
     double? outerCircleSize = screenHeight! * 0.09;
+    double? markerSize = title == "Cross" ? screenHeight! * 0.034 : screenHeight! * 0.045;
     //double? innerCircleSize = outerCircleSize * 0.34;
     return GestureDetector(
       onTap: () {
@@ -488,10 +510,15 @@ class SelectColorState extends State<SelectColor> {
             selectedMarker = 1;
             selectLayout();
           });
-        } else if (title == "Triangle") {
+        } else if (title == "Circle") {
           setState(() {
             selectedMarker = 2;
             selectLayout();
+          });
+        }else if (title == "Custom") {
+          setState(() {
+            selectedMarker = 2; // Need to Change to 3
+            selectLayout(); // Need to Add Pick Image from Phone for Custom Marker
           });
         }
       },
@@ -514,8 +541,8 @@ class SelectColorState extends State<SelectColor> {
                 ),
               ),
               Container(
-                  width: screenHeight! * 0.034,
-                  height: screenHeight! * 0.034,
+                  width: markerSize,
+                  height: markerSize,
                   decoration: BoxDecoration(
                     image:
                     DecorationImage(image: showImage, fit: BoxFit.fitWidth),

@@ -807,7 +807,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
       } else {
-        selectedMarker = AppConstants.triangleImg;
+        selectedMarker = AppConstants.sfCircleImg;
       }
     } else {
       selectedMarker = AppConstants.plusImg;

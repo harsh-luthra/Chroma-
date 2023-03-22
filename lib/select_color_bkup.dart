@@ -202,7 +202,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
             const SizedBox(
               width: 10,
             ),
-            markerPaletteBox(AppConstants.triangleImg, "Triangle"),
+            markerPaletteBox(AppConstants.sfCircleImg, "Triangle"),
           ],
         ),
         const SizedBox(
@@ -235,7 +235,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
             const SizedBox(
               width: 10,
             ),
-            layoutPaletteBox(AppConstants.triangleImg, "Custom"),
+            layoutPaletteBox(AppConstants.sfCircleImg, "Custom"),
           ],
         ),
         const SizedBox(
