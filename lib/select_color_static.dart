@@ -12,10 +12,10 @@ class SelectColor extends StatelessWidget {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: AppConstants.Bg_Color,
+      backgroundColor: AppConstants.bgColor,
       body: Container(
         decoration: const BoxDecoration(
-          color: AppConstants.Bg_Color,
+          color: AppConstants.bgColor,
         ),
         child: SafeArea(
           child: Column(
@@ -27,7 +27,7 @@ class SelectColor extends StatelessWidget {
                 'CHROMA+',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    color: AppConstants.txt_color_1,
+                    color: AppConstants.txtColor1,
                     fontFamily: 'Inter',
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ class SelectColor extends StatelessWidget {
                 'by Scissor Films',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    color: AppConstants.txt_color_1,
+                    color: AppConstants.txtColor1,
                     fontFamily: 'Proxima Nova',
                     fontSize: 15,
                     fontWeight: FontWeight.w300,
@@ -48,7 +48,7 @@ class SelectColor extends StatelessWidget {
                 'Select Color',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    color: AppConstants.txt_color_1,
+                    color: AppConstants.txtColor1,
                     fontFamily: 'Inter',
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -61,11 +61,11 @@ class SelectColor extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  colorPalette(AppConstants.green_clr, "Green"),
+                  colorPalette(AppConstants.greenColor, "Green"),
                   const SizedBox(
                     width: 10,
                   ),
-                  colorPalette(AppConstants.blue_clr, "Blue"),
+                  colorPalette(AppConstants.blueColor, "Blue"),
                 ],
               ),
               const SizedBox(
@@ -75,7 +75,7 @@ class SelectColor extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  colorPalette(AppConstants.black_clr, "Black"),
+                  colorPalette(AppConstants.blackColor, "Black"),
                   const SizedBox(
                     width: 10,
                   ),
@@ -83,7 +83,7 @@ class SelectColor extends StatelessWidget {
                       onTap: () {
                         print("Custom Tapped");
                       },
-                      child: colorPalette(AppConstants.red_clr, "Custom")),
+                      child: colorPalette(AppConstants.redColor, "Custom")),
                 ],
               ),
               const SizedBox(height: 20),
@@ -127,7 +127,7 @@ class SelectColor extends StatelessWidget {
                   bottomLeft: Radius.circular(outerCircleCorner),
                   bottomRight: Radius.circular(outerCircleCorner),
                 ),
-                color: AppConstants.Alt_Color,
+                color: AppConstants.altColor,
               ),
             ),
             Container(
@@ -203,7 +203,7 @@ class SelectColor extends StatelessWidget {
                   bottomLeft: Radius.circular(38.84709167480469),
                   bottomRight: Radius.circular(38.84709167480469),
                 ),
-                color: AppConstants.green_alt_clr,
+                color: AppConstants.greenAltColor,
               )),
         ]),
       ),

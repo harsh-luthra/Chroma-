@@ -17,7 +17,7 @@ class _GestureTestState extends State<GestureTest> {
     double? screenWidth = MediaQuery.of(context).size.width;
     double? screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: AppConstants.green_clr,
+        backgroundColor: AppConstants.greenColor,
         body: SafeArea(
           child: Container(
             alignment: Alignment.center,
@@ -28,7 +28,7 @@ class _GestureTestState extends State<GestureTest> {
               children: [
                 Container(
                   alignment: Alignment.center,
-                  color: AppConstants.red_clr,
+                  color: AppConstants.redColor,
                   width: screenWidth*0.8,
                   height: screenHeight*0.8,
                   child: GestureDetector(

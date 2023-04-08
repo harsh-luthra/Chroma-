@@ -14,14 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_csv/to_csv.dart' as exportCSV;
 
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MainScreenBkup extends StatefulWidget {
+  const MainScreenBkup({Key? key}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => MainScreenState();
+  State<MainScreenBkup> createState() => MainScreenBkupState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class MainScreenBkupState extends State<MainScreenBkup> {
   // create some values
   double? screenWidth;
   double? screenHeight;
@@ -87,7 +87,7 @@ class MainScreenState extends State<MainScreen> {
       print("B: $brightnessSliderValue");
       showingThreeFingersMenu = true;
     });
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -571,7 +571,7 @@ class MainScreenState extends State<MainScreen> {
                       fontFamily: 'Inter',
                       fontSize: fontSize,
                       letterSpacing:
-                          2 /*percentages not used in flutter. defaulting to zero*/,
+                      2 /*percentages not used in flutter. defaulting to zero*/,
                       fontWeight: FontWeight.normal,
                       height: 1),
                 ),
@@ -595,7 +595,7 @@ class MainScreenState extends State<MainScreen> {
                     fontFamily: 'Inter',
                     fontSize: fontSize,
                     letterSpacing:
-                        2 /*percentages not used in flutter. defaulting to zero*/,
+                    2 /*percentages not used in flutter. defaulting to zero*/,
                     fontWeight: FontWeight.normal,
                     height: 1),
               ),
@@ -630,7 +630,7 @@ class MainScreenState extends State<MainScreen> {
                     fontFamily: 'Inter',
                     fontSize: fontSize,
                     letterSpacing:
-                        2 /*percentages not used in flutter. defaulting to zero*/,
+                    2 /*percentages not used in flutter. defaulting to zero*/,
                     fontWeight: FontWeight.normal,
                     height: 1),
               ),
@@ -653,7 +653,7 @@ class MainScreenState extends State<MainScreen> {
                     fontFamily: 'Inter',
                     fontSize: fontSize,
                     letterSpacing:
-                        2 /*percentages not used in flutter. defaulting to zero*/,
+                    2 /*percentages not used in flutter. defaulting to zero*/,
                     fontWeight: FontWeight.normal,
                     height: 1),
               ),
@@ -824,7 +824,7 @@ class MainScreenState extends State<MainScreen> {
     header.add('Mobile');
     header.add('ID Number');
     List<List<String>> listOfLists =
-        []; //Outter List which contains the data List
+    []; //Outter List which contains the data List
     List<String> data1 = [
       '1',
       'Bilal Saeed',

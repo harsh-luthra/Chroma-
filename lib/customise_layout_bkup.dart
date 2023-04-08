@@ -18,7 +18,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
   // create some values
   double? screenWidth;
   double? screenHeight;
-  late final String? defaultColor = AppConstants.green_clr.toString();
+  late final String? defaultColor = AppConstants.greenColor.toString();
   late SharedPreferences prefs;
 
   double fPS = 30;

@@ -6,6 +6,7 @@
 
 import 'dart:async';
 
+import 'package:chroma_plus_flutter/Sample/ColorPicker.dart';
 import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:chroma_plus_flutter/select_color.dart';
@@ -30,12 +31,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const SelectColor(),
+      home: SelectColor(),
       //home: const SelectColor(),
       routes: <String, WidgetBuilder> {
-        '/selectColor': (BuildContext context) => const SelectColor(),
-        '/mainScreen' : (BuildContext context) =>  const MainScreen(),
+        '/selectColor': (BuildContext context) => SelectColor(),
+        '/mainScreen' : (BuildContext context) => const MainScreen(),
         '/customiseLayout' : (BuildContext context) =>  const CustomiseLayout(),
+        '/colorPicker': (BuildContext context) => ColorPicker(200),
       },
       //home: const MyHomePage(),
     );

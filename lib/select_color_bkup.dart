@@ -20,7 +20,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
   // create some values
   double? screenWidth;
   double? screenHeight;
-  late final String? defaultColor = AppConstants.red_clr.toString();
+  late final String? defaultColor = AppConstants.redColor.toString();
   late var prefrences;
 
   String selectTitle = "Select Color";
@@ -51,10 +51,10 @@ class SelectColorBkupState extends State<SelectColorBkup> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: AppConstants.Bg_Color,
+        backgroundColor: AppConstants.bgColor,
         body: Container(
           decoration: const BoxDecoration(
-            color: AppConstants.Bg_Color,
+            color: AppConstants.bgColor,
           ),
           child: SafeArea(
             child: Column(
@@ -66,7 +66,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                   'CHROMA+',
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      color: AppConstants.txt_color_1,
+                      color: AppConstants.txtColor1,
                       fontFamily: 'Inter',
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -76,7 +76,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                   'by Scissor Films',
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      color: AppConstants.txt_color_1,
+                      color: AppConstants.txtColor1,
                       fontFamily: 'Proxima Nova',
                       fontSize: 15,
                       fontWeight: FontWeight.w300,
@@ -87,7 +87,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                   selectTitle,
                   textAlign: TextAlign.left,
                   style: const TextStyle(
-                      color: AppConstants.txt_color_1,
+                      color: AppConstants.txtColor1,
                       fontFamily: 'Inter',
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -166,11 +166,11 @@ class SelectColorBkupState extends State<SelectColorBkup> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            colorPaletteBox(AppConstants.green_clr, "Green"),
+            colorPaletteBox(AppConstants.greenColor, "Green"),
             const SizedBox(
               width: 10,
             ),
-            colorPaletteBox(AppConstants.blue_clr, "Blue"),
+            colorPaletteBox(AppConstants.blueColor, "Blue"),
           ],
         ),
         const SizedBox(
@@ -180,7 +180,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            colorPaletteBox(AppConstants.black_clr, "Black"),
+            colorPaletteBox(AppConstants.blackColor, "Black"),
             const SizedBox(
               width: 10,
             ),
@@ -440,7 +440,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                     bottomLeft: Radius.circular(outerCircleCorner),
                     bottomRight: Radius.circular(outerCircleCorner),
                   ),
-                  color: AppConstants.Alt_Color,
+                  color: AppConstants.altColor,
                 ),
               ),
               Container(
@@ -510,7 +510,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                     bottomLeft: Radius.circular(outerCircleCorner),
                     bottomRight: Radius.circular(outerCircleCorner),
                   ),
-                  color: AppConstants.Alt_Color,
+                  color: AppConstants.altColor,
                 ),
               ),
               Container(
@@ -618,7 +618,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                     bottomLeft: Radius.circular(outerCircleCorner),
                     bottomRight: Radius.circular(outerCircleCorner),
                   ),
-                  color: AppConstants.Alt_Color,
+                  color: AppConstants.altColor,
                 ),
               ),
               layoutCenterBox(title),
@@ -712,7 +712,7 @@ class SelectColorBkupState extends State<SelectColorBkup> {
                   bottomLeft: Radius.circular(38.84709167480469),
                   bottomRight: Radius.circular(38.84709167480469),
                 ),
-                color: AppConstants.green_alt_clr,
+                color: AppConstants.greenAltColor,
               )),
         ]),
       ),

@@ -27,11 +27,11 @@ class Data_List_State extends State<Data_List> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: AppConstants.Bg_Color,
+        backgroundColor: AppConstants.bgColor,
         body: Container(
           width: screenWidth!,
           decoration: const BoxDecoration(
-            color: AppConstants.Bg_Color,
+            color: AppConstants.bgColor,
           ),
           child: SafeArea(
             child: Column(

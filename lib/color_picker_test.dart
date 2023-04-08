@@ -1,16 +1,15 @@
 import 'package:chroma_plus_flutter/AppConstants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class color_picker_test extends StatefulWidget {
-  const color_picker_test({Key? key}) : super(key: key);
+class colorPickerTest extends StatefulWidget {
+  const colorPickerTest({Key? key}) : super(key: key);
 
   @override
-  State<color_picker_test> createState() => _color_picker_testState();
+  State<colorPickerTest> createState() => colorPickerTestState();
 }
 
-class _color_picker_testState extends State<color_picker_test> {
+class colorPickerTestState extends State<colorPickerTest> {
   // create some values
   double? screenWidth;
   double? screenHeight;
@@ -23,11 +22,11 @@ class _color_picker_testState extends State<color_picker_test> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: AppConstants.Bg_Color,
+      backgroundColor: AppConstants.bgColor,
       body: Container(
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          color: AppConstants.Bg_Color,
+          color: AppConstants.bgColor,
         ),
         child: SafeArea(
           child: Column(
@@ -39,7 +38,7 @@ class _color_picker_testState extends State<color_picker_test> {
                 'CHROMA+',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    color: AppConstants.txt_color_1,
+                    color: AppConstants.txtColor1,
                     fontFamily: 'Inter',
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -123,7 +122,7 @@ class _color_picker_testState extends State<color_picker_test> {
                   bottomLeft: Radius.circular(outerCircleCorner),
                   bottomRight: Radius.circular(outerCircleCorner),
                 ),
-                color: AppConstants.Alt_Color,
+                color: AppConstants.altColor,
               ),
             ),
             Container(

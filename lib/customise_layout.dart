@@ -6,6 +6,7 @@ import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomiseLayout extends StatefulWidget {
@@ -19,7 +20,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   // create some values
   double? screenWidth;
   double? screenHeight;
-  late final String? defaultColor = AppConstants.green_clr.toString();
+  late final String? defaultColor = AppConstants.greenColor.toString();
   late SharedPreferences prefs;
 
   double fPS = 30;
@@ -58,6 +59,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
   MarkersDataObj markersDataObj = MarkersDataObj();
 
+  double brightnessSliderValue = 0.5;
+
   // Color containerBorderColour = const Color.fromARGB(125, 0, 0, 0);
   // Color containerColour = const Color.fromARGB(125, 0, 0, 0);
 
@@ -71,8 +74,13 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     print(Duration.microsecondsPerSecond ~/ fPS);
     setState(() {
       cornerMargin = _currentSliderValue / 100;
-      //markerSize = _secondSliderValue * (screenWidth! * 0.0025);
+      //markerSize = _secondSliderValue * (screenWidth! * 0.0025);.
+      StartState();
     });
+  }
+
+  void StartState()async{
+    brightnessSliderValue = await currentBrightness;
   }
 
   @override
@@ -266,12 +274,12 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                         height: screenHeight! * 0.015,
                       ),
                       AutoSizeText(
-                        "Hold markers for 2 seconds to toggle visibility",
+                        "Hold markers to toggle visibility",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Proxima Nova',
-                            fontSize: fontSize,
+                            fontSize: fontSize!*1.35,
                             fontWeight: FontWeight.w500,
                             height: 1),
                         maxLines: 1,
@@ -299,7 +307,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
               // SLIDERS
 
               Positioned(
-                bottom: screenHeight! * 0.2,
+                bottom: screenHeight! * 0.15,
                 child: Column(
                   children: [
 
@@ -351,7 +359,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                       ),
                     ),
 
-                    SizedBox(height: screenHeight! * 0.03,),
+                    SizedBox(height: screenHeight! * 0.015,),
 
                     // Marker Size Slider
                     Container(
@@ -416,6 +424,68 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
                     SizedBox(height: screenHeight! * 0.015,),
 
+                    // Brightness Slider
+                    Container(
+                      transformAlignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        // boxShadow: const [
+                        //   BoxShadow(
+                        //       color: Color.fromRGBO(0, 0, 0, 0.5),
+                        //       offset: Offset(0, 6),
+                        //       blurRadius: 4)
+                        // ],
+                        // gradient: const LinearGradient(
+                        //   begin: Alignment.topCenter,
+                        //   end: Alignment.bottomCenter,
+                        //   colors: [
+                        //     Color.fromRGBO(127, 127, 127, 1),
+                        //     Color.fromRGBO(0, 0, 0, 0.29),
+                        //   ],
+                        // ),
+                          color: AppConstants.containerGreyColor,
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(20))),
+                      height: screenHeight! * 0.05,
+                      child: Row(
+                        children: [
+                          SizedBox(width: screenWidth! * 0.04),
+                          Text(
+                            'Brightness',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Proxima Nova',
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w500,
+                                height: 1),
+                          ),
+                          SizedBox(width: screenWidth! * 0.07),
+                          SizedBox(
+                            width: screenWidth! * 0.6,
+                            height: screenHeight! * 0.05,
+                            child: Slider(
+                              activeColor: AppConstants.sliderActiveColor,
+                              inactiveColor: AppConstants.sliderInActiveColor,
+                              value: brightnessSliderValue,
+                              min: 0.1,
+                              max: 1.0,
+                              divisions: 9,
+                              label: (brightnessSliderValue * 100).toInt().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  setBrightness(value);
+                                  brightnessSliderValue = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: screenHeight! * 0.01,),
+                    //brightnessSlider(),
+
                     // Buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -447,7 +517,6 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                         }),
                       ],
                     ),
-
                   ],
                 ),
               ),
@@ -680,6 +749,75 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
         child: Text (title),
       ),
     );
+  }
+
+  Widget brightnessSlider() {
+    // Brightness Slider
+    return Container(
+      decoration: BoxDecoration(
+          color: AppConstants.containerGreyColor,
+          border: Border.all(
+            color: Colors.transparent,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      height: screenHeight! * 0.09,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: screenWidth! * 0.04),
+          SizedBox(height: screenHeight! * 0.005),
+          Text(
+            'Brightness',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Proxima Nova',
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+                height: 1),
+          ),
+          SizedBox(height: screenHeight! * 0.0025),
+          SizedBox(
+            width: screenWidth! * 0.6,
+            height: screenHeight! * 0.05,
+            child: Slider(
+              activeColor: AppConstants.sliderActiveColor,
+              inactiveColor: AppConstants.sliderInActiveColor,
+              value: brightnessSliderValue,
+              min: 0.1,
+              max: 1.0,
+              divisions: 9,
+              label: (brightnessSliderValue * 100).toInt().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  setBrightness(value);
+                  brightnessSliderValue = value;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<double> get currentBrightness async {
+    try {
+      return await ScreenBrightness().current;
+    } catch (e) {
+      print(e);
+      throw 'Failed to get current brightness';
+    }
+  }
+
+  Future<void> setBrightness(double brightness) async {
+    try {
+      await ScreenBrightness().setScreenBrightness(brightness);
+    } catch (e) {
+      print(e);
+      throw 'Failed to set brightness';
+    }
   }
 
   void resetSettings() {
