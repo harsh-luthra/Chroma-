@@ -560,6 +560,9 @@ class SelectColorState extends State<SelectColor> {
     showBack = true;
     printConsole("Saved Color $selectedColor");
     await prefrences.setString('selectedColor', selectedColor.toString());
+    setState(() {
+      _shadedColor = selectedColor;
+    });
   }
 
   void selectLayout() async {
@@ -569,6 +572,11 @@ class SelectColorState extends State<SelectColor> {
     showBack = true;
     printConsole("Saved Marker $selectedMarker");
     await prefrences.setString('selectedMarker', selectedMarker.toString());
+    await prefrences.setString('selectedColor', _shadedColor.toString());
+    setState(() {
+      selectedColor = _shadedColor;
+      pickerColor = _shadedColor;
+    });
   }
 
   void exitFullScreen() async {
@@ -814,7 +822,7 @@ class SelectColorState extends State<SelectColor> {
             if(PickedImage == null){
               pickMarkerFromDevice();
             }else{
-              selectedMarker = 2; // Need to Change to 3
+              selectedMarker = 3; // Need to Change to 3
               selectLayout(); // Need to Add Pick Image from Phone for Custom Marker
               //pickMarkerFromDevice();
             }

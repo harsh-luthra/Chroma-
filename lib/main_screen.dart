@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/Data_List.dart';
@@ -8,11 +9,11 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fullscreen/fullscreen.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_csv/to_csv.dart' as exportCSV;
-
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class MainScreenState extends State<MainScreen> {
   double? screenHeight;
   late final String? defaultColor = AppConstants.greenColor.toString();
   late var prefs;
-
+  static const TWO_PI = 3.14 * 2;
   double FPS = 30;
 
   late Timer timer;
@@ -63,9 +64,12 @@ class MainScreenState extends State<MainScreen> {
   double brightnessSliderValue = 0.5;
 
   MarkersDataObj markersDataObj = new MarkersDataObj();
+  bool animating = false;
+  File? PickedImage;
+  String? loadedMarker = "1";
 
   @override
-  void initState(){
+  void initState() {
     // TODO: implement initState
     super.initState();
     StartState();
@@ -78,16 +82,28 @@ class MainScreenState extends State<MainScreen> {
     // });
   }
 
-  void StartState()async{
+  void StartState() async {
+    getCustomImage();
     loadData();
     listenAllSensors();
     brightnessSliderValue = await currentBrightness;
     //print(Duration.microsecondsPerSecond ~/ FPS);
-    setState((){
+    setState(() {
       print("B: $brightnessSliderValue");
       showingThreeFingersMenu = true;
     });
-}
+  }
+
+  void getCustomImage() async{
+    final pathGot = await getApplicationDocumentsDirectory();
+    const fileNameToSave = (AppConstants.customImageName);
+    File checkFile = File('${pathGot.path}/$fileNameToSave');
+    if(await checkFile.exists()){
+      setState(() {
+        PickedImage = checkFile;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,14 +117,23 @@ class MainScreenState extends State<MainScreen> {
         backgroundColor: selectedColor,
         body: GestureDetector(
           onScaleStart: (de) {
+            print(de.pointerCount);
             fingersNowHold = de.pointerCount;
             onThreeHold(de.pointerCount);
           },
           onScaleUpdate: (de) {
+            print(de.pointerCount);
             fingersNowHold = de.pointerCount;
             if (de.pointerCount != 3) {
               cancelHoldTimer();
             }
+          },
+          onScaleEnd: (de){
+            // print(de.pointerCount);
+            // fingersNowHold = de.pointerCount;
+            // if (de.pointerCount != 3) {
+            //   cancelHoldTimer();
+            // }
           },
           child: Container(
             decoration: BoxDecoration(
@@ -177,7 +202,8 @@ class MainScreenState extends State<MainScreen> {
                     child: markerWidget(markersDataObj.markerBottomRight),
                   ),
 
-                  fingersHoldMenu(),
+                  //fingersHoldMenu(),
+                  newHoldMenu(),
                 ],
               ),
             ),
@@ -197,13 +223,177 @@ class MainScreenState extends State<MainScreen> {
           color: Colors.transparent,
           image: DecorationImage(
             opacity: 1,
-            image: selectedMarker,
-            fit: BoxFit.contain,
+            // image: selectedMarker,
+            image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
           ),
         ),
       );
     } else {
       return Container();
+    }
+  }
+
+  Widget newHoldMenu() {
+    if (showingThreeFingersMenu) {
+      return Stack(alignment: Alignment.center, children: [
+        Container(
+          margin: const EdgeInsets.only(left: 25, right: 25, top: 225, bottom: 100),
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(190, 0, 0, 0),
+              border: Border.all(
+                color: const Color.fromARGB(190, 0, 0, 0),
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+        ),
+        Positioned(
+          top: screenHeight! * 0.4,
+          child: CircleTest(),
+        ),
+        Positioned(
+          top: screenHeight! * 0.55,
+          child: const Text(
+            "HOLD TO COME BACK",
+            style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        Positioned(
+          bottom: screenHeight! * 0.19,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              // SizedBox(
+              //   height: screenHeight! * 0.025,
+              // ),
+              progressBarSized(1),
+              SizedBox(
+                height: screenHeight! * 0.01,
+              ),
+              bottomBackButton(),
+            ],
+          ),
+        ),
+      ]);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget CircleTest() {
+    final size = 100.0;
+    if(!animating) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          ShaderMask(
+            shaderCallback: (rect) {
+              return SweepGradient(
+                  startAngle: 0.0,
+                  endAngle: TWO_PI,
+                  stops: [0, 0],
+                  // 0.0 , 0.5 , 0.5 , 1.0
+                  center: Alignment.center,
+                  colors: [Colors.green, Colors.white]).createShader(rect);
+            },
+            child: Container(
+              width: size,
+              height: size,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.white),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: size - 10,
+              height: size - 10,
+              decoration: const BoxDecoration(
+                  color: Colors.black, shape: BoxShape.circle),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "HOLD",
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "TO GET STARTED",
+                      style: TextStyle(
+                          fontSize: 8,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ]),
+            ),
+          ),
+          SizedBox(height: 10,),
+
+        ],
+      );
+    }else{
+      return TweenAnimationBuilder(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: Duration(milliseconds: AppConstants.holdTime-150),
+          builder: (context, value, child) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                ShaderMask(
+                  shaderCallback: (rect) {
+                    return SweepGradient(
+                        startAngle: 0.0,
+                        endAngle: TWO_PI,
+                        stops: [value, value],
+                        // 0.0 , 0.5 , 0.5 , 1.0
+                        center: Alignment.center,
+                        colors: [Colors.green, Colors.white]).createShader(rect);
+                  },
+                  child: Container(
+                    width: size,
+                    height: size,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    width: size - 10,
+                    height: size - 10,
+                    decoration: const BoxDecoration(
+                        color: Colors.black, shape: BoxShape.circle),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "HOLD",
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "TO GET STARTED",
+                            style: TextStyle(
+                                fontSize: 8,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ]),
+                  ),
+                )
+              ],
+            );
+          });
     }
   }
 
@@ -373,14 +563,14 @@ class MainScreenState extends State<MainScreen> {
     );
   }
 
-  void goBack() async{
+  void goBack() async {
     Navigator.pop(context);
     await FullScreen.exitFullScreen();
   }
 
   Future<bool> _onWillPop() async {
     Navigator.pop(context);
-    return await FullScreen.exitFullScreen().then((value){
+    return await FullScreen.exitFullScreen().then((value) {
       return false;
     });
   }
@@ -669,6 +859,8 @@ class MainScreenState extends State<MainScreen> {
     if (fingersCount == 3) {
       print("3 FINGERS DETECTED");
       startHoldTimer();
+    }else{
+
     }
   }
 
@@ -683,6 +875,9 @@ class MainScreenState extends State<MainScreen> {
         print("3 FINGERS ACTION COMPLETED");
         setState(() {
           showingThreeFingersMenu = !showingThreeFingersMenu;
+          // if(showingThreeFingersMenu){
+          //   animating = false;
+          // }
           ToggleFullScreen();
         });
       } else {
@@ -691,10 +886,10 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
-  void ToggleFullScreen() async{
-    if(showingThreeFingersMenu == false){
+  void ToggleFullScreen() async {
+    if (showingThreeFingersMenu == false) {
       await FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
-    }else{
+    } else {
       await FullScreen.exitFullScreen();
     }
   }
@@ -703,6 +898,9 @@ class MainScreenState extends State<MainScreen> {
   cancelHoldTimer() {
     if (holdTimer.isActive) {
       holdTimer.cancel();
+      // setState(() {
+      //   animating = false;
+      // });
     }
   }
 
@@ -876,12 +1074,14 @@ class MainScreenState extends State<MainScreen> {
     }
 
     // Load Marker
-    final String? loadedMarker = prefs.getString('selectedMarker');
+    loadedMarker = prefs.getString('selectedMarker');
     print("Loaded Marker $loadedMarker");
     if (loadedMarker != null) {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
-      } else {
+      } else if (loadedMarker == "2") {
+        selectedMarker = AppConstants.sfCircleImg;
+      }else{
         selectedMarker = AppConstants.sfCircleImg;
       }
     } else {
@@ -912,6 +1112,8 @@ class MainScreenState extends State<MainScreen> {
       markersDataObj = markersDataObj;
     });
   }
+
+
 
   void loadCustomLayout() {
     // Load Custom Layout

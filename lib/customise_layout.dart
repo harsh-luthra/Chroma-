@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -65,6 +67,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   // Color containerColour = const Color.fromARGB(125, 0, 0, 0);
 
   double? fontSize = 15;
+  File? PickedImage;
+  String? loadedMarker = "1";
 
   @override
   void initState() {
@@ -77,6 +81,18 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       //markerSize = _secondSliderValue * (screenWidth! * 0.0025);.
       StartState();
     });
+    getCustomImage();
+  }
+
+  void getCustomImage() async{
+    final pathGot = await getApplicationDocumentsDirectory();
+    const fileNameToSave = (AppConstants.customImageName);
+    File checkFile = File('${pathGot.path}/$fileNameToSave');
+    if(await checkFile.exists()){
+      setState(() {
+        PickedImage = checkFile;
+      });
+    }
   }
 
   void StartState()async{
@@ -871,8 +887,9 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
         //color: markerColor,
         image: DecorationImage(
           opacity: opacity,
-          image: selectedMarker,
-          fit: BoxFit.contain,
+          // image: selectedMarker,
+          image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+          fit: BoxFit.fitWidth
         ),
       ),
     );
@@ -939,7 +956,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     }
 
     // Load Marker
-    final String? loadedMarker = prefs.getString('selectedMarker');
+    loadedMarker = prefs.getString('selectedMarker');
     print("Loaded Marker $loadedMarker");
     if (loadedMarker != null) {
       if (loadedMarker == "1") {
