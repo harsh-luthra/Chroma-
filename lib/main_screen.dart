@@ -250,7 +250,7 @@ class MainScreenState extends State<MainScreen> {
           child: CircleTest(),
         ),
         Positioned(
-          top: screenHeight! * 0.55,
+          top: screenHeight! * 0.575,
           child: const Text(
             "HOLD TO COME BACK",
             style: TextStyle(
