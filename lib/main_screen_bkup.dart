@@ -557,7 +557,7 @@ class MainScreenBkupState extends State<MainScreenBkup> {
                       image: DecorationImage(
                           image: AppConstants.backImg,
                           fit: BoxFit.fitWidth,
-                          invertColors: true),
+                          invertColors: false),
                     )),
               ),
               SizedBox(width: screenWidth! * 0.035),

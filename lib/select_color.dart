@@ -1038,7 +1038,7 @@ class SelectColorState extends State<SelectColor> {
                       image: DecorationImage(
                           image: AppConstants.backImg,
                           fit: BoxFit.fitWidth,
-                          invertColors: true),
+                          invertColors: false),
                     )),
               ),
               SizedBox(width: screenWidth! * 0.035),

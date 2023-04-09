@@ -22,7 +22,7 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   // create some values
   double? screenWidth;
   double? screenHeight;
@@ -57,7 +57,7 @@ class MainScreenState extends State<MainScreen> {
 
   int fingersNowHold = 0;
   Timer holdTimer = Timer(const Duration(milliseconds: 1), () {});
-  bool showingThreeFingersMenu = true;
+  bool ShowHoldMenu = true;
 
   double? fontSize = 15;
 
@@ -68,11 +68,25 @@ class MainScreenState extends State<MainScreen> {
   File? PickedImage;
   String? loadedMarker = "1";
 
+  late AnimationController controller;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     StartState();
+
+    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 1500));
+    controller.addListener(() {
+      if(controller.value == 1.0){
+        print("Done");
+        ShowHoldMenu = !ShowHoldMenu;
+        ToggleFullScreen();
+        HapticFeedback.mediumImpact();
+        controller.reset();
+      }
+      setState(() {});
+    });
     // loadData();
     // listenAllSensors();
     // brightnessSliderValue = currentBrightness as double;
@@ -90,7 +104,7 @@ class MainScreenState extends State<MainScreen> {
     //print(Duration.microsecondsPerSecond ~/ FPS);
     setState(() {
       print("B: $brightnessSliderValue");
-      showingThreeFingersMenu = true;
+      ShowHoldMenu = true;
     });
   }
 
@@ -116,25 +130,33 @@ class MainScreenState extends State<MainScreen> {
       child: Scaffold(
         backgroundColor: selectedColor,
         body: GestureDetector(
-          onScaleStart: (de) {
-            print(de.pointerCount);
-            fingersNowHold = de.pointerCount;
-            onThreeHold(de.pointerCount);
+          // onScaleStart: (de) {
+          //   print(de.pointerCount);
+          //   fingersNowHold = de.pointerCount;
+          //   onThreeHold(de.pointerCount);
+          // },
+          // onScaleUpdate: (de) {
+          //   print(de.pointerCount);
+          //   fingersNowHold = de.pointerCount;
+          //   if (de.pointerCount != 3) {
+          //     cancelHoldTimer();
+          //   }
+          // },
+          onTapDown: (dw){
+            controller.forward();
           },
-          onScaleUpdate: (de) {
-            print(de.pointerCount);
-            fingersNowHold = de.pointerCount;
-            if (de.pointerCount != 3) {
-              cancelHoldTimer();
+          onTapUp: (dw){
+            if (controller.status == AnimationStatus.forward) {
+              controller.reverse();
             }
           },
-          onScaleEnd: (de){
-            // print(de.pointerCount);
-            // fingersNowHold = de.pointerCount;
-            // if (de.pointerCount != 3) {
-            //   cancelHoldTimer();
-            // }
-          },
+          // onScaleEnd: (de){
+          //   // print(de.pointerCount);
+          //   // fingersNowHold = de.pointerCount;
+          //   // if (de.pointerCount != 3) {
+          //   //   cancelHoldTimer();
+          //   // }
+          // },
           child: Container(
             decoration: BoxDecoration(
               color: selectedColor,
@@ -234,7 +256,7 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Widget newHoldMenu() {
-    if (showingThreeFingersMenu) {
+    if (ShowHoldMenu) {
       return Stack(alignment: Alignment.center, children: [
         Container(
           margin: const EdgeInsets.only(left: 25, right: 25, top: 225, bottom: 100),
@@ -285,7 +307,6 @@ class MainScreenState extends State<MainScreen> {
 
   Widget CircleTest() {
     final size = 100.0;
-    if(!animating) {
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -294,7 +315,7 @@ class MainScreenState extends State<MainScreen> {
               return SweepGradient(
                   startAngle: 0.0,
                   endAngle: TWO_PI,
-                  stops: [0, 0],
+                  stops: [controller.value, controller.value],
                   // 0.0 , 0.5 , 0.5 , 1.0
                   center: Alignment.center,
                   colors: [Colors.green, Colors.white]).createShader(rect);
@@ -335,70 +356,12 @@ class MainScreenState extends State<MainScreen> {
             ),
           ),
           SizedBox(height: 10,),
-
         ],
       );
-    }else{
-      return TweenAnimationBuilder(
-          tween: Tween(begin: 0.0, end: 1.0),
-          duration: Duration(milliseconds: AppConstants.holdTime-150),
-          builder: (context, value, child) {
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                ShaderMask(
-                  shaderCallback: (rect) {
-                    return SweepGradient(
-                        startAngle: 0.0,
-                        endAngle: TWO_PI,
-                        stops: [value, value],
-                        // 0.0 , 0.5 , 0.5 , 1.0
-                        center: Alignment.center,
-                        colors: [Colors.green, Colors.white]).createShader(rect);
-                  },
-                  child: Container(
-                    width: size,
-                    height: size,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
-                  ),
-                ),
-                Center(
-                  child: Container(
-                    width: size - 10,
-                    height: size - 10,
-                    decoration: const BoxDecoration(
-                        color: Colors.black, shape: BoxShape.circle),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "HOLD",
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "TO GET STARTED",
-                            style: TextStyle(
-                                fontSize: 8,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ]),
-                  ),
-                )
-              ],
-            );
-          });
-    }
   }
 
   Widget fingersHoldMenu() {
-    if (showingThreeFingersMenu) {
+    if (ShowHoldMenu) {
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -747,7 +710,7 @@ class MainScreenState extends State<MainScreen> {
                       image: DecorationImage(
                           image: AppConstants.backImg,
                           fit: BoxFit.fitWidth,
-                          invertColors: true),
+                          invertColors: false),
                     )),
               ),
               SizedBox(width: screenWidth! * 0.035),
@@ -860,7 +823,6 @@ class MainScreenState extends State<MainScreen> {
       print("3 FINGERS DETECTED");
       startHoldTimer();
     }else{
-
     }
   }
 
@@ -874,7 +836,7 @@ class MainScreenState extends State<MainScreen> {
         HapticFeedback.mediumImpact();
         print("3 FINGERS ACTION COMPLETED");
         setState(() {
-          showingThreeFingersMenu = !showingThreeFingersMenu;
+          ShowHoldMenu = !ShowHoldMenu;
           // if(showingThreeFingersMenu){
           //   animating = false;
           // }
@@ -887,7 +849,7 @@ class MainScreenState extends State<MainScreen> {
   }
 
   void ToggleFullScreen() async {
-    if (showingThreeFingersMenu == false) {
+    if (ShowHoldMenu == false) {
       await FullScreen.enterFullScreen(FullScreenMode.EMERSIVE_STICKY);
     } else {
       await FullScreen.exitFullScreen();
