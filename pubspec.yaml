@@ -52,6 +52,8 @@ dependencies:
   fullscreen: ^1.0.3
   image_picker: ^0.8.7
   path_provider: ^2.0.14
+  percent_indicator: ^4.2.3
+  neon_circular_timer: ^0.0.7
 
 dev_dependencies:
   flutter_test:

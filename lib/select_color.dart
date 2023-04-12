@@ -409,22 +409,26 @@ class SelectColorState extends State<SelectColor> {
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15),
                   ),
-                  color: AppConstants.altColor,
+                  //color: AppConstants.altColor,
+                  color: selectedColor,
                 ),
               ),
                Container(
                 width: (screenHeight! * 0.07) * 0.5,
                 height: (screenHeight! * 0.07) * 0.5,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(39),
-                    topRight: Radius.circular(39),
-                    bottomLeft: Radius.circular(39),
-                    bottomRight: Radius.circular(39),
-                  ),
-                  color: _shadedColor,
-                ),
-              ),
+                 child: ColorFiltered(
+                   colorFilter:
+                   ColorFilter.mode(_shadedColor.withOpacity(1.0), BlendMode.srcIn),
+                   child: Container(
+                       width: 39,
+                       height: 39,
+                       decoration: BoxDecoration(
+                         image: DecorationImage(
+                             image: (AppConstants.plusImg), fit: BoxFit.fitWidth),
+                         // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                       ))
+                 ),
+               ),
             ],
           ),
           //colorShadeSlider(),
@@ -561,7 +565,7 @@ class SelectColorState extends State<SelectColor> {
     printConsole("Saved Color $selectedColor");
     await prefrences.setString('selectedColor', selectedColor.toString());
     setState(() {
-      _shadedColor = selectedColor;
+      //_shadedColor = selectedColor;
     });
   }
 
@@ -572,10 +576,10 @@ class SelectColorState extends State<SelectColor> {
     showBack = true;
     printConsole("Saved Marker $selectedMarker");
     await prefrences.setString('selectedMarker', selectedMarker.toString());
-    await prefrences.setString('selectedColor', _shadedColor.toString());
+    await prefrences.setString('selectedColor', selectedColor.toString());
     setState(() {
-      selectedColor = _shadedColor;
-      pickerColor = _shadedColor;
+      //selectedColor = _shadedColor;
+      //pickerColor = _shadedColor;
     });
   }
 

@@ -9,11 +9,16 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fullscreen/fullscreen.dart';
+import 'package:neon_circular_timer/neon_circular_painter.dart';
+import 'package:neon_circular_timer/neon_circular_timer.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_csv/to_csv.dart' as exportCSV;
+
+import 'dart:math' as math;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -70,13 +75,17 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   late AnimationController controller;
 
+  double _progress = 1.0;
+
+  final CountDownController Count_controller = new CountDownController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     StartState();
 
-    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 1500));
+    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
     controller.addListener(() {
       if(controller.value == 1.0){
         print("Done");
@@ -143,11 +152,18 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
           //   }
           // },
           onTapDown: (dw){
-            controller.forward();
+            setState(() {
+              controller.forward();
+            });
+            //Count_controller.start();
           },
           onTapUp: (dw){
+              // Count_controller.restart();
+              // Count_controller.pause();
             if (controller.status == AnimationStatus.forward) {
-              controller.reverse();
+              setState(() {
+                controller.reverse();
+              });
             }
           },
           // onScaleEnd: (de){
@@ -259,7 +275,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     if (ShowHoldMenu) {
       return Stack(alignment: Alignment.center, children: [
         Container(
-          margin: const EdgeInsets.only(left: 25, right: 25, top: 225, bottom: 100),
+          margin: EdgeInsets.only(left: (screenWidth!*0.065), right: (screenWidth!*0.065), top: (screenHeight!*0.3), bottom: screenHeight!*0.155),
           decoration: BoxDecoration(
               color: const Color.fromARGB(190, 0, 0, 0),
               border: Border.all(
@@ -268,11 +284,44 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
               borderRadius: const BorderRadius.all(Radius.circular(20))),
         ),
         Positioned(
-          top: screenHeight! * 0.4,
-          child: CircleTest(),
+          top: screenHeight! * 0.37,
+          child: SampleTest(),
+          // child: CircularPercentIndicator(
+          //       radius: screenWidth!*0.175,
+          //       backgroundColor: Colors.white,
+          //       progressColor: AppConstants.greenAltColor,
+          //       percent: controller.value,
+          //       startAngle: 90,
+          //       center: Container(
+          //         width: screenWidth!*0.325,
+          //         height: screenWidth!*0.325,
+          //         decoration: const BoxDecoration(
+          //             shape: BoxShape.circle, color: Color.fromARGB(125, 0, 0, 0),),
+          //         child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             mainAxisSize: MainAxisSize.max,
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: const [
+          //               Text(
+          //                 "HOLD",
+          //                 style: TextStyle(
+          //                     fontSize: 30,
+          //                     color: Colors.white,
+          //                     fontWeight: FontWeight.bold),
+          //               ),
+          //               Text(
+          //                 "TO GET STARTED",
+          //                 style: TextStyle(
+          //                     fontSize: 10,
+          //                     color: Colors.white,
+          //                     fontWeight: FontWeight.bold),
+          //               ),
+          //             ]),
+          //       ),
+          // ),
         ),
         Positioned(
-          top: screenHeight! * 0.575,
+          top: screenHeight! * 0.59,
           child: const Text(
             "HOLD TO COME BACK",
             style: TextStyle(
@@ -305,8 +354,115 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     }
   }
 
+  // WORKING GLOW CIRCLE PROGRESS BAR
+  Widget SampleTest(){
+    //AnimationController? _controller;
+    Animation<double>? countDownAnimation;
+      return Center(
+        child: Container(
+          width: screenWidth!*0.35,
+          height: screenWidth!*0.35,
+          child: AnimatedBuilder(
+              animation: controller!,
+              builder: (context, child) {
+                return Align(
+                  child: AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: CustomTimerPainter(
+                                neumorphicEffect: true,
+                                backgroundColor: Colors.white54,
+                                animation: countDownAnimation ?? controller,
+                                innerFillColor: Colors.transparent,
+                                innerFillGradient: const LinearGradient(colors: [
+                                  AppConstants.greenAltColor,
+                                  AppConstants.greenAltColor
+                                ]),
+                                neonColor: Colors.red,
+                                neonGradient: const LinearGradient(colors: [
+                                  AppConstants.greenAltColor,
+                                  AppConstants.greenAltColor
+                                ]),
+                                strokeWidth: 7,
+                                strokeCap: StrokeCap.round,
+                                outerStrokeColor: Colors.white70,
+                                outerStrokeGradient: const LinearGradient(colors: [
+                                  AppConstants.greenAltColor,
+                                  AppConstants.greenAltColor
+                                ]),
+                                neon: 10),
+                          ),
+                        ),
+                        Align(
+                          alignment: FractionalOffset.center,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  "HOLD",
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "TO GET STARTED",
+                                  style: TextStyle(
+                                      fontSize: 8,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ]),
+                        ),
+                        Container(),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      );
+  }
+
+  Widget CircularNeonProgress(){
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        NeonCircularTimer(
+          width: screenWidth!*0.35,
+          duration: 2,
+          controller : Count_controller,
+          isTimerTextShown: false,
+          neumorphicEffect: false,
+          autoStart: false,
+          innerFillGradient: LinearGradient(colors: [
+            AppConstants.greenAltColor,
+            AppConstants.greenAltColor
+          ]),
+          neonGradient: LinearGradient(colors: [
+            AppConstants.greenAltColor,
+            AppConstants.greenAltColor
+          ]),
+          // innerFillGradient: LinearGradient(colors: [
+          //   Colors.greenAccent.shade200,
+          //   Colors.blueAccent.shade400
+          // ]),
+          // neonGradient: LinearGradient(colors: [
+          //   Colors.greenAccent.shade200,
+          //   Colors.blueAccent.shade400
+          // ]),
+        ),
+      ],
+    );
+  }
+
   Widget CircleTest() {
-    final size = 100.0;
+    final size = screenWidth!*0.325;
       return Stack(
         alignment: Alignment.center,
         children: [
@@ -1075,8 +1231,6 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     });
   }
 
-
-
   void loadCustomLayout() {
     // Load Custom Layout
     // Load cornerMargin
@@ -1113,4 +1267,50 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     markerSize = 40;
     markersDataObj = new MarkersDataObj();
   }
+}
+
+class GradientArcPainter extends CustomPainter {
+  const GradientArcPainter({
+    required this.circleSize,
+    required this.progress,
+    required this.startColor,
+    required this.endColor,
+    required this.width,
+  })  : assert(progress != null),
+        assert(startColor != null),
+        assert(endColor != null),
+        assert(width != null),
+        super();
+
+  final double circleSize;
+  final double progress;
+  final Color startColor;
+  final Color endColor;
+  final double width;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = new Rect.fromLTWH(0.0, 0.0, size.width, size.height);
+    final gradient = new SweepGradient(
+      startAngle: 3 * math.pi / 2,
+      endAngle: 7 * math.pi / 2,
+      tileMode: TileMode.repeated,
+      colors: [startColor, endColor],
+    );
+
+    final paint = new Paint()
+      ..shader = gradient.createShader(rect)
+      ..strokeCap = StrokeCap.butt  // StrokeCap.round is not recommended.
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = width;
+    final center = new Offset(size.width / 2, size.height / 2);
+    final radius = circleSize;
+    final startAngle = -math.pi / 2;
+    final sweepAngle = 2 * math.pi * progress;
+    canvas.drawArc(new Rect.fromCircle(center: center, radius: radius),
+        startAngle, sweepAngle, false, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 class AppConstants{
 
-  static const int holdTime = 1500;
+  static const int holdTime = 2000;
 
   static const Color bgColor = Color.fromRGBO(32, 35, 32, 1);
   static const Color altColor = Color.fromRGBO(111, 111, 111, 1);
