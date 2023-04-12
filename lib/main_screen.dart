@@ -20,6 +20,8 @@ import 'package:to_csv/to_csv.dart' as exportCSV;
 
 import 'dart:math' as math;
 
+import 'CustomTimerPainterNew.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -372,7 +374,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                       children: <Widget>[
                         Positioned.fill(
                           child: CustomPaint(
-                            painter: CustomTimerPainter(
+                            painter: CustomTimerPainterNew(
                                 neumorphicEffect: true,
                                 backgroundColor: Colors.white54,
                                 animation: countDownAnimation ?? controller,
@@ -386,7 +388,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                                   AppConstants.greenAltColor,
                                   AppConstants.greenAltColor
                                 ]),
-                                strokeWidth: 7,
+                                innerStrokeWidth: 7,
+                                outerStrokeWidth: 9,
                                 strokeCap: StrokeCap.round,
                                 outerStrokeColor: Colors.white70,
                                 outerStrokeGradient: const LinearGradient(colors: [
