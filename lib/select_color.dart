@@ -17,13 +17,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class _SliderIndicatorPainter extends CustomPainter {
   final double position;
+  final Color _sdColor;
 
-  _SliderIndicatorPainter(this.position);
+  _SliderIndicatorPainter(this.position,this._sdColor);
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(
-        Offset(position, size.height / 2), 12, Paint()..color = Colors.grey);
+    //canvas.drawCircle(Offset(position, size.height / 2), 12, Paint()..color = Colors.grey);
+    canvas.drawCircle(Offset(position, size.height / 2), 12, Paint()..color = _sdColor);
   }
 
   @override
@@ -35,7 +36,6 @@ class _SliderIndicatorPainter extends CustomPainter {
 class SelectColor extends StatefulWidget {
   late double width = 200;
 
-  // SelectColor(this.width);
   @override
   State<SelectColor> createState() => SelectColorState();
 }
@@ -467,14 +467,14 @@ class SelectColorState extends State<SelectColor> {
           padding: EdgeInsets.all(15),
           child: Container(
             width: widget.width,
-            height: 15,
+            height: screenHeight!*0.02,
             decoration: BoxDecoration(
               border: Border.all(width: 2, color: Colors.grey[800]!),
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(0),
               gradient: LinearGradient(colors: _colors),
             ),
             child: CustomPaint(
-              painter: _SliderIndicatorPainter(_colorSliderPosition),
+              painter: _SliderIndicatorPainter(_colorSliderPosition,_shadedColor),
             ),
           ),
         ),
@@ -510,7 +510,7 @@ class SelectColorState extends State<SelectColor> {
                   colors: [Colors.black, _currentColor, Colors.white]),
             ),
             child: CustomPaint(
-              painter: _SliderIndicatorPainter(_shadeSliderPosition),
+              painter: _SliderIndicatorPainter(_shadeSliderPosition,_shadedColor),
             ),
           ),
         ),
@@ -1132,8 +1132,8 @@ class SelectColorState extends State<SelectColor> {
 
   void ShowDialogCustomMarkers() {
     double? outerCircleCorner = 35;
-    double? outerCircleSize = screenHeight! * 0.09;
-    double? innerCircleSize = outerCircleSize * 0.34;
+    //double? outerCircleSize = screenHeight! * 0.09;
+    // double? innerCircleSize = outerCircleSize * 0.34;
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -1197,7 +1197,7 @@ class SelectColorState extends State<SelectColor> {
                           ),
                           width: MediaQuery.of(context).size.width * 0.8,
                           height: MediaQuery.of(context).size.height * 0.6,
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           //margin: EdgeInsets.all(20),
                           child: Column(
                             children: [

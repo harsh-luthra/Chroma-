@@ -14,8 +14,8 @@ class colorPickerTestState extends State<colorPickerTest> {
   double? screenWidth;
   double? screenHeight;
 
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Color(0xff443a49);
+  Color pickerColor = const Color(0xff443a49);
+  Color currentColor = const Color(0xff443a49);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class colorPickerTestState extends State<colorPickerTest> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Text(
+              const Text(
                 'CHROMA+',
                 textAlign: TextAlign.left,
                 style: TextStyle(
@@ -44,7 +44,7 @@ class colorPickerTestState extends State<colorPickerTest> {
                     fontWeight: FontWeight.bold,
                     height: 1),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               GestureDetector(
