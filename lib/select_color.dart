@@ -1137,111 +1137,180 @@ class SelectColorState extends State<SelectColor> {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
-        barrierLabel:
-            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
         barrierColor: Colors.transparent,
         transitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
-          return Center(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  height: MediaQuery.of(context).size.height * 0.60,
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(
-                      color: Color.fromARGB(225, 53, 54, 54),
-                      width: 2,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.80,
+                          height: MediaQuery.of(context).size.height * 0.60,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(
+                              color: const Color.fromARGB(225, 53, 54, 54),
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(outerCircleCorner),
+                              topRight: Radius.circular(outerCircleCorner),
+                              bottomLeft: Radius.circular(outerCircleCorner),
+                              bottomRight: Radius.circular(outerCircleCorner),
+                            ),
+                          ),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.80,
+                              height: MediaQuery.of(context).size.height * 0.60,
+                              color: Colors.black.withOpacity(0.1),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(outerCircleCorner),
+                              topRight: Radius.circular(outerCircleCorner),
+                              bottomLeft: Radius.circular(outerCircleCorner),
+                              bottomRight: Radius.circular(outerCircleCorner),
+                            ),
+                            // color: Color.fromARGB(225, 53, 54, 54),
+                            color: Colors.transparent,
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          padding: EdgeInsets.all(10),
+                          //margin: EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              SizedBox(height: screenHeight! * 0.02,),
+                              Text(
+                                selectTitle,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    decoration: TextDecoration.none,
+                                    color: AppConstants.txtColor1,
+                                    fontFamily: 'Inter',
+                                    fontSize: fontSize,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1),
+                              ),
+                              SizedBox(height: screenHeight! * 0.02,),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      SizedBox(height: screenHeight! * 0.015,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          customMarkersPaletteBox(AppConstants.markerCircle, "Circle,"),
+                                          customMarkersPaletteBox(AppConstants.markerCross, "Cross"),
+                                          customMarkersPaletteBox(AppConstants.markerHexagon, "Hexagon"),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight! * 0.03,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          customMarkersPaletteBox(AppConstants.markerHollowCircle, "Circle"),
+                                          customMarkersPaletteBox(AppConstants.markerHollowSquare, "Square"),
+                                          customMarkersPaletteBox(AppConstants.markerMoon, "Moon"),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight! * 0.03,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
+                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
+                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight! * 0.03,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
+                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
+                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight! * 0.03,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
+                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
+                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight! * 0.03,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
+                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
+                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight! * 0.03,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
+                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
+                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight! * 0.02,),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(outerCircleCorner),
-                      topRight: Radius.circular(outerCircleCorner),
-                      bottomLeft: Radius.circular(outerCircleCorner),
-                      bottomRight: Radius.circular(outerCircleCorner),
-                    ),
-                  ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.80,
-                      height: MediaQuery.of(context).size.height * 0.60,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ),
+                  ],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(outerCircleCorner),
-                      topRight: Radius.circular(outerCircleCorner),
-                      bottomLeft: Radius.circular(outerCircleCorner),
-                      bottomRight: Radius.circular(outerCircleCorner),
-                    ),
-                    // color: Color.fromARGB(225, 53, 54, 54),
-                    color: Colors.transparent,
-                  ),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  padding: EdgeInsets.all(20),
-                  //margin: EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        selectTitle,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            decoration: TextDecoration.none,
-                            color: AppConstants.txtColor1,
-                            fontFamily: 'Inter',
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.w500,
-                            height: 1),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          customMarkersPaletteBox(AppConstants.markerCircle, "Circle,"),
-                          customMarkersPaletteBox(AppConstants.markerCross, "Cross"),
-                          customMarkersPaletteBox(AppConstants.markerHexagon, "Hexagon"),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          customMarkersPaletteBox(AppConstants.markerHollowCircle, "Circle"),
-                          customMarkersPaletteBox(AppConstants.markerHollowSquare, "Square"),
-                          customMarkersPaletteBox(AppConstants.markerMoon, "Moon"),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
-                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
-                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           );
         });
   }
