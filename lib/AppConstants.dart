@@ -49,4 +49,17 @@ class AppConstants{
 
   static const AssetImage backImgWhite = AssetImage('assets/images/backButtonWhite.png');
 
+  static var customShapes = [markerCircle,markerCross,markerHexagon,markerHollowCircle,markerHollowSquare
+                            ,markerMoon, markerSquare, markerStar, markerTriangle];
+
+  static const AssetImage markerCircle = AssetImage('assets/images/circle.png');
+  static const AssetImage markerCross = AssetImage('assets/images/cross.png');
+  static const AssetImage markerHexagon = AssetImage('assets/images/hexagon.png');
+  static const AssetImage markerHollowCircle = AssetImage('assets/images/hollow_circle.png');
+  static const AssetImage markerHollowSquare = AssetImage('assets/images/hollow_square.png');
+  static const AssetImage markerMoon = AssetImage('assets/images/moon.png');
+  static const AssetImage markerSquare = AssetImage('assets/images/square.png');
+  static const AssetImage markerStar = AssetImage('assets/images/star.png');
+  static const AssetImage markerTriangle = AssetImage('assets/images/triangle.png');
+
 }

@@ -70,6 +70,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   File? PickedImage;
   String? loadedMarker = "1";
 
+  Color markerColor = const Color(0xffffffff);
+
   @override
   void initState() {
     // TODO: implement initState
@@ -879,20 +881,48 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       //markerColor = disabledMarkerColor;
       opacity = 0.25;
     }
-    return Container(
-      width: markerSize,
-      height: markerSize,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        //color: markerColor,
-        image: DecorationImage(
-          opacity: opacity,
-          // image: selectedMarker,
-          image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
-          fit: BoxFit.fitWidth
+    if(loadedMarker == "1" || loadedMarker == "2"){
+      return Container(
+        width: markerSize,
+        height: markerSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+          image: DecorationImage(
+            opacity: opacity,
+            image: selectedMarker,
+            // image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+          ),
         ),
-      ),
-    );
+      );
+    }else{
+      return Container(
+        width: markerSize,
+        height: markerSize,
+        // decoration: BoxDecoration(
+        //   shape: BoxShape.circle,
+        //   color: Colors.transparent,
+        //   image: DecorationImage(
+        //     opacity: 1,
+        //     image: selectedMarker,
+        //     // image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+        //   ),
+        // ),
+        child: ColorFiltered(
+            colorFilter:
+            ColorFilter.mode(markerColor.withOpacity(1.0), BlendMode.srcIn),
+            child: Container(
+                width: 39,
+                height: 39,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      opacity: opacity,
+                      image: (selectedMarker), fit: BoxFit.fitWidth),
+                  // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                ))
+        ),
+      );
+    }
   }
 
   // Future<void> _dialogBuilder(BuildContext context) {
@@ -942,7 +972,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   void loadData() async {
     prefs = await SharedPreferences.getInstance();
 
-    // Load Color
+    // Load Main Color
     final String? loadedColor = prefs.getString('selectedColor');
     print("Loaded Color $loadedColor");
     if (loadedColor != null) {
@@ -961,11 +991,39 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     if (loadedMarker != null) {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
-      } else {
+      } else if (loadedMarker == "2") {
         selectedMarker = AppConstants.sfCircleImg;
+      } else {
+        final String? customMarkerString = prefs.getString('customMarker');
+        if (customMarkerString != null) {
+          selectedMarker = AssetImage(customMarkerString);
+        }
+        //selectedMarker = AppConstants.sfCircleImg;
       }
     } else {
       selectedMarker = AppConstants.plusImg;
+    }
+    setState(() {
+      selectedMarker = selectedMarker;
+    });
+
+    // Load Marker Color
+    final String? loadedMarkerColor = prefs.getString('markerColor');
+    print("loadedMarker Color $loadedColor");
+    if (loadedMarkerColor != null) {
+      String valueString = loadedMarkerColor.split('(0x')[1].split(')')[0];
+      int value = int.parse(valueString, radix: 16);
+      markerColor = Color(value);
+      setState(() {
+        markerColor = Color(value);
+      });
+    } else {
+      String? valueString = defaultColor?.split('(0x')[1].split(')')[0];
+      int value = int.parse(valueString!, radix: 16);
+      markerColor = Color(value);
+      setState(() {
+        markerColor = Color(value);
+      });
     }
 
     /* // Load Layout

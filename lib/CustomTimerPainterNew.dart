@@ -81,7 +81,7 @@ class CustomTimerPainterNew extends CustomPainter {
     }
     Path path = Path();
 
-    path.addArc(Offset.zero & size, math.pi * 2, progress);
+    path.addArc(Offset.zero & size, math.pi * 2.5, progress);
 
     Path path_1 = Path()..addArc(Offset.zero & size, 0, math.pi * 2);
     if (neumorphicEffect) {

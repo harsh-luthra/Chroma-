@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/customise_layout.dart';
@@ -29,7 +30,6 @@ class _SliderIndicatorPainter extends CustomPainter {
   bool shouldRepaint(_SliderIndicatorPainter old) {
     return true;
   }
-
 }
 
 class SelectColor extends StatefulWidget {
@@ -77,11 +77,14 @@ class SelectColorState extends State<SelectColor> {
     Color.fromARGB(255, 255, 0, 255),
     Color.fromARGB(255, 255, 0, 127),
     Color.fromARGB(255, 128, 128, 128),
+    Color.fromARGB(255, 0, 0, 0),
   ];
   double _colorSliderPosition = 100;
   late double _shadeSliderPosition;
   late Color _currentColor;
   late Color _shadedColor;
+
+  AssetImage customMarkerImage = AppConstants.addMarkerImg;
 
   @override
   void initState() {
@@ -89,18 +92,24 @@ class SelectColorState extends State<SelectColor> {
     exitFullScreen();
     loadData();
     getCustomImage();
+  }
+
+  @override
+  void didChangeDependencies() {
+    SetColorSelectorData();
     setState(() {
       _currentColor = _calculateSelectedColor(_colorSliderPosition);
       _shadeSliderPosition = widget.width / 2; //center the shader selector
       _shadedColor = _calculateShadedColor(_shadeSliderPosition);
     });
+    super.didChangeDependencies();
   }
 
-  void getCustomImage() async{
+  void getCustomImage() async {
     final pathGot = await getApplicationDocumentsDirectory();
     const fileNameToSave = (AppConstants.customImageName);
     File checkFile = File('${pathGot.path}/$fileNameToSave');
-    if(await checkFile.exists()){
+    if (await checkFile.exists()) {
       setState(() {
         PickedImage = checkFile;
       });
@@ -123,6 +132,7 @@ class SelectColorState extends State<SelectColor> {
       position = 0;
     }
     print("New pos: $position");
+    prefrences.setDouble('colorSliderPosition', position);
     setState(() {
       _colorSliderPosition = position;
       _currentColor = _calculateSelectedColor(_colorSliderPosition);
@@ -390,47 +400,47 @@ class SelectColorState extends State<SelectColor> {
               SizedBox(
                 width: screenWidth! * 0.03,
               ),
-              markerPaletteBox(AppConstants.addMarkerImg, "Custom"),
+              markerPaletteBox(customMarkerImage, "Custom"),
             ],
           ),
           // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
-          SizedBox(height: screenHeight! * 0.01),
+          SizedBox(height: screenHeight! * 0.05),
           colorSelectorSlider(),
-          Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                width: screenHeight! * 0.07,
-                height: screenHeight! * 0.07,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                  ),
-                  //color: AppConstants.altColor,
-                  color: selectedColor,
-                ),
-              ),
-               Container(
-                width: (screenHeight! * 0.07) * 0.5,
-                height: (screenHeight! * 0.07) * 0.5,
-                 child: ColorFiltered(
-                   colorFilter:
-                   ColorFilter.mode(_shadedColor.withOpacity(1.0), BlendMode.srcIn),
-                   child: Container(
-                       width: 39,
-                       height: 39,
-                       decoration: BoxDecoration(
-                         image: DecorationImage(
-                             image: (AppConstants.plusImg), fit: BoxFit.fitWidth),
-                         // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
-                       ))
-                 ),
-               ),
-            ],
-          ),
+          // Stack(
+          //   alignment: Alignment.center,
+          //   children: <Widget>[
+          //     Container(
+          //       width: screenHeight! * 0.07,
+          //       height: screenHeight! * 0.07,
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.only(
+          //           topLeft: Radius.circular(15),
+          //           topRight: Radius.circular(15),
+          //           bottomLeft: Radius.circular(15),
+          //           bottomRight: Radius.circular(15),
+          //         ),
+          //         //color: AppConstants.altColor,
+          //         color: selectedColor,
+          //       ),
+          //     ),
+          //      Container(
+          //       width: (screenHeight! * 0.07) * 0.5,
+          //       height: (screenHeight! * 0.07) * 0.5,
+          //        child: ColorFiltered(
+          //          colorFilter:
+          //          ColorFilter.mode(_shadedColor.withOpacity(1.0), BlendMode.srcIn),
+          //          child: Container(
+          //              width: 39,
+          //              height: 39,
+          //              decoration: BoxDecoration(
+          //                image: DecorationImage(
+          //                    image: (AppConstants.plusImg), fit: BoxFit.fitWidth),
+          //                // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+          //              ))
+          //        ),
+          //      ),
+          //   ],
+          // ),
           //colorShadeSlider(),
         ],
       ),
@@ -532,6 +542,15 @@ class SelectColorState extends State<SelectColor> {
 
   void loadData() async {
     prefrences = await SharedPreferences.getInstance();
+    final String? customMarkerString = prefrences.getString('customMarker');
+    final double? colorSliderValue = prefrences.getDouble('colorSliderPosition');
+    if (colorSliderValue != null) {
+      _colorSliderPosition = colorSliderValue;
+      _colorChangeHandler(_colorSliderPosition);
+    }
+    if (customMarkerString != null) {
+      customMarkerImage = AssetImage(customMarkerString);
+    }
     final String? customColor = prefrences.getString('customColor');
     printConsole("Loaded Color $customColor");
     if (customColor != null) {
@@ -576,6 +595,7 @@ class SelectColorState extends State<SelectColor> {
     showBack = true;
     printConsole("Saved Marker $selectedMarker");
     await prefrences.setString('selectedMarker', selectedMarker.toString());
+    await prefrences.setString('markerColor', _shadedColor.toString());
     await prefrences.setString('selectedColor', selectedColor.toString());
     setState(() {
       //selectedColor = _shadedColor;
@@ -786,6 +806,7 @@ class SelectColorState extends State<SelectColor> {
             title,
             textAlign: TextAlign.left,
             style: TextStyle(
+                decoration: TextDecoration.none,
                 color: AppConstants.buttonTxtColor,
                 fontFamily: 'Inter',
                 fontSize: fontSize,
@@ -798,15 +819,16 @@ class SelectColorState extends State<SelectColor> {
     );
   }
 
-  Widget markerPaletteBox(AssetImage showImage, String title) {
+  Widget markerPaletteBoxWithFile(AssetImage showImage, String title) {
     double? outerCircleCorner = 15;
     double? outerCircleSize = screenHeight! * 0.09;
-    double? markerSize = title == "Cross" ? screenHeight! * 0.045 : screenHeight! * 0.045;
-    markerSize = title == "Circle" ? screenHeight! * 0.0625 : screenHeight! * 0.045;
+    double? markerSize =
+        title == "Cross" ? screenHeight! * 0.045 : screenHeight! * 0.045;
+    markerSize =
+        title == "Circle" ? screenHeight! * 0.0625 : screenHeight! * 0.045;
     // if(title == "Custom"){
     //   showImage = PickedImage == null ? showImage : PickedImage as AssetImage;
     // }
-
     //double? innerCircleSize = outerCircleSize * 0.34;
     return GestureDetector(
       onTap: () {
@@ -823,9 +845,10 @@ class SelectColorState extends State<SelectColor> {
           });
         } else if (title == "Custom") {
           setState(() {
-            if(PickedImage == null){
-              pickMarkerFromDevice();
-            }else{
+            if (PickedImage == null) {
+              ShowDialogCustomMarkers();
+              //pickMarkerFromDevice();
+            } else {
               selectedMarker = 3; // Need to Change to 3
               selectLayout(); // Need to Add Pick Image from Phone for Custom Marker
               //pickMarkerFromDevice();
@@ -833,15 +856,15 @@ class SelectColorState extends State<SelectColor> {
           });
         }
       },
-      onLongPress: (){
-        if (title == "Custom") {
-          setState(() {
-          selectedMarker = 2; // Need to Change to 3
-          // selectLayout(); // Need to Add Pick Image from Phone for Custom Marker
-          pickMarkerFromDevice();
-          });
-        }
-      },
+      // onLongPress: (){
+      //   if (title == "Custom") {
+      //     setState(() {
+      //     selectedMarker = 2; // Need to Change to 3
+      //     // selectLayout(); // Need to Add Pick Image from Phone for Custom Marker
+      //     pickMarkerFromDevice();
+      //     });
+      //   }
+      // },
       child: Column(
         children: [
           Stack(
@@ -870,10 +893,10 @@ class SelectColorState extends State<SelectColor> {
                         // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
                       ))
                   : Image.file(
-                  width: markerSize,
-                  height: markerSize,
-                  PickedImage!,
-                  fit: BoxFit.cover,
+                      width: markerSize,
+                      height: markerSize,
+                      PickedImage!,
+                      fit: BoxFit.cover,
                     ),
             ],
           ),
@@ -893,6 +916,338 @@ class SelectColorState extends State<SelectColor> {
         ],
       ),
     );
+  }
+
+  Widget markerPaletteBox(AssetImage showImage, String title) {
+    double? outerCircleCorner = 15;
+    double? outerCircleSize = screenHeight! * 0.09;
+    double? markerSize = screenHeight! * 0.045;
+    if(title == "Cross"){
+      markerSize = screenHeight! * 0.045;
+    }else if( title == "Circle"){
+      markerSize = screenHeight! * 0.0625;
+    }else{
+      markerSize = screenHeight! * 0.0625;
+    }
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.mediumImpact();
+        if (title == "Cross") {
+          setState(() {
+            selectedMarker = 1;
+            selectLayout();
+          });
+        } else if (title == "Circle") {
+          setState(() {
+            selectedMarker = 2;
+            selectLayout();
+          });
+        } else if (title == "Custom") {
+          setState(() {
+            selectedMarker = 3;
+            selectLayout();
+              //ShowDialogCustomMarkers();
+          });
+        }
+      },
+      onLongPress: (){
+        if (title == "Custom") {
+          setState(() {
+              ShowDialogCustomMarkers();
+          });
+        }
+      },
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: outerCircleSize,
+                height: outerCircleSize,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(outerCircleCorner),
+                    topRight: Radius.circular(outerCircleCorner),
+                    bottomLeft: Radius.circular(outerCircleCorner),
+                    bottomRight: Radius.circular(outerCircleCorner),
+                  ),
+                  color: AppConstants.altColor,
+                ),
+              ),
+              title != "Custom" ?
+              Container(
+                  width: markerSize,
+                  height: markerSize,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: (showImage), fit: BoxFit.fitWidth),
+                    // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                  )) :
+                  SizedBox(
+                  width: markerSize,
+                  height: markerSize,
+                    child: ColorFiltered(
+                        colorFilter:
+                        ColorFilter.mode(_shadedColor.withOpacity(1.0), BlendMode.srcIn),
+                        child: Container(
+                            width: 39,
+                            height: 39,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: (showImage), fit: BoxFit.fitWidth),
+                              // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                            ))
+                    ),
+                  ),
+            ],
+          ),
+          SizedBox(
+            height: screenHeight! * 0.01,
+          ),
+          Text(
+            title,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: const Color.fromRGBO(69, 69, 69, 1),
+                fontFamily: 'Inter',
+                fontSize: fontSize,
+                fontWeight: FontWeight.normal,
+                height: 1),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget customMarkersPaletteBox(AssetImage showImage, String title) {
+    double? outerCircleCorner = 15;
+    double? outerCircleSize = screenHeight! * 0.09;
+    double? markerSize = screenHeight! * 0.06;
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.mediumImpact();
+        setState(() {
+          customMarkerImage = showImage;
+        });
+        print(customMarkerImage.assetName);
+        prefrences.setString('customMarker', customMarkerImage.assetName);
+        Navigator.of(context).pop();
+        // if (title == "Cross") {
+        //   setState(() {
+        //     selectedMarker = 1;
+        //     selectLayout();
+        //   });
+        // } else if (title == "Circle") {
+        //   setState(() {
+        //     selectedMarker = 2;
+        //     selectLayout();
+        //   });
+        // } else if (title == "Custom") {
+        //   setState(() {
+        //     if (PickedImage == null) {
+        //       ShowDialogCustomMarkers();
+        //       //pickMarkerFromDevice();
+        //     } else {
+        //       selectedMarker = 3; // Need to Change to 3
+        //       selectLayout(); // Need to Add Pick Image from Phone for Custom Marker
+        //       //pickMarkerFromDevice();
+        //     }
+        //   });
+        // }
+      },
+      // onLongPress: (){
+      //   if (title == "Custom") {
+      //     setState(() {
+      //     selectedMarker = 2; // Need to Change to 3
+      //     // selectLayout(); // Need to Add Pick Image from Phone for Custom Marker
+      //     pickMarkerFromDevice();
+      //     });
+      //   }
+      // },
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: outerCircleSize,
+                height: outerCircleSize,
+                decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(
+                      blurRadius: 10,
+                    )
+                  ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(outerCircleCorner),
+                    topRight: Radius.circular(outerCircleCorner),
+                    bottomLeft: Radius.circular(outerCircleCorner),
+                    bottomRight: Radius.circular(outerCircleCorner),
+                  ),
+                  color: AppConstants.altColor,
+                ),
+              ),
+              Container(
+                  width: markerSize,
+                  height: markerSize,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: (showImage), fit: BoxFit.fitWidth),
+                    // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                  ),
+                  // child: ColorFiltered(
+                  //        colorFilter:
+                  //        ColorFilter.mode(_shadedColor.withOpacity(1.0), BlendMode.srcIn),
+                  //        child: Container(
+                  //            width: 39,
+                  //            height: 39,
+                  //            decoration: BoxDecoration(
+                  //              image: DecorationImage(
+                  //                  image: (showImage), fit: BoxFit.fitWidth),
+                  //              // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                  //            ))
+                  //      ),
+                ),
+            ],
+          ),
+          SizedBox(
+            height: screenHeight! * 0.01,
+          ),
+          // Text(
+          //   title,
+          //   textAlign: TextAlign.left,
+          //   style: TextStyle(
+          //       color: const Color.fromRGBO(69, 69, 69, 1),
+          //       decoration: TextDecoration.none,
+          //       fontFamily: 'Inter',
+          //       fontSize: fontSize,
+          //       fontWeight: FontWeight.normal,
+          //       height: 1),
+          // )
+        ],
+      ),
+    );
+  }
+
+  void ShowDialogCustomMarkers() {
+    double? outerCircleCorner = 35;
+    double? outerCircleSize = screenHeight! * 0.09;
+    double? innerCircleSize = outerCircleSize * 0.34;
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.transparent,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.80,
+                  height: MediaQuery.of(context).size.height * 0.60,
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(
+                      color: Color.fromARGB(225, 53, 54, 54),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(outerCircleCorner),
+                      topRight: Radius.circular(outerCircleCorner),
+                      bottomLeft: Radius.circular(outerCircleCorner),
+                      bottomRight: Radius.circular(outerCircleCorner),
+                    ),
+                  ),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.80,
+                      height: MediaQuery.of(context).size.height * 0.60,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(outerCircleCorner),
+                      topRight: Radius.circular(outerCircleCorner),
+                      bottomLeft: Radius.circular(outerCircleCorner),
+                      bottomRight: Radius.circular(outerCircleCorner),
+                    ),
+                    // color: Color.fromARGB(225, 53, 54, 54),
+                    color: Colors.transparent,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  padding: EdgeInsets.all(20),
+                  //margin: EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        selectTitle,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            decoration: TextDecoration.none,
+                            color: AppConstants.txtColor1,
+                            fontFamily: 'Inter',
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                            height: 1),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          customMarkersPaletteBox(AppConstants.markerCircle, "Circle,"),
+                          customMarkersPaletteBox(AppConstants.markerCross, "Cross"),
+                          customMarkersPaletteBox(AppConstants.markerHexagon, "Hexagon"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          customMarkersPaletteBox(AppConstants.markerHollowCircle, "Circle"),
+                          customMarkersPaletteBox(AppConstants.markerHollowSquare, "Square"),
+                          customMarkersPaletteBox(AppConstants.markerMoon, "Moon"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
+                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
+                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  Widget CustomMarkersDialog() {
+    return Container();
   }
 
   Widget layoutPaletteBox(AssetImage showImage, String title) {
@@ -1172,7 +1527,8 @@ class SelectColorState extends State<SelectColor> {
       //final extension = p.extension(pickedFile.path);
       const fileNameToSave = (AppConstants.customImageName);
       // copy the image's whole directory to a new <File>
-      final File localImage = await imageFile.copy('${pathGot.path}/$fileNameToSave');
+      final File localImage =
+          await imageFile.copy('${pathGot.path}/$fileNameToSave');
       print(localImage.path);
       setState(() {
         PickedImage = imageFile;

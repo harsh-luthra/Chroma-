@@ -80,6 +80,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   double _progress = 1.0;
 
   final CountDownController Count_controller = new CountDownController();
+  Color markerColor = const Color(0xffffffff);
 
   @override
   void initState() {
@@ -255,19 +256,47 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   Widget markerWidget(bool isMarkerEnabled) {
     if (isMarkerEnabled) {
-      return Container(
-        width: markerSize,
-        height: markerSize,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.transparent,
-          image: DecorationImage(
-            opacity: 1,
-            // image: selectedMarker,
-            image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+      if(loadedMarker == "1" || loadedMarker == "2"){
+        return Container(
+          width: markerSize,
+          height: markerSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.transparent,
+            image: DecorationImage(
+              opacity: 1,
+              image: selectedMarker,
+              // image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+            ),
           ),
-        ),
-      );
+        );
+      }else{
+        return SizedBox(
+          width: markerSize,
+          height: markerSize,
+          // decoration: BoxDecoration(
+          //   shape: BoxShape.circle,
+          //   color: Colors.transparent,
+          //   image: DecorationImage(
+          //     opacity: 1,
+          //     image: selectedMarker,
+          //     // image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+          //   ),
+          // ),
+          child: ColorFiltered(
+              colorFilter:
+              ColorFilter.mode(markerColor.withOpacity(1.0), BlendMode.srcIn),
+              child: Container(
+                  width: 39,
+                  height: 39,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: (selectedMarker), fit: BoxFit.fitWidth),
+                    // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                  ))
+          ),
+        );
+      }
     } else {
       return Container();
     }
@@ -324,10 +353,10 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
         ),
         Positioned(
           top: screenHeight! * 0.59,
-          child: const Text(
+          child: Text(
             "HOLD TO COME BACK",
             style: TextStyle(
-                fontSize: 10,
+                fontSize: fontSize,
                 color: Colors.grey,
                 fontWeight: FontWeight.bold),
           ),
@@ -405,18 +434,18 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
                                   "HOLD",
                                   style: TextStyle(
-                                      fontSize: 25,
+                                      fontSize: fontSize,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   "TO GET STARTED",
                                   style: TextStyle(
-                                      fontSize: 8,
+                                      fontSize: fontSize!/3,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -496,18 +525,18 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Text(
                       "HOLD",
                       style: TextStyle(
-                          fontSize: 25,
+                          fontSize: fontSize,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "TO GET STARTED",
                       style: TextStyle(
-                          fontSize: 8,
+                          fontSize: (fontSize!/3),
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
@@ -604,13 +633,13 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   Widget Gyroscope() {
     return Column(
       children: [
-        const Text(
+         Text(
           "Gyroscope data",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
-              fontSize: 15,
+              fontSize: fontSize,
               fontWeight: FontWeight.w500,
               height: 1),
         ),
@@ -720,10 +749,10 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
         Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
               color: AppConstants.txtColor1,
               fontFamily: 'Inter',
-              fontSize: 12,
+              fontSize: fontSize!/2,
               fontWeight: FontWeight.w400,
               height: 1),
         ),
@@ -1175,7 +1204,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   void loadData() async {
     prefs = await SharedPreferences.getInstance();
 
-    // Load Color
+    // Load Main Color
     final String? loadedColor = prefs.getString('selectedColor');
     print("Loaded Color $loadedColor");
     if (loadedColor != null) {
@@ -1202,8 +1231,12 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
         selectedMarker = AppConstants.plusImg;
       } else if (loadedMarker == "2") {
         selectedMarker = AppConstants.sfCircleImg;
-      }else{
-        selectedMarker = AppConstants.sfCircleImg;
+      } else {
+        final String? customMarkerString = prefs.getString('customMarker');
+        if (customMarkerString != null) {
+            selectedMarker = AssetImage(customMarkerString);
+        }
+        //selectedMarker = AppConstants.sfCircleImg;
       }
     } else {
       selectedMarker = AppConstants.plusImg;
@@ -1211,6 +1244,25 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     setState(() {
       selectedMarker = selectedMarker;
     });
+
+    // Load Marker Color
+    final String? loadedMarkerColor = prefs.getString('markerColor');
+    print("loadedMarker Color $loadedColor");
+    if (loadedMarkerColor != null) {
+      String valueString = loadedMarkerColor.split('(0x')[1].split(')')[0];
+      int value = int.parse(valueString, radix: 16);
+      markerColor = Color(value);
+      setState(() {
+        markerColor = Color(value);
+      });
+    } else {
+      String? valueString = defaultColor?.split('(0x')[1].split(')')[0];
+      int value = int.parse(valueString!, radix: 16);
+      markerColor = Color(value);
+      setState(() {
+        markerColor = Color(value);
+      });
+    }
 
     // Load Layout
     final String? loadedLayout = prefs.getString('selectedLayout');
