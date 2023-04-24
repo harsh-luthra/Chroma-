@@ -438,14 +438,14 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                                 Text(
                                   "HOLD",
                                   style: TextStyle(
-                                      fontSize: fontSize,
+                                      fontSize: fontSize!*1.5,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   "TO GET STARTED",
                                   style: TextStyle(
-                                      fontSize: fontSize!/3,
+                                      fontSize: fontSize!/1.9,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -529,14 +529,14 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                     Text(
                       "HOLD",
                       style: TextStyle(
-                          fontSize: fontSize,
+                          fontSize: fontSize!*2,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "TO GET STARTED",
                       style: TextStyle(
-                          fontSize: (fontSize!/3),
+                          fontSize: (fontSize!/1.5),
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),

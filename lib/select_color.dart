@@ -499,7 +499,7 @@ class SelectColorState extends State<SelectColor> {
         //This outside padding makes it much easier to grab the slider because the gesture detector has
         // the extra padding to recognize gestures inside of
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Container(
             width: widget.width,
             height: 15,
