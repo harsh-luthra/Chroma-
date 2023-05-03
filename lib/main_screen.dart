@@ -29,7 +29,7 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
+class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   // create some values
   double? screenWidth;
   double? screenHeight;
@@ -76,11 +76,17 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   String? loadedMarker = "1";
 
   late AnimationController controller;
+  late AnimationController controller_txt_color;
+  late AnimationController controller_txt_opacity;
+  late Animation _colorAnim;
+  Color txt_color = Colors.grey;
 
   double _progress = 1.0;
 
   final CountDownController Count_controller = new CountDownController();
   Color markerColor = const Color(0xffffffff);
+
+  double txt_opacity = 0;
 
   @override
   void initState() {
@@ -99,6 +105,30 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
       }
       setState(() {});
     });
+
+     controller_txt_color = AnimationController(duration: Duration(seconds: 2), vsync: this);
+     _colorAnim = ColorTween(begin:Colors.white,end: AppConstants.greenColor).animate(controller_txt_color);
+
+     controller_txt_opacity = AnimationController(duration: Duration(seconds: 1), vsync: this);
+
+    _colorAnim.addListener((){
+      if(controller_txt_color.value > 0){
+        controller_txt_opacity.forward();
+      }
+
+      if(controller_txt_color.value == 1.0){
+         controller_txt_color.reset();
+         controller_txt_opacity.reset();
+      }
+
+      setState(() {
+        txt_color = _colorAnim.value;
+        if(controller_txt_color.value == 0){
+          controller_txt_opacity.reset();
+        }
+      });
+    });
+
     // loadData();
     // listenAllSensors();
     // brightnessSliderValue = currentBrightness as double;
@@ -157,6 +187,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
           onTapDown: (dw){
             setState(() {
               controller.forward();
+              controller_txt_color.forward();
             });
             //Count_controller.start();
           },
@@ -166,6 +197,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
             if (controller.status == AnimationStatus.forward) {
               setState(() {
                 controller.reverse();
+                controller_txt_color.reverse();
               });
             }
           },
@@ -315,7 +347,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
               borderRadius: const BorderRadius.all(Radius.circular(20))),
         ),
         Positioned(
-          top: screenHeight! * 0.37,
+          top: screenHeight! * 0.42,
           child: SampleTest(),
           // child: CircularPercentIndicator(
           //       radius: screenWidth!*0.175,
@@ -352,14 +384,15 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
           // ),
         ),
         Positioned(
-          top: screenHeight! * 0.59,
-          child: Text(
-            "HOLD TO COME BACK",
-            style: TextStyle(
-                fontSize: fontSize,
-                color: Colors.grey,
-                fontWeight: FontWeight.bold),
-          ),
+          top: screenHeight! * 0.35,
+          // child: Text(
+          //   "HOLD TO COME BACK",
+          //   style: TextStyle(
+          //       fontSize: fontSize,
+          //       color: txt_color,
+          //       fontWeight: FontWeight.bold),
+          // ),
+          child: txt_come_back(),
         ),
         Positioned(
           bottom: screenHeight! * 0.19,
@@ -383,6 +416,35 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     } else {
       return Container();
     }
+  }
+
+  Widget txt_come_back(){
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      child: Text(
+        "HOLD TO COME BACK",
+        style: TextStyle(
+            fontSize: fontSize,
+            color: txt_color.withOpacity(controller_txt_opacity.value),
+            //color: txt_color,
+            fontWeight: FontWeight.bold),
+      ),
+    );
+    // if(controller_txt_color.value > 0){
+    //   return AnimatedContainer(
+    //     duration: Duration(seconds: 1),
+    //     child: Text(
+    //       "HOLD TO COME BACK",
+    //       style: TextStyle(
+    //           fontSize: fontSize,
+    //           // color: txt_color.withOpacity(controller_txt_opacity.value),
+    //           color: txt_color,
+    //           fontWeight: FontWeight.bold),
+    //     ),
+    //   );
+    // }else{
+    //   return Container();
+    // }
   }
 
   // WORKING GLOW CIRCLE PROGRESS BAR
