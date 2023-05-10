@@ -64,27 +64,27 @@ class SelectColorState extends State<SelectColor> {
 
   ///////////////////////////////////////////////////////////////////////////////////////
   final List<Color> _colors = [
-    Color.fromARGB(255, 255, 0, 0),
-    Color.fromARGB(255, 255, 128, 0),
-    Color.fromARGB(255, 255, 255, 0),
-    Color.fromARGB(255, 128, 255, 0),
-    Color.fromARGB(255, 0, 255, 0),
-    Color.fromARGB(255, 0, 255, 128),
-    Color.fromARGB(255, 0, 255, 255),
-    Color.fromARGB(255, 0, 128, 255),
-    Color.fromARGB(255, 0, 0, 255),
-    Color.fromARGB(255, 127, 0, 255),
-    Color.fromARGB(255, 255, 0, 255),
-    Color.fromARGB(255, 255, 0, 127),
-    Color.fromARGB(255, 128, 128, 128),
-    Color.fromARGB(255, 0, 0, 0),
+    const Color.fromARGB(255, 255, 0, 0),
+    const Color.fromARGB(255, 255, 128, 0),
+    const Color.fromARGB(255, 255, 255, 0),
+    const Color.fromARGB(255, 128, 255, 0),
+    const Color.fromARGB(255, 0, 255, 0),
+    const Color.fromARGB(255, 0, 255, 128),
+    const Color.fromARGB(255, 0, 255, 255),
+    const Color.fromARGB(255, 0, 128, 255),
+    const Color.fromARGB(255, 0, 0, 255),
+    const Color.fromARGB(255, 127, 0, 255),
+    const Color.fromARGB(255, 255, 0, 255),
+    const Color.fromARGB(255, 255, 0, 127),
+    const Color.fromARGB(255, 128, 128, 128),
+    const Color.fromARGB(255, 0, 0, 0),
   ];
   double _colorSliderPosition = 100;
   late double _shadeSliderPosition;
   late Color _currentColor;
   late Color _shadedColor;
 
-  AssetImage customMarkerImage = AppConstants.addMarkerImg;
+  AssetImage customMarkerImage = AppConstants.markerCross;
 
   @override
   void initState() {
@@ -464,13 +464,14 @@ class SelectColorState extends State<SelectColor> {
         //This outside padding makes it much easier to grab the   slider because the gesture detector has
         // the extra padding to recognize gestures inside of
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Container(
             width: widget.width,
-            height: screenHeight!*0.02,
+            height: screenHeight!*0.0175,
+            //height: 10,
             decoration: BoxDecoration(
               border: Border.all(width: 2, color: Colors.grey[800]!),
-              borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(20),
               gradient: LinearGradient(colors: _colors),
             ),
             child: CustomPaint(
@@ -593,9 +594,9 @@ class SelectColorState extends State<SelectColor> {
 
   // SELECT LAYOUT FUNCTION
   void selectLayout() async {
-    selectTitle = "Select Layout";
+    //selectTitle = "Select Layout";
     //progressInt = "3";
-    progressSize = 0.75;
+    //progressSize = 0.75;
     showBack = true;
     printConsole("Saved Marker $selectedMarker");
     await prefrences.setString('selectedMarker', selectedMarker.toString());
@@ -950,6 +951,8 @@ class SelectColorState extends State<SelectColor> {
         } else if (title == "Custom") {
           setState(() {
             selectedMarker = 3;
+            // Added here to fix initial empty marker which was default to PLus Marker now What is selected on first app start is there
+            prefrences.setString('customMarker', customMarkerImage.assetName);
             selectLayout();
               //ShowDialogCustomMarkers();
           });
