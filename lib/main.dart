@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     Wakelock.enable();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Sensors Demo',
+      title: 'Chroma+',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),

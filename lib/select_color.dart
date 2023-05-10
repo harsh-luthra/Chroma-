@@ -1164,7 +1164,7 @@ class SelectColorState extends State<SelectColor> {
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width * 0.80,
-                          height: MediaQuery.of(context).size.height * 0.60,
+                          height: MediaQuery.of(context).size.height * 0.50,
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             color: Colors.transparent,
@@ -1183,7 +1183,7 @@ class SelectColorState extends State<SelectColor> {
                             filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.80,
-                              height: MediaQuery.of(context).size.height * 0.60,
+                              height: MediaQuery.of(context).size.height * 0.50,
                               color: Colors.black.withOpacity(0.1),
                             ),
                           ),
@@ -1204,7 +1204,7 @@ class SelectColorState extends State<SelectColor> {
                             color: Colors.transparent,
                           ),
                           width: MediaQuery.of(context).size.width * 0.8,
-                          height: MediaQuery.of(context).size.height * 0.6,
+                          height: MediaQuery.of(context).size.height * 0.5,
                           padding: const EdgeInsets.all(10),
                           //margin: EdgeInsets.all(20),
                           child: Column(
@@ -1261,51 +1261,16 @@ class SelectColorState extends State<SelectColor> {
                                           customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
                                         ],
                                       ),
+                                      // SizedBox(height: screenHeight! * 0.03,),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      //   mainAxisSize: MainAxisSize.max,
+                                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                                      //   children: [
+                                      //     customMarkersPaletteBox(AppConstants.plusImg, "Plus"),
+                                      //   ],
+                                      // ),
                                       SizedBox(height: screenHeight! * 0.03,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
-                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
-                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
-                                        ],
-                                      ),
-                                      SizedBox(height: screenHeight! * 0.03,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
-                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
-                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
-                                        ],
-                                      ),
-                                      SizedBox(height: screenHeight! * 0.03,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
-                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
-                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
-                                        ],
-                                      ),
-                                      SizedBox(height: screenHeight! * 0.03,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          customMarkersPaletteBox(AppConstants.markerSquare, "Square"),
-                                          customMarkersPaletteBox(AppConstants.markerStar, "Star"),
-                                          customMarkersPaletteBox(AppConstants.markerTriangle, "Triangle"),
-                                        ],
-                                      ),
-                                      SizedBox(height: screenHeight! * 0.02,),
                                     ],
                                   ),
                                 ),
