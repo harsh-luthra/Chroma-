@@ -467,7 +467,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           child: CustomPaint(
                             painter: CustomTimerPainterNew(
                                 neumorphicEffect: true,
-                                backgroundColor: Colors.white54,
+                                backgroundColor: Color.fromARGB(0, 100, 100, 100),
                                 animation: countDownAnimation ?? controller,
                                 innerFillColor: Colors.transparent,
                                 innerFillGradient: const LinearGradient(colors: [
@@ -479,8 +479,8 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                   AppConstants.greenAltColor,
                                   AppConstants.greenAltColor
                                 ]),
-                                innerStrokeWidth: 7,
-                                outerStrokeWidth: 9,
+                                innerStrokeWidth: 10,
+                                outerStrokeWidth: 7,
                                 strokeCap: StrokeCap.round,
                                 outerStrokeColor: Colors.white70,
                                 outerStrokeGradient: const LinearGradient(colors: [
@@ -500,13 +500,15 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 Text(
                                   "HOLD",
                                   style: TextStyle(
-                                      fontSize: fontSize!*1.5,
+                                      letterSpacing: 5,
+                                      fontSize: fontSize!*2,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   "TO GET STARTED",
                                   style: TextStyle(
+                                      letterSpacing: 2,
                                       fontSize: fontSize!/1.9,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),

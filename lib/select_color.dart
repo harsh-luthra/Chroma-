@@ -569,6 +569,7 @@ class SelectColorState extends State<SelectColor> {
     });
   }
 
+  // SELECT COLOR FUNCTION
   void selectColorView() async {
     selectTitle = "Select Color";
     progressInt = "1";
@@ -576,8 +577,10 @@ class SelectColorState extends State<SelectColor> {
     showBack = false;
   }
 
+  // SELECT MARKER FUNCTION
   void selectMarkerView() async {
     selectTitle = "Select Marker";
+    selectedLayout = 2; // TO make it Select Cusotm Layout
     progressInt = "2";
     progressSize = 0.5;
     showBack = true;
@@ -588,9 +591,10 @@ class SelectColorState extends State<SelectColor> {
     });
   }
 
+  // SELECT LAYOUT FUNCTION
   void selectLayout() async {
     selectTitle = "Select Layout";
-    progressInt = "3";
+    //progressInt = "3";
     progressSize = 0.75;
     showBack = true;
     printConsole("Saved Marker $selectedMarker");
@@ -598,6 +602,7 @@ class SelectColorState extends State<SelectColor> {
     await prefrences.setString('markerColor', _shadedColor.toString());
     await prefrences.setString('selectedColor', selectedColor.toString());
     setState(() {
+      goToMain();
       //selectedColor = _shadedColor;
       //pickerColor = _shadedColor;
     });
@@ -1326,7 +1331,7 @@ class SelectColorState extends State<SelectColor> {
       onTap: () {
         HapticFeedback.mediumImpact();
         if (title == "Standard") {
-          selectedLayout = 1;
+          selectedLayout = 2;
         } else {
           selectedLayout = 2;
         }
