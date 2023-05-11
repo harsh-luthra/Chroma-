@@ -94,6 +94,12 @@ class SelectColorState extends State<SelectColor> {
     getCustomImage();
   }
 
+  void Debug_print(msg){
+    if (kDebugMode) {
+      print(msg);
+    }
+  }
+
   @override
   void didChangeDependencies() {
     SetColorSelectorData();
@@ -131,7 +137,7 @@ class SelectColorState extends State<SelectColor> {
     if (position < 0) {
       position = 0;
     }
-    print("New pos: $position");
+    Debug_print("New pos: $position");
     prefrences.setDouble('colorSliderPosition', position);
     setState(() {
       _colorSliderPosition = position;
@@ -147,7 +153,7 @@ class SelectColorState extends State<SelectColor> {
     setState(() {
       _shadeSliderPosition = position;
       _shadedColor = _calculateShadedColor(_shadeSliderPosition);
-      print(
+      Debug_print(
           "r: ${_shadedColor.red}, g: ${_shadedColor.green}, b: ${_shadedColor.blue}");
     });
   }
@@ -193,10 +199,10 @@ class SelectColorState extends State<SelectColor> {
   Color _calculateSelectedColor(double position) {
     //determine color
     // double positionInColorArray = (position / widget.width * (_colors.length - 1));
-    double positionInColorArray = (position / widget.width * (_colors.length - 1));
-    print(positionInColorArray);
+    double positionInColorArray = (position / 200.0 * (_colors.length - 1));
+    Debug_print(positionInColorArray);
     int index = positionInColorArray.truncate();
-    print(index);
+    Debug_print(index);
     double remainder = positionInColorArray - index;
     if (remainder == 0.0) {
       _currentColor = _colors[index];
@@ -306,7 +312,7 @@ class SelectColorState extends State<SelectColor> {
 
   void printConsole(msg) {
     if (kDebugMode) {
-      print(msg);
+      Debug_print(msg);
     }
   }
 
@@ -452,7 +458,7 @@ class SelectColorState extends State<SelectColor> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onHorizontalDragStart: (DragStartDetails details) {
-          print("_-------------------------STARTED DRAG");
+          Debug_print("_-------------------------STARTED DRAG");
           _colorChangeHandler(details.localPosition.dx);
         },
         onHorizontalDragUpdate: (DragUpdateDetails details) {
@@ -488,7 +494,7 @@ class SelectColorState extends State<SelectColor> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onHorizontalDragStart: (DragStartDetails details) {
-          print("_-------------------------STARTED DRAG");
+          Debug_print("_-------------------------STARTED DRAG");
           _shadeChangeHandler(details.localPosition.dx);
         },
         onHorizontalDragUpdate: (DragUpdateDetails details) {
@@ -1038,7 +1044,7 @@ class SelectColorState extends State<SelectColor> {
         setState(() {
           customMarkerImage = showImage;
         });
-        print(customMarkerImage.assetName);
+        Debug_print(customMarkerImage.assetName);
         prefrences.setString('customMarker', customMarkerImage.assetName);
         Navigator.of(context).pop();
         // if (title == "Cross") {
@@ -1563,7 +1569,7 @@ class SelectColorState extends State<SelectColor> {
 
       // 5. Get the path to the apps directory so we can save the file to it.
       final pathGot = await getApplicationDocumentsDirectory();
-      print(pathGot.path);
+      Debug_print(pathGot.path);
       // get the image's directory
       //final fileName = p.basename(pickedFile.path);
       //final extension = p.extension(pickedFile.path);
@@ -1571,7 +1577,7 @@ class SelectColorState extends State<SelectColor> {
       // copy the image's whole directory to a new <File>
       final File localImage =
           await imageFile.copy('${pathGot.path}/$fileNameToSave');
-      print(localImage.path);
+      Debug_print(localImage.path);
       setState(() {
         PickedImage = imageFile;
       });
