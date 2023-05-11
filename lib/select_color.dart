@@ -34,7 +34,7 @@ class _SliderIndicatorPainter extends CustomPainter {
 }
 
 class SelectColor extends StatefulWidget {
-  late double width = 200;
+  double width = 200.0;
 
   @override
   State<SelectColor> createState() => SelectColorState();
@@ -192,8 +192,8 @@ class SelectColorState extends State<SelectColor> {
 
   Color _calculateSelectedColor(double position) {
     //determine color
-    double positionInColorArray =
-        (position / widget.width * (_colors.length - 1));
+    // double positionInColorArray = (position / widget.width * (_colors.length - 1));
+    double positionInColorArray = (position / widget.width * (_colors.length - 1));
     print(positionInColorArray);
     int index = positionInColorArray.truncate();
     print(index);
