@@ -32,8 +32,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
   String selectTitle = "Select Color";
   double progressSize = 0.25;
-  String progressInt = "1";
-  bool showBack = false;
+  String progressInt = "3";
+  bool showBack = true;
 
   double _currentSliderValue = 1;
   double _secondSliderValue = 40;
@@ -325,7 +325,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
               // SLIDERS
 
               Positioned(
-                bottom: screenHeight! * 0.15,
+                bottom: screenHeight! * 0.12,
                 child: Column(
                   children: [
 
@@ -501,40 +501,44 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                         ],
                       ),
                     ),
-                    SizedBox(height: screenHeight! * 0.01,),
+                    SizedBox(height: screenHeight! * 0.03,),
                     //brightnessSlider(),
-
-                    // Buttons
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        //Reset Button
-                        gradientButton("Reset",(){
-                          setState(() {
-                            HapticFeedback.mediumImpact();
-                            resetSettings();
-                          });
-                        }),
-                        //Save Button
-                        SizedBox(width: screenWidth! * 0.02),
-                        gradientButton("Save",(){
-                          setState(() {
-                            HapticFeedback.mediumImpact();
-                            saveData();
-                          });
-                        }),
-                        //Exit Button
-                        SizedBox(width: screenWidth! * 0.02),
-                        gradientButton("Exit",(){
-                          setState(() {
-                            HapticFeedback.mediumImpact();
-                            Navigator.pop(context);
-                          });
-                        }),
-                      ],
+                    progressBarSized(0.75),
+                    SizedBox(
+                      height: screenHeight! * 0.01,
                     ),
+                    bottomBackButton(),
+                    // Buttons
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   mainAxisSize: MainAxisSize.max,
+                    //   children: [
+                    //     //Reset Button
+                    //     gradientButton("Reset",(){
+                    //       setState(() {
+                    //         HapticFeedback.mediumImpact();
+                    //         resetSettings();
+                    //       });
+                    //     }),
+                    //     //Save Button
+                    //     SizedBox(width: screenWidth! * 0.02),
+                    //     gradientButton("Save",(){
+                    //       setState(() {
+                    //         HapticFeedback.mediumImpact();
+                    //         saveData();
+                    //       });
+                    //     }),
+                    //     //Exit Button
+                    //     SizedBox(width: screenWidth! * 0.02),
+                    //     gradientButton("Exit",(){
+                    //       setState(() {
+                    //         HapticFeedback.mediumImpact();
+                    //         Navigator.pop(context);
+                    //       });
+                    //     }),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
@@ -694,6 +698,227 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
         ),
       ),
     );
+  }
+
+  Widget progressBarSized(double progress) {
+    double? progressFullWidth = screenWidth! * 0.42;
+    return Stack(children: <Widget>[
+      // Full Bar
+      Container(
+        width: progressFullWidth,
+        height: 9,
+        child: Stack(children: <Widget>[
+          Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                  width: progressFullWidth,
+                  height: 9,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(38.84709167480469),
+                      topRight: Radius.circular(38.84709167480469),
+                      bottomLeft: Radius.circular(38.84709167480469),
+                      bottomRight: Radius.circular(38.84709167480469),
+                    ),
+                    color: Color.fromRGBO(111, 109, 109, 1),
+                  ))),
+        ]),
+      ),
+      // Progress
+      SizedBox(
+        width: progressFullWidth * progress,
+        height: 9,
+        child: Stack(children: <Widget>[
+          Container(
+              alignment: Alignment.centerLeft,
+              width: progressFullWidth,
+              height: 9,
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(
+                      1.0,
+                      3.0,
+                    ),
+                    color: Colors.black12,
+                    spreadRadius: 4,
+                    blurRadius: 4,
+                  )
+                ],
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(38.84709167480469),
+                  topRight: Radius.circular(38.84709167480469),
+                  bottomLeft: Radius.circular(38.84709167480469),
+                  bottomRight: Radius.circular(38.84709167480469),
+                ),
+                color: AppConstants.greenAltColor,
+              )),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget bottomBackButton() {
+    double backButtonSize = screenWidth! * 0.1;
+    if (showBack) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    width: backButtonSize,
+                    height: backButtonSize,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AppConstants.backImg,
+                          fit: BoxFit.fitWidth,
+                          invertColors: false),
+                    )),
+              ),
+              SizedBox(width: screenWidth! * 0.035),
+              SizedBox(
+                width: screenWidth! * 0.15,
+                child: Text(
+                  '$progressInt of 4',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color: Colors.white70,
+                      fontFamily: 'Inter',
+                      fontSize: fontSize,
+                      letterSpacing:
+                      2 /*percentages not used in flutter. defaulting to zero*/,
+                      fontWeight: FontWeight.normal,
+                      height: 1),
+                ),
+              ),
+              SizedBox(width: screenWidth! * 0.035),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      saveData();
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      width: backButtonSize,
+                      height: backButtonSize,
+                      decoration: const BoxDecoration(
+                      image: DecorationImage(
+                      image: AppConstants.forwardImg,
+                      fit: BoxFit.fitWidth,
+                      invertColors: false),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Back',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.21),
+              Text(
+                'Next',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+            ],
+          )
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  width: backButtonSize,
+                  height: backButtonSize,
+                ),
+              ),
+              SizedBox(width: screenWidth! * 0.09),
+              Text(
+                '$progressInt of 4',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.09),
+              Container(
+                alignment: Alignment.centerLeft,
+                width: backButtonSize,
+                height: backButtonSize,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.31),
+            ],
+          )
+        ],
+      );
+    }
+  }
+
+  void goBack() async {
+    Navigator.pop(context);
+    //await FullScreen.exitFullScreen();
   }
 
   Widget gradientButton(String title, Function() action){
@@ -1099,7 +1324,8 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       //     },
       //   ),
       // );
-      Navigator.popAndPushNamed(context, '/mainScreen');
+      Navigator.pushNamed(context, '/mainScreen');
+      // Navigator.popAndPushNamed(context, '/mainScreen');
     });
   }
 

@@ -84,7 +84,7 @@ class SelectColorState extends State<SelectColor> {
   late Color _currentColor;
   late Color _shadedColor;
 
-  AssetImage customMarkerImage = AppConstants.markerCross;
+  AssetImage customMarkerImage = AppConstants.markerPlus;
 
   @override
   void initState() {
@@ -578,7 +578,7 @@ class SelectColorState extends State<SelectColor> {
 
   // SELECT COLOR FUNCTION
   void selectColorView() async {
-    selectTitle = "Select Color";
+    selectTitle = "Background Color";
     progressInt = "1";
     progressSize = 0.25;
     showBack = false;
@@ -882,19 +882,19 @@ class SelectColorState extends State<SelectColor> {
           Stack(
             alignment: Alignment.center,
             children: <Widget>[
-              Container(
-                width: outerCircleSize,
-                height: outerCircleSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(outerCircleCorner),
-                    topRight: Radius.circular(outerCircleCorner),
-                    bottomLeft: Radius.circular(outerCircleCorner),
-                    bottomRight: Radius.circular(outerCircleCorner),
+                Container(
+                  width: outerCircleSize,
+                  height: outerCircleSize,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(outerCircleCorner),
+                      topRight: Radius.circular(outerCircleCorner),
+                      bottomLeft: Radius.circular(outerCircleCorner),
+                      bottomRight: Radius.circular(outerCircleCorner),
+                    ),
+                    color: AppConstants.altColor,
                   ),
-                  color: AppConstants.altColor,
                 ),
-              ),
               (PickedImage == null || title != "Custom")
                   ? Container(
                       width: markerSize,
@@ -976,7 +976,23 @@ class SelectColorState extends State<SelectColor> {
           Stack(
             alignment: Alignment.center,
             children: <Widget>[
+              // title == "Custom" ? Container(
+              //   width: outerCircleSize,
+              //   height: outerCircleSize,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.only(
+              //       topLeft: Radius.circular(outerCircleCorner),
+              //       topRight: Radius.circular(outerCircleCorner),
+              //       bottomLeft: Radius.circular(outerCircleCorner),
+              //       bottomRight: Radius.circular(outerCircleCorner),
+              //     ),
+              //     color: AppConstants.whiteTxtColor,
+              //   ),
+              // ) :
+              // Container(),
               Container(
+                // width: outerCircleSize*0.95,
+                // height: outerCircleSize*0.95,
                 width: outerCircleSize,
                 height: outerCircleSize,
                 decoration: BoxDecoration(
@@ -1241,7 +1257,7 @@ class SelectColorState extends State<SelectColor> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           customMarkersPaletteBox(AppConstants.markerCircle, "Circle,"),
-                                          customMarkersPaletteBox(AppConstants.markerCross, "Cross"),
+                                          customMarkersPaletteBox(AppConstants.markerPlus, "PLus"),
                                           customMarkersPaletteBox(AppConstants.markerHexagon, "Hexagon"),
                                         ],
                                       ),

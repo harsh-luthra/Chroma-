@@ -35,6 +35,7 @@ class AppConstants{
   static const AssetImage standardImg = AssetImage('assets/images/standardLayout.png');
 
   static const AssetImage backImg = AssetImage('assets/images/backButton.png');
+  static const AssetImage forwardImg = AssetImage('assets/images/rightButton.png');
 
   static const String customImageName = "custom_img.png";
 
@@ -54,6 +55,7 @@ class AppConstants{
 
   static const AssetImage markerCircle = AssetImage('assets/images/circle.png');
   static const AssetImage markerCross = AssetImage('assets/images/cross.png');
+  static const AssetImage markerPlus = AssetImage('assets/images/plus.png');
   static const AssetImage markerHexagon = AssetImage('assets/images/hexagon.png');
   static const AssetImage markerHollowCircle = AssetImage('assets/images/hollow_circle.png');
   static const AssetImage markerHollowSquare = AssetImage('assets/images/hollow_square.png');

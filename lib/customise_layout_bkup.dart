@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomiseLayoutBkup extends StatefulWidget {
@@ -57,10 +61,16 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
 
   MarkersDataObj markersDataObj = MarkersDataObj();
 
+  double brightnessSliderValue = 0.5;
+
   // Color containerBorderColour = const Color.fromARGB(125, 0, 0, 0);
   // Color containerColour = const Color.fromARGB(125, 0, 0, 0);
 
   double? fontSize = 15;
+  File? PickedImage;
+  String? loadedMarker = "1";
+
+  Color markerColor = const Color(0xffffffff);
 
   @override
   void initState() {
@@ -70,8 +80,25 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
     print(Duration.microsecondsPerSecond ~/ fPS);
     setState(() {
       cornerMargin = _currentSliderValue / 100;
-      //markerSize = _secondSliderValue * (screenWidth! * 0.0025);
+      //markerSize = _secondSliderValue * (screenWidth! * 0.0025);.
+      StartState();
     });
+    getCustomImage();
+  }
+
+  void getCustomImage() async{
+    final pathGot = await getApplicationDocumentsDirectory();
+    const fileNameToSave = (AppConstants.customImageName);
+    File checkFile = File('${pathGot.path}/$fileNameToSave');
+    if(await checkFile.exists()){
+      setState(() {
+        PickedImage = checkFile;
+      });
+    }
+  }
+
+  void StartState()async{
+    brightnessSliderValue = await currentBrightness;
   }
 
   @override
@@ -99,7 +126,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerTopLeft =
-                          !markersDataObj.markerTopLeft;
+                      !markersDataObj.markerTopLeft;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -114,7 +141,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerTopCenter =
-                          !markersDataObj.markerTopCenter;
+                      !markersDataObj.markerTopCenter;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -130,7 +157,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerTopRight =
-                          !markersDataObj.markerTopRight;
+                      !markersDataObj.markerTopRight;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -145,7 +172,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerMiddleLeft =
-                          !markersDataObj.markerMiddleLeft;
+                      !markersDataObj.markerMiddleLeft;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -161,7 +188,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerCenter =
-                          !markersDataObj.markerCenter;
+                      !markersDataObj.markerCenter;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -176,7 +203,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerMiddleRight =
-                          !markersDataObj.markerMiddleRight;
+                      !markersDataObj.markerMiddleRight;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -192,7 +219,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerBottomLeft =
-                          !markersDataObj.markerBottomLeft;
+                      !markersDataObj.markerBottomLeft;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -207,7 +234,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerBottomCenter =
-                          !markersDataObj.markerBottomCenter;
+                      !markersDataObj.markerBottomCenter;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -223,7 +250,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                   onLongPress: () {
                     setState(() {
                       markersDataObj.markerBottomRight =
-                          !markersDataObj.markerBottomRight;
+                      !markersDataObj.markerBottomRight;
                       HapticFeedback.mediumImpact();
                     });
                   },
@@ -235,6 +262,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
               Positioned(
                 bottom: screenHeight! * 0.56,
                 child: Container(
+                  padding: const EdgeInsets.only(left: 10,right: 10),
                   decoration: BoxDecoration(
                       color: AppConstants.containerGreyColor,
                       border: Border.all(
@@ -263,20 +291,21 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                       SizedBox(
                         height: screenHeight! * 0.015,
                       ),
-                      Text(
-                        "Hold markers for 2 seconds to toggle visibility",
+                      AutoSizeText(
+                        "Hold markers to toggle visibility",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Proxima Nova',
-                            fontSize: fontSize,
+                            fontSize: fontSize!*1.35,
                             fontWeight: FontWeight.w500,
                             height: 1),
+                        maxLines: 1,
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      Text(
+                      AutoSizeText(
                         "(Low opacity markers wont be visible at launch)",
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -286,6 +315,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
                             letterSpacing: 0,
                             fontWeight: FontWeight.w500,
                             height: 1),
+                        maxLines: 1,
                       ),
                     ],
                   ),
@@ -293,156 +323,372 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
               ),
 
               // SLIDERS
-              
-              // Marker Margin Slider
-              Positioned(
-                bottom: screenHeight! * 0.365,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: AppConstants.containerGreyColor,
-                      border: Border.all(
-                        color: Colors.transparent,
-                      ),
-                      borderRadius: const BorderRadius.all(Radius.circular(20))),
-                  height: screenHeight! * 0.05,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(width: screenWidth! * 0.04),
-                      Text(
-                        'Marker Position',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Proxima Nova',
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.w500,
-                            height: 1),
-                      ),
-                      SizedBox(
-                        width: screenWidth! * 0.6,
-                        height: screenHeight! * 0.05,
-                        child: Slider(
-                          activeColor: AppConstants.sliderActiveColor,
-                          inactiveColor: AppConstants.sliderInActiveColor,
-                          value: _currentSliderValue,
-                          min: 0,
-                          max: 20,
-                          divisions: 20,
-                          label: _currentSliderValue.round().toString(),
-                          onChanged: (double value) {
-                            setState(() {
-                              //print(value);
-                              _currentSliderValue = value;
-                              cornerMargin = _currentSliderValue / 100;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
 
-              // Marker Size Slider
               Positioned(
-                bottom: screenHeight! * 0.29,
-                child: Container(
-                  transformAlignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    // boxShadow: const [
-                    //   BoxShadow(
-                    //       color: Color.fromRGBO(0, 0, 0, 0.5),
-                    //       offset: Offset(0, 6),
-                    //       blurRadius: 4)
-                    // ],
-                    // gradient: const LinearGradient(
-                    //   begin: Alignment.topCenter,
-                    //   end: Alignment.bottomCenter,
-                    //   colors: [
-                    //     Color.fromRGBO(127, 127, 127, 1),
-                    //     Color.fromRGBO(0, 0, 0, 0.29),
-                    //   ],
-                    // ),
-                      color: AppConstants.containerGreyColor,
-                      border: Border.all(
-                        color: Colors.transparent,
-                      ),
-                      borderRadius: const BorderRadius.all(Radius.circular(20))),
-                  height: screenHeight! * 0.05,
-                  child: Row(
-                    children: [
-                      SizedBox(width: screenWidth! * 0.04),
-                      Text(
-                        'Marker Size',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Proxima Nova',
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.w500,
-                            height: 1),
-                      ),
-                      SizedBox(width: screenWidth! * 0.07),
-                      SizedBox(
-                        width: screenWidth! * 0.6,
-                        height: screenHeight! * 0.05,
-                        child: Slider(
-                          activeColor: AppConstants.sliderActiveColor,
-                          inactiveColor: AppConstants.sliderInActiveColor,
-                          value: _secondSliderValue,
-                          min: 20,
-                          max: 60,
-                          divisions: 10,
-                          label: _secondSliderValue.round().toString(),
-                          onChanged: (double value) {
-                            setState(() {
-                              //print(value);
-                              _secondSliderValue = value;
-                              markerSize = _secondSliderValue * (screenWidth! * 0.0025);
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Buttons
-              Positioned(
-                bottom: screenHeight! * 0.21,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
+                bottom: screenHeight! * 0.15,
+                child: Column(
                   children: [
-                    //Reset Button
-                    gradientButton("Reset",(){
-                      setState(() {
-                        HapticFeedback.mediumImpact();
-                        resetSettings();
-                      });
-                    }),
-                    //Save Button
-                    SizedBox(width: screenWidth! * 0.02),
-                    gradientButton("Save",(){
-                      setState(() {
-                        HapticFeedback.mediumImpact();
-                        saveData();
-                      });
-                    }),
-                    //Exit Button
-                    SizedBox(width: screenWidth! * 0.02),
-                    gradientButton("Exit",(){
-                      setState(() {
-                        HapticFeedback.mediumImpact();
-                        Navigator.pop(context);
-                      });
-                    }),
+
+                    // Marker Margin Slider
+                    Container(
+                      decoration: BoxDecoration(
+                          color: AppConstants.containerGreyColor,
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(20))),
+                      height: screenHeight! * 0.05,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: screenWidth! * 0.04),
+                          Text(
+                            'Marker Position',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Proxima Nova',
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w500,
+                                height: 1),
+                          ),
+                          SizedBox(
+                            width: screenWidth! * 0.6,
+                            height: screenHeight! * 0.05,
+                            child: Slider(
+                              activeColor: AppConstants.sliderActiveColor,
+                              inactiveColor: AppConstants.sliderInActiveColor,
+                              value: _currentSliderValue,
+                              min: 0,
+                              max: 20,
+                              divisions: 20,
+                              label: _currentSliderValue.round().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  //print(value);
+                                  _currentSliderValue = value;
+                                  cornerMargin = _currentSliderValue / 100;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: screenHeight! * 0.015,),
+
+                    // Marker Size Slider
+                    Container(
+                      transformAlignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        // boxShadow: const [
+                        //   BoxShadow(
+                        //       color: Color.fromRGBO(0, 0, 0, 0.5),
+                        //       offset: Offset(0, 6),
+                        //       blurRadius: 4)
+                        // ],
+                        // gradient: const LinearGradient(
+                        //   begin: Alignment.topCenter,
+                        //   end: Alignment.bottomCenter,
+                        //   colors: [
+                        //     Color.fromRGBO(127, 127, 127, 1),
+                        //     Color.fromRGBO(0, 0, 0, 0.29),
+                        //   ],
+                        // ),
+                          color: AppConstants.containerGreyColor,
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(20))),
+                      height: screenHeight! * 0.05,
+                      child: Row(
+                        children: [
+                          SizedBox(width: screenWidth! * 0.04),
+                          Text(
+                            'Marker Size',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Proxima Nova',
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w500,
+                                height: 1),
+                          ),
+                          SizedBox(width: screenWidth! * 0.07),
+                          SizedBox(
+                            width: screenWidth! * 0.6,
+                            height: screenHeight! * 0.05,
+                            child: Slider(
+                              activeColor: AppConstants.sliderActiveColor,
+                              inactiveColor: AppConstants.sliderInActiveColor,
+                              value: _secondSliderValue,
+                              min: 20,
+                              max: 60,
+                              divisions: 10,
+                              label: _secondSliderValue.round().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  //print(value);
+                                  _secondSliderValue = value;
+                                  markerSize = _secondSliderValue * (screenWidth! * 0.0025);
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: screenHeight! * 0.015,),
+
+                    // Brightness Slider
+                    Container(
+                      transformAlignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        // boxShadow: const [
+                        //   BoxShadow(
+                        //       color: Color.fromRGBO(0, 0, 0, 0.5),
+                        //       offset: Offset(0, 6),
+                        //       blurRadius: 4)
+                        // ],
+                        // gradient: const LinearGradient(
+                        //   begin: Alignment.topCenter,
+                        //   end: Alignment.bottomCenter,
+                        //   colors: [
+                        //     Color.fromRGBO(127, 127, 127, 1),
+                        //     Color.fromRGBO(0, 0, 0, 0.29),
+                        //   ],
+                        // ),
+                          color: AppConstants.containerGreyColor,
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(20))),
+                      height: screenHeight! * 0.05,
+                      child: Row(
+                        children: [
+                          SizedBox(width: screenWidth! * 0.04),
+                          Text(
+                            'Brightness',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Proxima Nova',
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w500,
+                                height: 1),
+                          ),
+                          SizedBox(width: screenWidth! * 0.07),
+                          SizedBox(
+                            width: screenWidth! * 0.6,
+                            height: screenHeight! * 0.05,
+                            child: Slider(
+                              activeColor: AppConstants.sliderActiveColor,
+                              inactiveColor: AppConstants.sliderInActiveColor,
+                              value: brightnessSliderValue,
+                              min: 0.1,
+                              max: 1.0,
+                              divisions: 9,
+                              label: (brightnessSliderValue * 100).toInt().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  setBrightness(value);
+                                  brightnessSliderValue = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: screenHeight! * 0.01,),
+                    //brightnessSlider(),
+
+                    // Buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        //Reset Button
+                        gradientButton("Reset",(){
+                          setState(() {
+                            HapticFeedback.mediumImpact();
+                            resetSettings();
+                          });
+                        }),
+                        //Save Button
+                        SizedBox(width: screenWidth! * 0.02),
+                        gradientButton("Save",(){
+                          setState(() {
+                            HapticFeedback.mediumImpact();
+                            saveData();
+                          });
+                        }),
+                        //Exit Button
+                        SizedBox(width: screenWidth! * 0.02),
+                        gradientButton("Exit",(){
+                          setState(() {
+                            HapticFeedback.mediumImpact();
+                            Navigator.pop(context);
+                          });
+                        }),
+                      ],
+                    ),
                   ],
                 ),
               ),
+
+              // // Marker Margin Slider
+              // Positioned(
+              //   bottom: screenHeight! * 0.365,
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //         color: AppConstants.containerGreyColor,
+              //         border: Border.all(
+              //           color: Colors.transparent,
+              //         ),
+              //         borderRadius: const BorderRadius.all(Radius.circular(20))),
+              //     height: screenHeight! * 0.05,
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         SizedBox(width: screenWidth! * 0.04),
+              //         Text(
+              //           'Marker Position',
+              //           textAlign: TextAlign.left,
+              //           style: TextStyle(
+              //               color: Colors.white,
+              //               fontFamily: 'Proxima Nova',
+              //               fontSize: fontSize,
+              //               fontWeight: FontWeight.w500,
+              //               height: 1),
+              //         ),
+              //         SizedBox(
+              //           width: screenWidth! * 0.6,
+              //           height: screenHeight! * 0.05,
+              //           child: Slider(
+              //             activeColor: AppConstants.sliderActiveColor,
+              //             inactiveColor: AppConstants.sliderInActiveColor,
+              //             value: _currentSliderValue,
+              //             min: 0,
+              //             max: 20,
+              //             divisions: 20,
+              //             label: _currentSliderValue.round().toString(),
+              //             onChanged: (double value) {
+              //               setState(() {
+              //                 //print(value);
+              //                 _currentSliderValue = value;
+              //                 cornerMargin = _currentSliderValue / 100;
+              //               });
+              //             },
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+
+              // Marker Size Slider
+              // Positioned(
+              //   bottom: screenHeight! * 0.29,
+              //   child: Container(
+              //     transformAlignment: Alignment.center,
+              //     decoration: BoxDecoration(
+              //       // boxShadow: const [
+              //       //   BoxShadow(
+              //       //       color: Color.fromRGBO(0, 0, 0, 0.5),
+              //       //       offset: Offset(0, 6),
+              //       //       blurRadius: 4)
+              //       // ],
+              //       // gradient: const LinearGradient(
+              //       //   begin: Alignment.topCenter,
+              //       //   end: Alignment.bottomCenter,
+              //       //   colors: [
+              //       //     Color.fromRGBO(127, 127, 127, 1),
+              //       //     Color.fromRGBO(0, 0, 0, 0.29),
+              //       //   ],
+              //       // ),
+              //         color: AppConstants.containerGreyColor,
+              //         border: Border.all(
+              //           color: Colors.transparent,
+              //         ),
+              //         borderRadius: const BorderRadius.all(Radius.circular(20))),
+              //     height: screenHeight! * 0.05,
+              //     child: Row(
+              //       children: [
+              //         SizedBox(width: screenWidth! * 0.04),
+              //         Text(
+              //           'Marker Size',
+              //           style: TextStyle(
+              //               color: Colors.white,
+              //               fontFamily: 'Proxima Nova',
+              //               fontSize: fontSize,
+              //               fontWeight: FontWeight.w500,
+              //               height: 1),
+              //         ),
+              //         SizedBox(width: screenWidth! * 0.07),
+              //         SizedBox(
+              //           width: screenWidth! * 0.6,
+              //           height: screenHeight! * 0.05,
+              //           child: Slider(
+              //             activeColor: AppConstants.sliderActiveColor,
+              //             inactiveColor: AppConstants.sliderInActiveColor,
+              //             value: _secondSliderValue,
+              //             min: 20,
+              //             max: 60,
+              //             divisions: 10,
+              //             label: _secondSliderValue.round().toString(),
+              //             onChanged: (double value) {
+              //               setState(() {
+              //                 //print(value);
+              //                 _secondSliderValue = value;
+              //                 markerSize = _secondSliderValue * (screenWidth! * 0.0025);
+              //               });
+              //             },
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+
+              // Buttons
+              // Positioned(
+              //   bottom: screenHeight! * 0.21,
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     mainAxisSize: MainAxisSize.max,
+              //     children: [
+              //       //Reset Button
+              //       gradientButton("Reset",(){
+              //         setState(() {
+              //           HapticFeedback.mediumImpact();
+              //           resetSettings();
+              //         });
+              //       }),
+              //       //Save Button
+              //       SizedBox(width: screenWidth! * 0.02),
+              //       gradientButton("Save",(){
+              //         setState(() {
+              //           HapticFeedback.mediumImpact();
+              //           saveData();
+              //         });
+              //       }),
+              //       //Exit Button
+              //       SizedBox(width: screenWidth! * 0.02),
+              //       gradientButton("Exit",(){
+              //         setState(() {
+              //           HapticFeedback.mediumImpact();
+              //           Navigator.pop(context);
+              //         });
+              //       }),
+              //     ],
+              //   ),
+              // ),
+
             ],
           ),
         ),
@@ -459,13 +705,13 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
         padding: const EdgeInsets.all(0.0),
       ),
       onPressed: () {
-       action();
+        action();
       },
       child: Ink(
         padding: const EdgeInsets.only(top: 10, left: 15, right: 15,bottom: 10),
-        width: screenWidth! * 0.185,
+        width: screenWidth! * 0.19,
         decoration: const BoxDecoration(
-            color: AppConstants.buttonGreyColor,
+          color: AppConstants.buttonGreyColor,
           // gradient: LinearGradient(
           //     begin: Alignment.topCenter,
           //     end: Alignment.bottomCenter,
@@ -523,6 +769,75 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
     );
   }
 
+  Widget brightnessSlider() {
+    // Brightness Slider
+    return Container(
+      decoration: BoxDecoration(
+          color: AppConstants.containerGreyColor,
+          border: Border.all(
+            color: Colors.transparent,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      height: screenHeight! * 0.09,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: screenWidth! * 0.04),
+          SizedBox(height: screenHeight! * 0.005),
+          Text(
+            'Brightness',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Proxima Nova',
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+                height: 1),
+          ),
+          SizedBox(height: screenHeight! * 0.0025),
+          SizedBox(
+            width: screenWidth! * 0.6,
+            height: screenHeight! * 0.05,
+            child: Slider(
+              activeColor: AppConstants.sliderActiveColor,
+              inactiveColor: AppConstants.sliderInActiveColor,
+              value: brightnessSliderValue,
+              min: 0.1,
+              max: 1.0,
+              divisions: 9,
+              label: (brightnessSliderValue * 100).toInt().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  setBrightness(value);
+                  brightnessSliderValue = value;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<double> get currentBrightness async {
+    try {
+      return await ScreenBrightness().current;
+    } catch (e) {
+      print(e);
+      throw 'Failed to get current brightness';
+    }
+  }
+
+  Future<void> setBrightness(double brightness) async {
+    try {
+      await ScreenBrightness().setScreenBrightness(brightness);
+    } catch (e) {
+      print(e);
+      throw 'Failed to set brightness';
+    }
+  }
+
   void resetSettings() {
     _currentSliderValue = 1;
     _secondSliderValue = 40;
@@ -566,19 +881,48 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
       //markerColor = disabledMarkerColor;
       opacity = 0.25;
     }
-    return Container(
-      width: markerSize,
-      height: markerSize,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        //color: markerColor,
-        image: DecorationImage(
-          opacity: opacity,
-          image: selectedMarker,
-          fit: BoxFit.contain,
+    if(loadedMarker == "1" || loadedMarker == "2"){
+      return Container(
+        width: markerSize,
+        height: markerSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+          image: DecorationImage(
+            opacity: opacity,
+            image: selectedMarker,
+            // image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+          ),
         ),
-      ),
-    );
+      );
+    }else{
+      return Container(
+        width: markerSize,
+        height: markerSize,
+        // decoration: BoxDecoration(
+        //   shape: BoxShape.circle,
+        //   color: Colors.transparent,
+        //   image: DecorationImage(
+        //     opacity: 1,
+        //     image: selectedMarker,
+        //     // image: (loadedMarker == "1" || loadedMarker == "2") ? selectedMarker : FileImage(PickedImage!) as ImageProvider,
+        //   ),
+        // ),
+        child: ColorFiltered(
+            colorFilter:
+            ColorFilter.mode(markerColor.withOpacity(1.0), BlendMode.srcIn),
+            child: Container(
+                width: 39,
+                height: 39,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      opacity: opacity,
+                      image: (selectedMarker), fit: BoxFit.fitWidth),
+                  // DecorationImage(image: PickedImage == null ? showImage : Image.file(PickedImage), fit: BoxFit.fitWidth),
+                ))
+        ),
+      );
+    }
   }
 
   // Future<void> _dialogBuilder(BuildContext context) {
@@ -628,7 +972,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
   void loadData() async {
     prefs = await SharedPreferences.getInstance();
 
-    // Load Color
+    // Load Main Color
     final String? loadedColor = prefs.getString('selectedColor');
     print("Loaded Color $loadedColor");
     if (loadedColor != null) {
@@ -642,16 +986,44 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
     }
 
     // Load Marker
-    final String? loadedMarker = prefs.getString('selectedMarker');
+    loadedMarker = prefs.getString('selectedMarker');
     print("Loaded Marker $loadedMarker");
     if (loadedMarker != null) {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
-      } else {
+      } else if (loadedMarker == "2") {
         selectedMarker = AppConstants.sfCircleImg;
+      } else {
+        final String? customMarkerString = prefs.getString('customMarker');
+        if (customMarkerString != null) {
+          selectedMarker = AssetImage(customMarkerString);
+        }
+        //selectedMarker = AppConstants.sfCircleImg;
       }
     } else {
       selectedMarker = AppConstants.plusImg;
+    }
+    setState(() {
+      selectedMarker = selectedMarker;
+    });
+
+    // Load Marker Color
+    final String? loadedMarkerColor = prefs.getString('markerColor');
+    print("loadedMarker Color $loadedColor");
+    if (loadedMarkerColor != null) {
+      String valueString = loadedMarkerColor.split('(0x')[1].split(')')[0];
+      int value = int.parse(valueString, radix: 16);
+      markerColor = Color(value);
+      setState(() {
+        markerColor = Color(value);
+      });
+    } else {
+      String? valueString = defaultColor?.split('(0x')[1].split(')')[0];
+      int value = int.parse(valueString!, radix: 16);
+      markerColor = Color(value);
+      setState(() {
+        markerColor = Color(value);
+      });
     }
 
     /* // Load Layout
@@ -683,9 +1055,9 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
     final String? loadedSize = prefs.getString('markerSize');
     print("Loaded Marker Size $loadedSize");
     if (loadedSize != null) {
-      markerSize = double.parse(loadedSize);
+      _secondSliderValue = double.parse(loadedSize);
     } else {
-      markerSize = 40;
+      _secondSliderValue = 40;
     }
 
     final String? markerDataobjString = prefs.getString('markerDataobjString');
@@ -702,8 +1074,9 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
       selectedColor = selectedColor;
       selectedMarker = selectedMarker;
       cornerMargin = cornerMargin;
-      markerSize = markerSize;
-      _secondSliderValue = markerSize;
+      //markerSize = markerSize;
+      _secondSliderValue = _secondSliderValue;
+      markerSize = _secondSliderValue * (screenWidth! * 0.0025);
       _currentSliderValue = cornerMargin * 100;
       markersDataObj = markersDataObj;
       setStateOfMarkersFromLoadedData();
@@ -716,7 +1089,7 @@ class CustomiseLayoutBkupState extends State<CustomiseLayoutBkup> {
         "markerDataobjString", json.encode(markersDataObj.toJson()));
     await prefs.setString('selectedLayout', "2");
     await prefs.setString('cornerMargin', cornerMargin.toString());
-    await prefs.setString('markerSize', markerSize.toString());
+    await prefs.setString('markerSize', _secondSliderValue.toString());
     Future.delayed(const Duration(milliseconds: 500), () {
       // Navigator.push(
       //   context,
