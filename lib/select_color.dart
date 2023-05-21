@@ -36,12 +36,14 @@ class _SliderIndicatorPainter extends CustomPainter {
 class SelectColor extends StatefulWidget {
   double width = 200.0;
 
+  SelectColor({super.key});
+
   @override
   State<SelectColor> createState() => SelectColorState();
 }
 
 class SelectColorState extends State<SelectColor> {
-  File? PickedImage;
+  File? pickedImage;
 
   double? screenWidth;
   double? screenHeight;
@@ -94,7 +96,7 @@ class SelectColorState extends State<SelectColor> {
     getCustomImage();
   }
 
-  void Debug_print(msg){
+  void debugPrint(msg){
     if (kDebugMode) {
       print(msg);
     }
@@ -102,7 +104,7 @@ class SelectColorState extends State<SelectColor> {
 
   @override
   void didChangeDependencies() {
-    SetColorSelectorData();
+    setColorSelectorData();
     setState(() {
       _currentColor = _calculateSelectedColor(_colorSliderPosition);
       _shadeSliderPosition = widget.width / 2; //center the shader selector
@@ -117,12 +119,12 @@ class SelectColorState extends State<SelectColor> {
     File checkFile = File('${pathGot.path}/$fileNameToSave');
     if (await checkFile.exists()) {
       setState(() {
-        PickedImage = checkFile;
+        pickedImage = checkFile;
       });
     }
   }
 
-  void SetColorSelectorData() {
+  void setColorSelectorData() {
     widget.width = MediaQuery.of(context).size.width / 2;
     _currentColor = _calculateSelectedColor(_colorSliderPosition);
     _shadeSliderPosition = widget.width / 2; //center the shader selector
@@ -137,7 +139,7 @@ class SelectColorState extends State<SelectColor> {
     if (position < 0) {
       position = 0;
     }
-    Debug_print("New pos: $position");
+    debugPrint("New pos: $position");
     prefrences.setDouble('colorSliderPosition', position);
     setState(() {
       _colorSliderPosition = position;
@@ -153,7 +155,7 @@ class SelectColorState extends State<SelectColor> {
     setState(() {
       _shadeSliderPosition = position;
       _shadedColor = _calculateShadedColor(_shadeSliderPosition);
-      Debug_print(
+      debugPrint(
           "r: ${_shadedColor.red}, g: ${_shadedColor.green}, b: ${_shadedColor.blue}");
     });
   }
@@ -200,9 +202,9 @@ class SelectColorState extends State<SelectColor> {
     //determine color
     // double positionInColorArray = (position / widget.width * (_colors.length - 1));
     double positionInColorArray = (position / 200.0 * (_colors.length - 1));
-    Debug_print(positionInColorArray);
+    debugPrint(positionInColorArray);
     int index = positionInColorArray.truncate();
-    Debug_print(index);
+    debugPrint(index);
     double remainder = positionInColorArray - index;
     if (remainder == 0.0) {
       _currentColor = _colors[index];
@@ -312,7 +314,7 @@ class SelectColorState extends State<SelectColor> {
 
   void printConsole(msg) {
     if (kDebugMode) {
-      Debug_print(msg);
+      debugPrint(msg);
     }
   }
 
@@ -458,7 +460,7 @@ class SelectColorState extends State<SelectColor> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onHorizontalDragStart: (DragStartDetails details) {
-          Debug_print("_-------------------------STARTED DRAG");
+          debugPrint("_-------------------------STARTED DRAG");
           _colorChangeHandler(details.localPosition.dx);
         },
         onHorizontalDragUpdate: (DragUpdateDetails details) {
@@ -494,7 +496,7 @@ class SelectColorState extends State<SelectColor> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onHorizontalDragStart: (DragStartDetails details) {
-          Debug_print("_-------------------------STARTED DRAG");
+          debugPrint("_-------------------------STARTED DRAG");
           _shadeChangeHandler(details.localPosition.dx);
         },
         onHorizontalDragUpdate: (DragUpdateDetails details) {
@@ -628,7 +630,7 @@ class SelectColorState extends State<SelectColor> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return MainScreen();
+              return const MainScreen();
             },
           ),
         );
@@ -857,8 +859,8 @@ class SelectColorState extends State<SelectColor> {
           });
         } else if (title == "Custom") {
           setState(() {
-            if (PickedImage == null) {
-              ShowDialogCustomMarkers();
+            if (pickedImage == null) {
+              showDialogCustomMarkers();
               //pickMarkerFromDevice();
             } else {
               selectedMarker = 3; // Need to Change to 3
@@ -895,7 +897,7 @@ class SelectColorState extends State<SelectColor> {
                     color: AppConstants.altColor,
                   ),
                 ),
-              (PickedImage == null || title != "Custom")
+              (pickedImage == null || title != "Custom")
                   ? Container(
                       width: markerSize,
                       height: markerSize,
@@ -907,7 +909,7 @@ class SelectColorState extends State<SelectColor> {
                   : Image.file(
                       width: markerSize,
                       height: markerSize,
-                      PickedImage!,
+                      pickedImage!,
                       fit: BoxFit.cover,
                     ),
             ],
@@ -967,7 +969,7 @@ class SelectColorState extends State<SelectColor> {
       onLongPress: (){
         if (title == "Custom") {
           setState(() {
-              ShowDialogCustomMarkers();
+              showDialogCustomMarkers();
           });
         }
       },
@@ -1060,7 +1062,7 @@ class SelectColorState extends State<SelectColor> {
         setState(() {
           customMarkerImage = showImage;
         });
-        Debug_print(customMarkerImage.assetName);
+        debugPrint(customMarkerImage.assetName);
         prefrences.setString('customMarker', customMarkerImage.assetName);
         Navigator.of(context).pop();
         // if (title == "Cross") {
@@ -1160,7 +1162,7 @@ class SelectColorState extends State<SelectColor> {
     );
   }
 
-  void ShowDialogCustomMarkers() {
+  void showDialogCustomMarkers() {
     double? outerCircleCorner = 35;
     //double? outerCircleSize = screenHeight! * 0.09;
     // double? innerCircleSize = outerCircleSize * 0.34;
@@ -1310,7 +1312,7 @@ class SelectColorState extends State<SelectColor> {
         });
   }
 
-  Widget CustomMarkersDialog() {
+  Widget customMarkersDialog() {
     return Container();
   }
 
@@ -1575,7 +1577,7 @@ class SelectColorState extends State<SelectColor> {
 
   /// Get from gallery
   _getFromGallery() async {
-    PickedFile? pickedFile = await ImagePicker().getImage(
+    XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxWidth: 1800,
       maxHeight: 1800,
@@ -1585,7 +1587,7 @@ class SelectColorState extends State<SelectColor> {
 
       // 5. Get the path to the apps directory so we can save the file to it.
       final pathGot = await getApplicationDocumentsDirectory();
-      Debug_print(pathGot.path);
+      debugPrint(pathGot.path);
       // get the image's directory
       //final fileName = p.basename(pickedFile.path);
       //final extension = p.extension(pickedFile.path);
@@ -1593,9 +1595,9 @@ class SelectColorState extends State<SelectColor> {
       // copy the image's whole directory to a new <File>
       final File localImage =
           await imageFile.copy('${pathGot.path}/$fileNameToSave');
-      Debug_print(localImage.path);
+      debugPrint(localImage.path);
       setState(() {
-        PickedImage = imageFile;
+        pickedImage = imageFile;
       });
     }
   }

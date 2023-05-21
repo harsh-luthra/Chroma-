@@ -9,14 +9,12 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fullscreen/fullscreen.dart';
-import 'package:neon_circular_timer/neon_circular_painter.dart';
 import 'package:neon_circular_timer/neon_circular_timer.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:to_csv/to_csv.dart' as exportCSV;
+import 'package:to_csv/to_csv.dart' as export_csv;
 
 import 'dart:math' as math;
 
@@ -34,9 +32,9 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   double? screenWidth;
   double? screenHeight;
   late final String? defaultColor = AppConstants.greenColor.toString();
-  late var prefs;
-  static const TWO_PI = 3.14 * 2;
-  double FPS = 30;
+  late SharedPreferences prefs;
+  static const twoPi = 3.14 * 2;
+  double fps = 30;
 
   late Timer timer;
   bool stopRecordingBool = false;
@@ -81,7 +79,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late Animation _colorAnim;
   Color txt_color = Colors.grey;
 
-  double _progress = 1.0;
+  //double _progress = 1.0;
 
   final CountDownController Count_controller = new CountDownController();
   Color markerColor = const Color(0xffffffff);
@@ -466,7 +464,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           width: screenWidth!*0.35,
           height: screenWidth!*0.35,
           child: AnimatedBuilder(
-              animation: controller!,
+              animation: controller,
               builder: (context, child) {
                 return Align(
                   child: AspectRatio(
@@ -576,7 +574,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             shaderCallback: (rect) {
               return SweepGradient(
                   startAngle: 0.0,
-                  endAngle: TWO_PI,
+                  endAngle: twoPi,
                   stops: [controller.value, controller.value],
                   // 0.0 , 0.5 , 0.5 , 1.0
                   center: Alignment.center,
@@ -1131,7 +1129,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   // Starts Recording of Sensors DATA to List
   startRecording() {
     timer = Timer.periodic(
-        Duration(microseconds: Duration.microsecondsPerSecond ~/ FPS), (timer) {
+        Duration(microseconds: Duration.microsecondsPerSecond ~/ fps), (timer) {
       if (stopRecordingBool) {
         stopRecording();
       }
@@ -1191,7 +1189,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   List<String> header = [];
                   header.add('TimeStamp.');
                   header.add('AccelerometerValues');
-                  exportCSV.myCSV(header, _accelerometerValues_List);
+                  export_csv.myCSV(header, _accelerometerValues_List);
                 },
               ),
               ElevatedButton(
@@ -1200,7 +1198,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   List<String> header = [];
                   header.add('TimeStamp.');
                   header.add('GyroscopeValues');
-                  exportCSV.myCSV(header, _gyroscopeValues_List);
+                  export_csv.myCSV(header, _gyroscopeValues_List);
                 },
               ),
               ElevatedButton(
@@ -1261,7 +1259,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     ]; //Inner list which contains Data i.e Row
     listOfLists.add(data1);
     listOfLists.add(data2);
-    exportCSV.myCSV(header, listOfLists);
+    export_csv.myCSV(header, listOfLists);
   }
 
   void TestCsv_new() {

@@ -4,14 +4,12 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'dart:async';
 
 import 'package:chroma_plus_flutter/Sample/ColorPicker.dart';
 import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:chroma_plus_flutter/select_color.dart';
 import 'package:flutter/material.dart';
-import 'package:sensors_plus/sensors_plus.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'CustomError.dart';
