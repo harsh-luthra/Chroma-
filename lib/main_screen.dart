@@ -202,14 +202,14 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             }
           },
           // FIXED BUG TO CANCEL CIRCLE ANIM
-          // onTapCancel: (){
-          //   if (controller.status == AnimationStatus.forward) {
-          //     setState(() {
-          //       controller.reverse();
-          //       controller_txt_color.reverse();
-          //     });
-          //   }
-          // },
+          onTapCancel: (){
+            if (controller.status == AnimationStatus.forward) {
+              setState(() {
+                controller.reverse();
+                controller_txt_color.reverse();
+              });
+            }
+          },
 
           // onScaleEnd: (de){
           //   // print(de.pointerCount);
