@@ -74,13 +74,13 @@ packages:
     source: hosted
     version: "0.3.3+4"
   csslib:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: csslib
-      sha256: b36c7f7e24c0bdf1bf9a3da461c837d1de64b9f8beb190c9011d8c72a3dfd745
+      sha256: f857285c8dc0b4f2f77b49a1c083ff8c75223a7549de20f3e607df58cf497a43
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.2"
+    version: "0.17.0"
   csv:
     dependency: "direct main"
     description:
@@ -614,13 +614,13 @@ packages:
     source: hosted
     version: "1.4.0"
   universal_html:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: universal_html
-      sha256: ed4f24120c9b1b4721d44e439f7a47d09d9f1b7b868bc84c9d6d373a4a8732af
+      sha256: f2e0ff0c4af8e4bbda4d273ca4a11be4055414f478fad5c161609b74790ff696
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   universal_io:
     dependency: transitive
     description:

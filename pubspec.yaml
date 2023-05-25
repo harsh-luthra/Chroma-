@@ -54,6 +54,8 @@ dependencies:
   path_provider: ^2.0.14
   percent_indicator: ^4.2.3
   neon_circular_timer: ^0.0.7
+  universal_html: ^2.2.2
+  csslib: 0.17.0
 
 dev_dependencies:
   flutter_test:
