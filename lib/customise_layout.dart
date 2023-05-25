@@ -19,6 +19,9 @@ class CustomiseLayout extends StatefulWidget {
 }
 
 class CustomiseLayoutState extends State<CustomiseLayout> {
+
+  bool movingToNextView = false;
+
   // create some values
   double? screenWidth;
   double? screenHeight;
@@ -804,6 +807,11 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                 children: [
                   GestureDetector(
                     onTap: () {
+                      // To Fix Bug of Not Moving to Main Screen Many times
+                      if(movingToNextView == true){
+                        return;
+                      }
+                      movingToNextView = true;
                       HapticFeedback.mediumImpact();
                       saveData();
                     },
@@ -1310,12 +1318,13 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
   void saveData() async {
     //saveMarkerObjData();
+    movingToNextView = true;
     await prefs.setString(
         "markerDataobjString", json.encode(markersDataObj.toJson()));
     await prefs.setString('selectedLayout', "2");
     await prefs.setString('cornerMargin', cornerMargin.toString());
     await prefs.setString('markerSize', _secondSliderValue.toString());
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 250), () {
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(
@@ -1325,6 +1334,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       //   ),
       // );
       Navigator.pushNamed(context, '/mainScreen');
+      movingToNextView = false;
       // Navigator.popAndPushNamed(context, '/mainScreen');
     });
   }

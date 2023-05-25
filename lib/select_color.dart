@@ -45,6 +45,8 @@ class SelectColor extends StatefulWidget {
 class SelectColorState extends State<SelectColor> {
   File? pickedImage;
 
+  bool movingToNextView = false;
+
   double? screenWidth;
   double? screenHeight;
   late final String? defaultColor = AppConstants.redColor.toString();
@@ -602,6 +604,7 @@ class SelectColorState extends State<SelectColor> {
 
   // SELECT LAYOUT FUNCTION
   void selectLayout() async {
+    movingToNextView = true;
     //selectTitle = "Select Layout";
     //progressInt = "3";
     //progressSize = 0.75;
@@ -624,7 +627,7 @@ class SelectColorState extends State<SelectColor> {
   void goToMain() async {
     await prefrences.setString('selectedLayout', selectedLayout.toString());
     printConsole("Saved Layout $selectedLayout");
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 250), () {
       if (selectedLayout == 1) {
         Navigator.push(
           context,
@@ -643,6 +646,8 @@ class SelectColorState extends State<SelectColor> {
             },
           ),
         );
+        movingToNextView = false;
+        print("MOVED TO CUSTOMISE LAYOUT");
       }
     });
   }
@@ -945,6 +950,9 @@ class SelectColorState extends State<SelectColor> {
     }
     return GestureDetector(
       onTap: () {
+        if(movingToNextView == true){
+          return;
+        }
         HapticFeedback.mediumImpact();
         if (title == "Cross") {
           setState(() {

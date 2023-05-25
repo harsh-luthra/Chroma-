@@ -41,14 +41,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: SelectColor(),
-      //home: const SelectColor(),
       routes: <String, WidgetBuilder>{
         '/selectColor': (BuildContext context) => SelectColor(),
         '/mainScreen': (BuildContext context) => const MainScreen(),
         '/customiseLayout': (BuildContext context) => const CustomiseLayout(),
         '/colorPicker': (BuildContext context) => ColorPicker(200),
       },
-      //home: const MyHomePage(),
     );
   }
 }
