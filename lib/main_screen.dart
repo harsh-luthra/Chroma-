@@ -8,7 +8,7 @@ import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fullscreen/fullscreen.dart';
+// import 'package:fullscreen/fullscreen.dart';
 import 'package:neon_circular_timer/neon_circular_timer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
@@ -19,6 +19,7 @@ import 'package:to_csv/to_csv.dart' as export_csv;
 import 'dart:math' as math;
 
 import 'CustomTimerPainterNew.dart';
+import 'fullscreen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);

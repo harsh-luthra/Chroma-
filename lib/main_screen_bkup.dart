@@ -7,11 +7,13 @@ import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fullscreen/fullscreen.dart';
+// import 'package:fullscreen/fullscreen.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_csv/to_csv.dart' as exportCSV;
+
+import 'fullscreen.dart';
 
 
 class MainScreenBkup extends StatefulWidget {

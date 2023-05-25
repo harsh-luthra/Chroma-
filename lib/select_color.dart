@@ -9,11 +9,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:fullscreen/fullscreen.dart';
+// import 'package:fullscreen/fullscreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'fullscreen.dart';
 
 class _SliderIndicatorPainter extends CustomPainter {
   final double position;
