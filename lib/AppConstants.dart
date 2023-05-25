@@ -29,7 +29,7 @@ class AppConstants{
   static const AssetImage sfCircleImg = AssetImage('assets/images/sfMarker.png');
 
   static const AssetImage addMarkerImg = AssetImage('assets/images/addMarker.png');
-  static const AssetImage colorCircleImg = AssetImage('assets/images/colorCirce.png');
+  static const AssetImage colorCircleImg = AssetImage('assets/images/colorCircle.png');
 
   static const AssetImage customImg = AssetImage('assets/images/settings.png');
   static const AssetImage standardImg = AssetImage('assets/images/standardLayout.png');
