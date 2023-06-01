@@ -1,6 +1,6 @@
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+//import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class colorPickerTest extends StatefulWidget {
   const colorPickerTest({Key? key}) : super(key: key);
@@ -54,10 +54,10 @@ class colorPickerTestState extends State<colorPickerTest> {
                   AlertDialog(
                     title: const Text('Pick a color!'),
                     content: SingleChildScrollView(
-                      child: ColorPicker(
-                        pickerColor: pickerColor,
-                        onColorChanged: changeColor,
-                      ),
+                      // child: ColorPicker(
+                      //   pickerColor: pickerColor,
+                      //   onColorChanged: changeColor,
+                      // ),
                     ),
                   );
                 },
@@ -77,10 +77,10 @@ class colorPickerTestState extends State<colorPickerTest> {
         return AlertDialog(
           title: const Text('Pick a color'),
           content: SingleChildScrollView(
-            child: ColorPicker(
-              pickerColor: pickerColor,
-              onColorChanged: changeColor,
-            ),
+            // child: ColorPicker(
+            //   pickerColor: pickerColor,
+            //   onColorChanged: changeColor,
+            // ),
           ),
           actions: <Widget>[
             ElevatedButton(

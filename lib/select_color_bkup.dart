@@ -5,7 +5,7 @@ import 'package:chroma_plus_flutter/customise_layout.dart';
 import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+//import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -351,10 +351,10 @@ class SelectColorBkupState extends State<SelectColorBkup> {
         return AlertDialog(
           title: const Text('Pick a color', style: TextStyle(fontSize: 15),),
           content: SingleChildScrollView(
-            child: ColorPicker(
-              pickerColor: pickerColor,
-              onColorChanged: changeColor,
-            ),
+            // child: ColorPicker(
+            //   pickerColor: pickerColor,
+            //   onColorChanged: changeColor,
+            // ),
           ),
           actions: <Widget>[
             ElevatedButton(

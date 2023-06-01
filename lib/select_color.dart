@@ -8,7 +8,7 @@ import 'package:chroma_plus_flutter/main_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:chroma_plus_flutter/color_picker/custom_colorpicker.dart';
 // import 'package:fullscreen/fullscreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -54,7 +54,7 @@ class SelectColorState extends State<SelectColor> {
   late final String? defaultColor = AppConstants.redColor.toString();
   late SharedPreferences prefrences;
 
-  String selectTitle = "Select Color";
+  String selectTitle = "Background Color";
   double progressSize = 0.25;
   String progressInt = "1";
   bool showBack = false;
@@ -686,9 +686,10 @@ class SelectColorState extends State<SelectColor> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: AppConstants.txtColor1,
           title: Text(
             'Pick a color',
-            style: TextStyle(fontSize: fontSize),
+            style: TextStyle(fontSize: fontSize,color: Colors.white),
           ),
           content: SingleChildScrollView(
             child: ColorPicker(
@@ -715,7 +716,7 @@ class SelectColorState extends State<SelectColor> {
               child: Text(
                 'Done',
                 style: TextStyle(
-                    color: AppConstants.buttonTxtColor,
+                    color: AppConstants.whiteTxtColor,
                     fontFamily: 'Inter',
                     fontSize: fontSize,
                     fontWeight: FontWeight.normal,
@@ -736,7 +737,7 @@ class SelectColorState extends State<SelectColor> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                    color: AppConstants.buttonTxtColor,
+                    color: AppConstants.whiteTxtColor,
                     fontFamily: 'Inter',
                     fontSize: fontSize,
                     fontWeight: FontWeight.normal,
