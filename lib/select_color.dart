@@ -82,8 +82,8 @@ class SelectColorState extends State<SelectColor> {
     const Color.fromARGB(255, 127, 0, 255),
     const Color.fromARGB(255, 255, 0, 255),
     const Color.fromARGB(255, 255, 0, 127),
-    const Color.fromARGB(255, 128, 128, 128),
     const Color.fromARGB(255, 0, 0, 0),
+    // const Color.fromARGB(255, 0, 0, 0),
   ];
   double _colorSliderPosition = 100;
   late double _shadeSliderPosition;
@@ -129,7 +129,8 @@ class SelectColorState extends State<SelectColor> {
   }
 
   void setColorSelectorData() {
-    widget.width = MediaQuery.of(context).size.width / 2;
+    // widget.width = MediaQuery.of(context).size.width / 2;
+    widget.width = 200;
     _currentColor = _calculateSelectedColor(_colorSliderPosition);
     _shadeSliderPosition = widget.width / 2; //center the shader selector
     _shadedColor = _calculateShadedColor(_shadeSliderPosition);
