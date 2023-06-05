@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -70,7 +71,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
   // Color containerColour = const Color.fromARGB(125, 0, 0, 0);
 
   double? fontSize = 15;
-  File? PickedImage;
+  // File? PickedImage;
   String? loadedMarker = "1";
 
   Color markerColor = const Color(0xffffffff);
@@ -95,13 +96,16 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     File checkFile = File('${pathGot.path}/$fileNameToSave');
     if(await checkFile.exists()){
       setState(() {
-        PickedImage = checkFile;
+        // PickedImage = checkFile;
       });
     }
   }
 
   void StartState()async{
     brightnessSliderValue = await currentBrightness;
+    if(brightnessSliderValue < 0.1){
+      brightnessSliderValue = 0.1;
+    }
   }
 
   @override
@@ -1207,7 +1211,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
     // Load Main Color
     final String? loadedColor = prefs.getString('selectedColor');
-    print("Loaded Color $loadedColor");
+    debugPrint("Loaded Color $loadedColor");
     if (loadedColor != null) {
       String valueString = loadedColor.split('(0x')[1].split(')')[0];
       int value = int.parse(valueString, radix: 16);
@@ -1220,7 +1224,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
     // Load Marker
     loadedMarker = prefs.getString('selectedMarker');
-    print("Loaded Marker $loadedMarker");
+    debugPrint("Loaded Marker $loadedMarker");
     if (loadedMarker != null) {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
@@ -1242,7 +1246,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
     // Load Marker Color
     final String? loadedMarkerColor = prefs.getString('markerColor');
-    print("loadedMarker Color $loadedColor");
+    debugPrint("loadedMarker Color $loadedColor");
     if (loadedMarkerColor != null) {
       String valueString = loadedMarkerColor.split('(0x')[1].split(')')[0];
       int value = int.parse(valueString, radix: 16);
@@ -1261,7 +1265,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
     /* // Load Layout
     final String? loadedLayout = prefs.getString('selectedLayout');
-    print("Loaded Layout $loadedMarker");
+    debugPrint("Loaded Layout $loadedMarker");
     if (loadedLayout != null) {
       if (loadedLayout == "1") {
         cornerMargin = 0.01;
@@ -1277,7 +1281,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
     // Load Border Margin
     final String? loadedMargin = prefs.getString('cornerMargin');
-    print("Loaded Margin $loadedMargin");
+    debugPrint("Loaded Margin $loadedMargin");
     if (loadedMargin != null) {
       cornerMargin = double.parse(loadedMargin);
     } else {
@@ -1286,7 +1290,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
 
     // Load Marker Size
     final String? loadedSize = prefs.getString('markerSize');
-    print("Loaded Marker Size $loadedSize");
+    debugPrint("Loaded Marker Size $loadedSize");
     if (loadedSize != null) {
       _secondSliderValue = double.parse(loadedSize);
     } else {
@@ -1406,4 +1410,11 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
     // makerColorBottomCenter = Colors.transparent;
     // makerColorBottomRight = Colors.transparent;
   }
+
+  void debugPrint(msg){
+    if (kDebugMode) {
+      print(msg);
+    }
+  }
+
 }

@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:chroma_plus_flutter/color_picker/custom_colorpicker.dart';
 // import 'package:fullscreen/fullscreen.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -649,7 +649,7 @@ class SelectColorState extends State<SelectColor> {
           ),
         );
         movingToNextView = false;
-        print("MOVED TO CUSTOMISE LAYOUT");
+        debugPrint("MOVED TO CUSTOMISE LAYOUT");
       }
     });
   }
@@ -1583,33 +1583,33 @@ class SelectColorState extends State<SelectColor> {
   }
 
   void pickMarkerFromDevice() {
-    _getFromGallery();
+    // _getFromGallery();
   }
 
   /// Get from gallery
-  _getFromGallery() async {
-    XFile? pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1800,
-      maxHeight: 1800,
-    );
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
-
-      // 5. Get the path to the apps directory so we can save the file to it.
-      final pathGot = await getApplicationDocumentsDirectory();
-      debugPrint(pathGot.path);
-      // get the image's directory
-      //final fileName = p.basename(pickedFile.path);
-      //final extension = p.extension(pickedFile.path);
-      const fileNameToSave = (AppConstants.customImageName);
-      // copy the image's whole directory to a new <File>
-      final File localImage =
-          await imageFile.copy('${pathGot.path}/$fileNameToSave');
-      debugPrint(localImage.path);
-      setState(() {
-        pickedImage = imageFile;
-      });
-    }
-  }
+  // _getFromGallery() async {
+  //   XFile? pickedFile = await ImagePicker().pickImage(
+  //     source: ImageSource.gallery,
+  //     maxWidth: 1800,
+  //     maxHeight: 1800,
+  //   );
+  //   if (pickedFile != null) {
+  //     File imageFile = File(pickedFile.path);
+  //
+  //     // 5. Get the path to the apps directory so we can save the file to it.
+  //     final pathGot = await getApplicationDocumentsDirectory();
+  //     debugPrint(pathGot.path);
+  //     // get the image's directory
+  //     //final fileName = p.basename(pickedFile.path);
+  //     //final extension = p.extension(pickedFile.path);
+  //     const fileNameToSave = (AppConstants.customImageName);
+  //     // copy the image's whole directory to a new <File>
+  //     final File localImage =
+  //         await imageFile.copy('${pathGot.path}/$fileNameToSave');
+  //     debugPrint(localImage.path);
+  //     setState(() {
+  //       pickedImage = imageFile;
+  //     });
+  //   }
+  // }
 }

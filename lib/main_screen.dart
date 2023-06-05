@@ -6,10 +6,11 @@ import 'package:chroma_plus_flutter/AppConstants.dart';
 import 'package:chroma_plus_flutter/Data_List.dart';
 import 'package:chroma_plus_flutter/MarkersDataObj.dart';
 import 'package:csv/csv.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:fullscreen/fullscreen.dart';
-import 'package:neon_circular_timer/neon_circular_timer.dart';
+// import 'package:neon_circular_timer/neon_circular_timer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -19,6 +20,7 @@ import 'package:to_csv/to_csv.dart' as export_csv;
 import 'dart:math' as math;
 
 import 'CustomTimerPainterNew.dart';
+import 'neon_circular_timer/NeonCircularTimer.dart';
 import 'fullscreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -96,7 +98,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     controller = AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
     controller.addListener(() {
       if(controller.value == 1.0){
-        print("Done");
+        debugPrint("Done");
         ShowHoldMenu = !ShowHoldMenu;
         ToggleFullScreen();
         HapticFeedback.mediumImpact();
@@ -131,7 +133,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     // loadData();
     // listenAllSensors();
     // brightnessSliderValue = currentBrightness as double;
-    // //print(Duration.microsecondsPerSecond ~/ FPS);
+    // //debugPrint(Duration.microsecondsPerSecond ~/ FPS);
     // setState(() {
     //   showingThreeFingersMenu = true;
     // });
@@ -142,9 +144,9 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     loadData();
     listenAllSensors();
     brightnessSliderValue = await currentBrightness;
-    //print(Duration.microsecondsPerSecond ~/ FPS);
+    //debugPrint(Duration.microsecondsPerSecond ~/ FPS);
     setState(() {
-      print("B: $brightnessSliderValue");
+      debugPrint("B: $brightnessSliderValue");
       ShowHoldMenu = true;
     });
   }
@@ -172,12 +174,12 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         backgroundColor: selectedColor,
         body: GestureDetector(
           // onScaleStart: (de) {
-          //   print(de.pointerCount);
+          //   debugPrint(de.pointerCount);
           //   fingersNowHold = de.pointerCount;
           //   onThreeHold(de.pointerCount);
           // },
           // onScaleUpdate: (de) {
-          //   print(de.pointerCount);
+          //   debugPrint(de.pointerCount);
           //   fingersNowHold = de.pointerCount;
           //   if (de.pointerCount != 3) {
           //     cancelHoldTimer();
@@ -211,7 +213,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           },
 
           // onScaleEnd: (de){
-          //   // print(de.pointerCount);
+          //   // debugPrint(de.pointerCount);
           //   // fingersNowHold = de.pointerCount;
           //   // if (de.pointerCount != 3) {
           //   //   cancelHoldTimer();
@@ -476,7 +478,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           child: CustomPaint(
                             painter: CustomTimerPainterNew(
                                 neumorphicEffect: true,
-                                backgroundColor: Color.fromARGB(0, 100, 100, 100),
+                                backgroundColor: const Color.fromARGB(0, 100, 100, 100),
                                 animation: countDownAnimation ?? controller,
                                 innerFillColor: Colors.transparent,
                                 innerFillGradient: const LinearGradient(colors: [
@@ -496,7 +498,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                   AppConstants.greenAltColor,
                                   AppConstants.greenAltColor
                                 ]),
-                                neon: 10),
+                                neon: 10, strokeWidth: 10.0),
                           ),
                         ),
                         Align(
@@ -725,7 +727,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             GestureDetector(
               onTap: () {
                 HapticFeedback.mediumImpact();
-                print("Pressed Record Button");
+                debugPrint("Pressed Record Button");
               },
               child: buttonImg(
                   "Record", AppConstants.startRecordImg, screenWidth! * 0.2),
@@ -734,7 +736,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             GestureDetector(
               onTap: () {
                 HapticFeedback.mediumImpact();
-                print("Pressed Stop Button");
+                debugPrint("Pressed Stop Button");
               },
               child: buttonImg(
                   "Stop", AppConstants.stopRecordImg, screenWidth! * 0.2),
@@ -750,7 +752,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             GestureDetector(
               onTap: () {
                 HapticFeedback.mediumImpact();
-                print("Pressed All Button");
+                debugPrint("Pressed All Button");
                 All_Data_List();
               },
               child: buttonImg(
@@ -762,7 +764,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             GestureDetector(
               onTap: () {
                 HapticFeedback.mediumImpact();
-                print("Pressed Export Button");
+                debugPrint("Pressed Export Button");
               },
               child: buttonImg(
                   "Export", AppConstants.exportImg, screenWidth! * 0.075),
@@ -936,7 +938,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     try {
       return await ScreenBrightness().current;
     } catch (e) {
-      print(e);
+      debugPrint(e);
       throw 'Failed to get current brightness';
     }
   }
@@ -945,7 +947,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     try {
       await ScreenBrightness().setScreenBrightness(brightness);
     } catch (e) {
-      print(e);
+      debugPrint(e);
       throw 'Failed to set brightness';
     }
   }
@@ -1081,7 +1083,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   void onThreeHold(int fingersCount) {
     if (fingersCount == 3) {
-      print("3 FINGERS DETECTED");
+      debugPrint("3 FINGERS DETECTED");
       startHoldTimer();
     }else{
     }
@@ -1095,7 +1097,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     holdTimer = Timer(const Duration(milliseconds: AppConstants.holdTime), () {
       if (fingersNowHold == 3) {
         HapticFeedback.mediumImpact();
-        print("3 FINGERS ACTION COMPLETED");
+        debugPrint("3 FINGERS ACTION COMPLETED");
         setState(() {
           ShowHoldMenu = !ShowHoldMenu;
           // if(showingThreeFingersMenu){
@@ -1104,7 +1106,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           ToggleFullScreen();
         });
       } else {
-        print("NOT 3 FINGERS ACTION CANCELED");
+        debugPrint("NOT 3 FINGERS ACTION CANCELED");
       }
     });
   }
@@ -1136,7 +1138,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       }
       if (!stopRecordingBool) {
         int timeStamp = DateTime.now().microsecondsSinceEpoch;
-        print("$timeStamp : $_accelerometerValues");
+        debugPrint("$timeStamp : $_accelerometerValues");
 
         // Only When Changed Values
         /*if(old_accelerometerValues != _accelerometerValues.toString()){
@@ -1271,7 +1273,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       ["3", "54212341212", "54gss2121212"]
     ];
     String csvData = const ListToCsvConverter().convert(data);
-    print(csvData);
+    debugPrint(csvData);
   }
 
   void loadData() async {
@@ -1279,7 +1281,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     // Load Main Color
     final String? loadedColor = prefs.getString('selectedColor');
-    print("Loaded Color $loadedColor");
+    debugPrint("Loaded Color $loadedColor");
     if (loadedColor != null) {
       String valueString = loadedColor.split('(0x')[1].split(')')[0];
       int value = int.parse(valueString, radix: 16);
@@ -1298,7 +1300,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     // Load Marker
     loadedMarker = prefs.getString('selectedMarker');
-    print("Loaded Marker $loadedMarker");
+    debugPrint("Loaded Marker $loadedMarker");
     if (loadedMarker != null) {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
@@ -1320,7 +1322,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     // Load Marker Color
     final String? loadedMarkerColor = prefs.getString('markerColor');
-    print("loadedMarker Color $loadedColor");
+    debugPrint("loadedMarker Color $loadedColor");
     if (loadedMarkerColor != null) {
       String valueString = loadedMarkerColor.split('(0x')[1].split(')')[0];
       int value = int.parse(valueString, radix: 16);
@@ -1339,7 +1341,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     // Load Layout
     final String? loadedLayout = prefs.getString('selectedLayout');
-    print("Loaded Layout $loadedMarker");
+    debugPrint("Loaded Layout $loadedMarker");
     if (loadedLayout != null) {
       if (loadedLayout == "1") {
         loadDefaultLayout();
@@ -1363,7 +1365,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     // Load Custom Layout
     // Load cornerMargin
     final String? loadedMargin = prefs.getString('cornerMargin');
-    print("Loaded Margin $loadedMargin");
+    debugPrint("Loaded Margin $loadedMargin");
     if (loadedMargin != null) {
       cornerMargin = double.parse(loadedMargin);
     } else {
@@ -1372,7 +1374,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     // Load Marker Size
     final String? loadedSize = prefs.getString('markerSize');
-    print("Loaded Marker Size $loadedSize");
+    debugPrint("Loaded Marker Size $loadedSize");
     if (loadedSize != null) {
       markerSize = double.parse(loadedSize) * (screenWidth! * 0.0025);
     } else {
@@ -1381,12 +1383,12 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     final String? markerDataobjString = prefs.getString('markerDataobjString');
     if (markerDataobjString != null) {
-      print(markerDataobjString.toString());
+      debugPrint(markerDataobjString.toString());
       Map<String, dynamic> datamap = jsonDecode(markerDataobjString);
       markersDataObj = MarkersDataObj.fromJson(datamap);
     } else {
       markersDataObj = MarkersDataObj();
-      print(markerDataobjString.toString());
+      debugPrint(markerDataobjString.toString());
     }
   }
 
@@ -1394,6 +1396,12 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     cornerMargin = 0.01;
     markerSize = 40;
     markersDataObj = new MarkersDataObj();
+  }
+}
+
+void debugPrint(msg){
+  if (kDebugMode) {
+    print(msg);
   }
 }
 

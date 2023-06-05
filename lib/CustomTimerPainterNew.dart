@@ -15,7 +15,7 @@ class CustomTimerPainterNew extends CustomPainter {
         this.strokeCap,
         required this.neon,
         this.outerStrokeColor,
-        this.outerStrokeGradient})
+        this.outerStrokeGradient, required double strokeWidth})
       : super(repaint: animation);
 
   final double? neon;
