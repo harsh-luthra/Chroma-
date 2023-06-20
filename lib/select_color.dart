@@ -36,9 +36,9 @@ class _SliderIndicatorPainter extends CustomPainter {
 }
 
 class SelectColor extends StatefulWidget {
-  double width = 200.0;
+  final double width = 200.0;
 
-  SelectColor({super.key});
+  const SelectColor({super.key});
 
   @override
   State<SelectColor> createState() => SelectColorState();
@@ -60,7 +60,7 @@ class SelectColorState extends State<SelectColor> {
   bool showBack = false;
 
   Color selectedColor = const Color(0xffffffff);
-  int selectedMarker = 1;
+  int selectedMarker = 0;
   int selectedLayout = 1;
 
   Color pickerColor = const Color(0xff443a49);
@@ -85,7 +85,7 @@ class SelectColorState extends State<SelectColor> {
     const Color.fromARGB(255, 128, 128, 128),
     const Color.fromARGB(255, 0, 0, 0),
   ];
-  double _colorSliderPosition = 100;
+  double _colorSliderPosition = 200;
   late double _shadeSliderPosition;
   late Color _currentColor;
   late Color _shadedColor;
@@ -130,7 +130,7 @@ class SelectColorState extends State<SelectColor> {
 
   void setColorSelectorData() {
     // widget.width = MediaQuery.of(context).size.width / 2;
-    widget.width = 200;
+    //widget.width = 200;
     _currentColor = _calculateSelectedColor(_colorSliderPosition);
     _shadeSliderPosition = widget.width / 2; //center the shader selector
     _shadedColor = _calculateShadedColor(_shadeSliderPosition);
@@ -297,7 +297,10 @@ class SelectColorState extends State<SelectColor> {
                 progressBarSized(progressSize),
                 SizedBox(height: screenHeight! * 0.01),
                 // Progress Text
-                bottomBackButton(),
+                selectedMarker == 0 ?
+                bottomBackButton()
+                    :
+                bottomBackButtonWithNext(),
               ],
             ),
           ),
@@ -405,15 +408,15 @@ class SelectColorState extends State<SelectColor> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              markerPaletteBox(AppConstants.plusImg, "Cross"),
+              markerPaletteBox(AppConstants.plusImg, "Cross",1),
               SizedBox(
                 width: screenWidth! * 0.03,
               ),
-              markerPaletteBox(AppConstants.sfCircleImg, "Circle"),
-              SizedBox(
-                width: screenWidth! * 0.03,
-              ),
-              markerPaletteBox(customMarkerImage, "Custom"),
+              markerPaletteBox(AppConstants.sfCircleImg_new, "Circle",2),
+              // SizedBox(
+              //   width: screenWidth! * 0.03,
+              // ),
+              // markerPaletteBox(customMarkerImage, "Custom"),
             ],
           ),
           // SizedBox(height: (screenHeight! * 0.09) + 10 + 10)
@@ -941,7 +944,7 @@ class SelectColorState extends State<SelectColor> {
     );
   }
 
-  Widget markerPaletteBox(AssetImage showImage, String title) {
+  Widget markerPaletteBox(AssetImage showImage, String title, int Selected_int) {
     double? outerCircleCorner = 15;
     double? outerCircleSize = screenHeight! * 0.09;
     double? markerSize = screenHeight! * 0.045;
@@ -960,20 +963,28 @@ class SelectColorState extends State<SelectColor> {
         HapticFeedback.mediumImpact();
         if (title == "Cross") {
           setState(() {
-            selectedMarker = 1;
-            selectLayout();
+            if(selectedMarker == 1){
+              selectedMarker = 0;
+            }else{
+              selectedMarker = 1;
+            }
+            //selectLayout();
           });
         } else if (title == "Circle") {
           setState(() {
-            selectedMarker = 2;
-            selectLayout();
+            if(selectedMarker == 2){
+              selectedMarker = 0;
+            }else{
+              selectedMarker = 2;
+            }
+            //selectLayout();
           });
         } else if (title == "Custom") {
           setState(() {
             selectedMarker = 3;
             // Added here to fix initial empty marker which was default to PLus Marker now What is selected on first app start is there
             prefrences.setString('customMarker', customMarkerImage.assetName);
-            selectLayout();
+            //selectLayout();
               //ShowDialogCustomMarkers();
           });
         }
@@ -1004,6 +1015,32 @@ class SelectColorState extends State<SelectColor> {
               //   ),
               // ) :
               // Container(),
+              (selectedMarker == Selected_int) ?
+              Container(
+                width: outerCircleSize*1.05,
+                height: outerCircleSize*1.05,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(outerCircleCorner),
+                    topRight: Radius.circular(outerCircleCorner),
+                    bottomLeft: Radius.circular(outerCircleCorner),
+                    bottomRight: Radius.circular(outerCircleCorner),
+                  ),
+                  color: AppConstants.whiteTxtColor,
+                ),
+              ): Container(
+                width: outerCircleSize*1.05,
+                height: outerCircleSize*1.05,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(outerCircleCorner),
+                    topRight: Radius.circular(outerCircleCorner),
+                    bottomLeft: Radius.circular(outerCircleCorner),
+                    bottomRight: Radius.circular(outerCircleCorner),
+                  ),
+                  color: AppConstants.altColor,
+                ),
+              ),
               Container(
                 // width: outerCircleSize*0.95,
                 // height: outerCircleSize*0.95,
@@ -1019,7 +1056,8 @@ class SelectColorState extends State<SelectColor> {
                   color: AppConstants.altColor,
                 ),
               ),
-              title != "Custom" ?
+              // title != "Custom" ?
+              (selectedMarker != Selected_int) ?
               Container(
                   width: markerSize,
                   height: markerSize,
@@ -1033,6 +1071,7 @@ class SelectColorState extends State<SelectColor> {
                   height: markerSize,
                     child: ColorFiltered(
                         colorFilter:
+                        // ColorFilter.mode(_shadedColor.withOpacity(1.0), BlendMode.srcIn),
                         ColorFilter.mode(_shadedColor.withOpacity(1.0), BlendMode.srcIn),
                         child: Container(
                             width: 39,
@@ -1517,7 +1556,7 @@ class SelectColorState extends State<SelectColor> {
                     fontWeight: FontWeight.normal,
                     height: 1),
               ),
-              SizedBox(width: screenWidth! * 0.31),
+              SizedBox(width: screenWidth! * 0.3237),
             ],
           )
         ],
@@ -1572,6 +1611,169 @@ class SelectColorState extends State<SelectColor> {
                     fontSize: fontSize,
                     letterSpacing:
                         2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.31),
+            ],
+          )
+        ],
+      );
+    }
+  }
+
+  Widget bottomBackButtonWithNext() {
+    double backButtonSize = screenWidth! * 0.1;
+    if (showBack) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    width: backButtonSize,
+                    height: backButtonSize,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AppConstants.backImg,
+                          fit: BoxFit.fitWidth,
+                          invertColors: false),
+                    )),
+              ),
+              SizedBox(width: screenWidth! * 0.035),
+              SizedBox(
+                width: screenWidth! * 0.15,
+                child: Text(
+                  '$progressInt of 4',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color: const Color.fromRGBO(105, 105, 105, 1),
+                      fontFamily: 'Inter',
+                      fontSize: fontSize,
+                      letterSpacing:
+                      2 /*percentages not used in flutter. defaulting to zero*/,
+                      fontWeight: FontWeight.normal,
+                      height: 1),
+                ),
+              ),
+              SizedBox(width: screenWidth! * 0.035),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // To Fix Bug of Not Moving to Main Screen Many times
+                      if(movingToNextView == true){
+                        return;
+                      }
+                      movingToNextView = true;
+                      HapticFeedback.mediumImpact();
+                      selectLayout();
+                      //saveData();
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      width: backButtonSize,
+                      height: backButtonSize,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AppConstants.forwardImg,
+                            fit: BoxFit.fitWidth,
+                            invertColors: false),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Back',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.21),
+              Text(
+                'Next',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+            ],
+          )
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  goBack();
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  width: backButtonSize,
+                  height: backButtonSize,
+                ),
+              ),
+              SizedBox(width: screenWidth! * 0.09),
+              Text(
+                '$progressInt of 4',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              SizedBox(width: screenWidth! * 0.09),
+              Container(
+                alignment: Alignment.centerLeft,
+                width: backButtonSize,
+                height: backButtonSize,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: const Color.fromRGBO(105, 105, 105, 1),
+                    fontFamily: 'Inter',
+                    fontSize: fontSize,
+                    letterSpacing:
+                    2 /*percentages not used in flutter. defaulting to zero*/,
                     fontWeight: FontWeight.normal,
                     height: 1),
               ),

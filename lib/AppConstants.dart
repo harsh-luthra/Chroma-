@@ -27,6 +27,7 @@ class AppConstants{
   static const AssetImage plusImg = AssetImage('assets/images/plusImg.png');
   static const AssetImage triangleImg = AssetImage('assets/images/triangleImg.png');
   static const AssetImage sfCircleImg = AssetImage('assets/images/sfMarker.png');
+  static const AssetImage sfCircleImg_new = AssetImage('assets/images/sfMarker_new.png');
 
   static const AssetImage addMarkerImg = AssetImage('assets/images/addMarker.png');
   static const AssetImage colorCircleImg = AssetImage('assets/images/colorCircle.png');

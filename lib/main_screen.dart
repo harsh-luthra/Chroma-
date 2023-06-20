@@ -299,7 +299,8 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   Widget markerWidget(bool isMarkerEnabled) {
     if (isMarkerEnabled) {
-      if(loadedMarker == "1" || loadedMarker == "2"){
+      // if(loadedMarker == "1" || loadedMarker == "2"){
+      if(loadedMarker == "3" || loadedMarker == "4"){
         return Container(
           width: markerSize,
           height: markerSize,
@@ -1305,7 +1306,7 @@ class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
       } else if (loadedMarker == "2") {
-        selectedMarker = AppConstants.sfCircleImg;
+        selectedMarker = AppConstants.sfCircleImg_new;
       } else {
         final String? customMarkerString = prefs.getString('customMarker');
         if (customMarkerString != null) {

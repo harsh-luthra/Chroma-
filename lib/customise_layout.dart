@@ -299,7 +299,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                         height: screenHeight! * 0.015,
                       ),
                       AutoSizeText(
-                        "Hold markers to toggle visibility",
+                        "Hold Marker to show/hide",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
@@ -313,7 +313,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
                         height: 5,
                       ),
                       AutoSizeText(
-                        "(Low opacity markers wont be visible at launch)",
+                        "(Low opacity markers won't be visible at launch)",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: AppConstants.whiteTxtColor,
@@ -1118,8 +1118,9 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       //markerColor = disabledMarkerColor;
       opacity = 0.25;
     }
-    if(loadedMarker == "1" || loadedMarker == "2"){
-      return Container(
+    // if(loadedMarker == "1" || loadedMarker == "2"){
+    if(loadedMarker == "3" || loadedMarker == "4"){
+        return Container(
         width: markerSize,
         height: markerSize,
         decoration: BoxDecoration(
@@ -1229,7 +1230,7 @@ class CustomiseLayoutState extends State<CustomiseLayout> {
       if (loadedMarker == "1") {
         selectedMarker = AppConstants.plusImg;
       } else if (loadedMarker == "2") {
-        selectedMarker = AppConstants.sfCircleImg;
+        selectedMarker = AppConstants.sfCircleImg_new;
       } else {
         final String? customMarkerString = prefs.getString('customMarker');
         if (customMarkerString != null) {
