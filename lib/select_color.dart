@@ -767,7 +767,7 @@ class SelectColorState extends State<SelectColor> {
       onTap: () {
         HapticFeedback.mediumImpact();
         if (title == "Custom") {
-          _dialogBuilder(context);
+          _ColorPickerdialog(context);
         } else {
           setState(() {
             selectedColor = color;
