@@ -685,7 +685,7 @@ class SelectColorState extends State<SelectColor> {
     }
   }
 
-  Future<void> _dialogBuilder(BuildContext context) {
+  Future<void> _ColorPickerdialog(BuildContext context) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
